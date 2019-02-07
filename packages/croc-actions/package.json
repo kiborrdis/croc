@@ -1,0 +1,29 @@
+{
+  "name": "croc-actions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "start": "rollup -c --watch",
+    "build": "rollup -c",
+    "lint:fix": "tslint -p . --fix",
+    "lint": "tslint -p ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.0",
+    "jest": "^24.1.0",
+    "rollup": "^1.1.2",
+    "rollup-plugin-typescript2": "^0.19.2",
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1"
+  },
+  "dependencies": {
+    "redux": "^4.0.1"
+  },
+  "types": "./dist/main.d.ts"
+}

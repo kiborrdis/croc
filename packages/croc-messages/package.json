@@ -1,0 +1,27 @@
+{
+  "name": "croc-messages",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "start": "rollup -c --watch",
+    "build": "tsc",
+    "lint:fix": "tslint -p . --fix",
+    "lint": "tslint -p ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.0",
+    "jest": "^24.1.0",
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1"
+  },
+  "dependencies": {
+    "croc-actions": "^1.0.0"
+  },
+  "types": "./dist/main.d.ts"
+}

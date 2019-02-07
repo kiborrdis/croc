@@ -1,0 +1,24 @@
+{
+  "extends": ["tslint:recommended"],
+  "defaultSeverity": "warning",
+  "rules": {
+    "max-classes-per-file": false,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "member-ordering": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "interface-name": false,
+    "no-empty": [
+      true,
+      "allow-empty-functions"
+    ]
+  },
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**/*.ts"
+    ]
+  }
+}
