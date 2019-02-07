@@ -21,7 +21,7 @@ export function isIntroductionMessage(message: any): message is IntroductionMess
   return message.type === INTRODUCTION_MESSAGE;
 }
 
-export function buildActionMessage(from: string, action: Actions): ActionMessage {
+export function buildActionMessage(action: Actions, from?: string): ActionMessage {
   return {
     type: 'action',
     action: {

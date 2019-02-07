@@ -1,8 +1,5 @@
 import { Action as ReduxAction } from 'redux';
 
-export const ADD_MESSAGE = 'ADD_MESSAGE';
-export const ADD_DRAW_ACTION = 'ADD_DRAW_ACTION';
-
 interface Action<T extends string, P, M> extends ReduxAction<T> {
   payload?: P;
   meta?: M;
@@ -34,13 +31,39 @@ export function createAction<T extends string, P, M>(type: T, payload?: P, meta?
   };
 }
 
-export const Actions = {
-  addMessage: (params: AddMessageParams, options: SyncOptions = {}) => {
-    const payload = { text: params.text, service: params.service };
+export const ADD_PLAYERS = 'ADD_PLAYERS';
+export const CHANGE_PLAYER_SCORE = 'CHANGE_PLAYER_SCORE';
+export const ADD_ANSWERS = 'ADD_ANSWERS';
+export const PROPOSE_ANSWER = 'PROPOSE_ANSWER';
+export const ADD_CHAT_MESSAGES = 'ADD_CHAT_MESSAGES';
+export const SET_LEADER = 'SET_LEADER';
+export const START_ROUND = 'START_ROUND';
+export const ADD_DRAW_ACTIONS = 'ADD_DRAW_ACTIONS';
+export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
 
-    return createAction(ADD_MESSAGE, payload, { sync: true });
+export const Actions = {
+  addPlayers: (players: Array<{ id: string, name: string, score: number }>) => {
+    return createAction(ADD_PLAYERS, players);
   },
-  addDrawAction: (num: number) => createAction(ADD_DRAW_ACTION, num),
+  changePlayerScore: (player: { id: string, newScore: number }) => {
+    return createAction(CHANGE_PLAYER_SCORE, player);
+  },
+  addAnswers: (answers: Array<{ id: string, answer: string, right: boolean }>) => {
+    return createAction(ADD_ANSWERS, answers);
+  },
+  proposeAnswer: (answer: { answer: string }) => {
+    return createAction(PROPOSE_ANSWER, answer);
+  },
+  addChatMessages: (messages: Array<{ text: string }>) => {
+    return createAction(ADD_CHAT_MESSAGES, messages)
+  },
+  setLeader: (id: string) => {
+    return createAction(SET_LEADER, id);
+  },
+  startRound: () => {
+    return createAction(START_ROUND);
+  },
+  // addDrawActions
 };
 
 export type Actions = ActionsUnion<typeof Actions>;
