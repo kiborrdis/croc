@@ -65,15 +65,21 @@ wsApp.app.ws('/ws', (ws, request) => {
 });
 
 function handleMessage(message: { type: string, [name: string]: any}, ws: WebSocket) {
+  if (isIntroductionMessage(message)) {
+    handleIntroductionMessage(message, ws);
+  } else if (!connections.contains(ws)) {
+    return;
+  }
+
   if (isActionMessage(message)) {
     handleActionMessage(message, ws);
-  } else if (isIntroductionMessage(message)) {
-    handleIntroductionMessage(message, ws);
   }
 }
 
 function handleActionMessage(message: ActionMessage, ws: WebSocket) {
   const connection = connections.find(ws);
+
+  console.log(message.action);
 
   if (connection) {
     responder.broadcastMessage(buildActionMessage(message.action, connection.name), [ ws ]);
