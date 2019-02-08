@@ -8,6 +8,10 @@ interface GameProps {
 const Game = (props: GameProps) => {
   const { loading } = props;
 
+  if (loading) {
+    return <span style={{ color: 'white' }}>loading</span>;
+  }
+
   return (
     <div className="Game">
       <div className="Sidebar">

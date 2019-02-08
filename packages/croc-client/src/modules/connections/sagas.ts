@@ -7,7 +7,7 @@ import { Actions, CONNECT_REQUEST, websocketMessage } from './actions';
 import { AnyAction } from 'redux';
 import { WebsocketConnection } from '../../utils/WebsocketConnection';
 
-const connection = new WebsocketConnection('ws://localhost:8000/echo');
+const connection = new WebsocketConnection('ws://localhost:8000/ws');
 
 const createWebsocketMessageChannel = (connection: WebsocketConnection) => {
   return eventChannel(emitter => {
