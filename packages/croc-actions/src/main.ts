@@ -42,7 +42,7 @@ export const ADD_DRAW_ACTIONS = 'ADD_DRAW_ACTIONS';
 export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
 
 export const Actions = {
-  addPlayers: (players: Array<{ id: string, name: string, score: number }>) => {
+  addPlayers: (players: Array<{ id: string, name?: string, score?: number }>) => {
     return createAction(ADD_PLAYERS, players);
   },
   changePlayerScore: (player: { id: string, newScore: number }) => {
