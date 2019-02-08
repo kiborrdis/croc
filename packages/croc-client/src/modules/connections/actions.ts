@@ -10,9 +10,9 @@ export const WEBSOCKET_MESSAGE = 'WEBSOCKET_MESSAGE';
 
 export const Actions = {
   connectRequest: (name: string) => createAction(CONNECT_REQUEST, { name }),
-  connectSuccess: () => createAction(CONNECT_SUCCESS),
-  connectFailure: () => createAction(CONNECT_FAILURE),
-  disconnect: () => createAction(DISCONNECT),
+  connectSuccess: () => createAction(CONNECT_SUCCESS, undefined),
+  connectFailure: () => createAction(CONNECT_FAILURE, undefined),
+  disconnect: () => createAction(DISCONNECT, undefined),
 }
 
 export type Actions = ActionsUnion<typeof Actions>;

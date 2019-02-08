@@ -71,8 +71,6 @@ function* connectSaga(action: Actions) {
 
   yield put(Actions.connectSuccess());
 
-  yield put(CrocActions.addMessage({ text: 'Connection opened', service: true, }, { sync: false }));
-
   yield fork(websocketChannelWatcher, connection);
   yield fork(syncActionsWatcher, connection);
 }
