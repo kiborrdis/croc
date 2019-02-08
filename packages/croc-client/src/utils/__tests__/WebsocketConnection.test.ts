@@ -85,4 +85,17 @@ describe('WebsocketConnection', () => {
 
     expect(test).toBeCalledWith(JSON.stringify(msgData));
   });
+
+  test('should call close callback when server emits error', async () => {
+    const test = jest.fn();
+    connection.closeHandler = test;
+
+    const openPromise = connection.open();
+    //@ts-ignore
+    server.simulate('error');
+
+    await openPromise.catch(test);
+
+    expect(test).toBeCalled();
+  });
 });

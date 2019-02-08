@@ -15,15 +15,21 @@ export class WebsocketConnection {
   public open() {
     this.ws = createWs(this.url);
 
-    this.ws.onmessage = this.handleMessage;
-    this.ws.onclose = this.handleClose;
-    this.ws.onerror = this.handleError;
-
     return new Promise((resolve, reject) => {
       if (this.ws !== null) {
         this.ws.onopen = resolve;
+        this.ws.onclose = reject;
+        this.ws.onerror = reject;
       }
-    });
+    }).then(this.setWSSocketHandlers);
+  }
+
+  private setWSSocketHandlers = () => {
+    if (this.ws) {
+      this.ws.onmessage = this.handleMessage;
+      this.ws.onclose = this.handleClose;
+      this.ws.onerror = this.handleError;
+    }
   }
 
   public close() {
