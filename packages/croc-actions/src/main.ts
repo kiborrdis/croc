@@ -1,7 +1,7 @@
 import { Action as ReduxAction } from 'redux';
 
 interface Action<T extends string, P, M> extends ReduxAction<T> {
-  payload?: P;
+  payload: P;
   meta?: M;
   syncData?: any;
 }
@@ -23,7 +23,7 @@ interface SyncOptions {
 
 export type ActionsUnion<A extends ActionCreatorsMapObject> = ReturnType<A[keyof A]>;
 
-export function createAction<T extends string, P, M>(type: T, payload?: P, meta?: M): Action<T, P, M> {
+export function createAction<T extends string, P, M>(type: T, payload: P, meta?: M): Action<T, P, M> {
   return {
     type,
     payload,
@@ -61,7 +61,7 @@ export const Actions = {
     return createAction(SET_LEADER, id);
   },
   startRound: () => {
-    return createAction(START_ROUND);
+    return createAction(START_ROUND, undefined);
   },
   // addDrawActions
 };
