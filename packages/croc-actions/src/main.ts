@@ -48,7 +48,7 @@ export const Actions = {
   changePlayerScore: (player: { id: string, newScore: number }) => {
     return createAction(CHANGE_PLAYER_SCORE, player);
   },
-  addAnswers: (answers: Array<{ id: string, answer: string, right: boolean }>) => {
+  addAnswers: (answers: Array<{ id: string, answer: string, right?: boolean }>) => {
     return createAction(ADD_ANSWERS, answers);
   },
   proposeAnswer: (answer: { answer: string }) => {
