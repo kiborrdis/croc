@@ -7,7 +7,7 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "start": "node dist/main.js",
-    "build": "rollup -c",
+    "build": "tsc",
     "lint:fix": "tslint -p . --fix",
     "lint": "tslint -p ."
   },

@@ -6,6 +6,7 @@
       "es6",
     ],
     "target": "es6",
+    "moduleResolution": "node",
     "outDir": "./dist"
   },
   "include": [
