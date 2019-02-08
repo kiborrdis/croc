@@ -67,7 +67,13 @@ function* handleActionMessage(action: AnyAction) {
 }
 
 function* connectSaga(action: Actions) {
-  yield call(() => connection.open());
+  try {
+    yield call(() => connection.open());
+  } catch(e) {
+    yield put(Actions.connectFailure());
+
+    return;
+  }
 
   yield put(Actions.connectSuccess());
 
