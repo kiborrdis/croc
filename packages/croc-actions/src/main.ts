@@ -55,7 +55,7 @@ export const Actions = {
     return createAction(PROPOSE_ANSWER, answer);
   },
   addChatMessages: (messages: Array<{ text: string }>) => {
-    return createAction(ADD_CHAT_MESSAGES, messages)
+    return createAction(ADD_CHAT_MESSAGES, messages);
   },
   setLeader: (id: string) => {
     return createAction(SET_LEADER, id);
