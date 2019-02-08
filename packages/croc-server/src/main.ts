@@ -55,10 +55,12 @@ wsApp.app.ws('/ws', (ws, request) => {
 
     connections.delete(ws);
 
-    responder.broadcastMessage(buildActionMessage(
-      Actions.addChatMessages([{ text: `'${connection.name}' disconnected` }]),
-      'server',
-    ));
+    if (connection) {
+      responder.broadcastMessage(buildActionMessage(
+        Actions.addChatMessages([{ text: `'${connection.name}' disconnected` }]),
+        'server',
+      ));
+    }
   });
 });
 
@@ -73,7 +75,9 @@ function handleMessage(message: { type: string, [name: string]: any}, ws: WebSoc
 function handleActionMessage(message: ActionMessage, ws: WebSocket) {
   const connection = connections.find(ws);
 
-  responder.broadcastMessage(buildActionMessage(message.action, connection.name), [ ws ]);
+  if (connection) {
+    responder.broadcastMessage(buildActionMessage(message.action, connection.name), [ ws ]);
+  }
 }
 
 function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) {
@@ -81,11 +85,12 @@ function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) 
     const connection = connections.find(ws);
 
     connections.set(message.name, ws);
-
-    responder.broadcastMessage(buildActionMessage(
-      Actions.addChatMessages([{ text: `Rename '${connection.name}' to '${message.name}'` }]),
-      'server',
-    ));
+    if (connection) {
+      responder.broadcastMessage(buildActionMessage(
+        Actions.addChatMessages([{ text: `Rename '${connection.name}' to '${message.name}'` }]),
+        'server',
+      ));
+    }
   } else {
     connections.set(message.name, ws);
 

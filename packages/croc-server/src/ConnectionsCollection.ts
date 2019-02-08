@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 interface ConnectionItem {
   name: string;
   ws: WebSocket;
-}
+};
 
 type Comparable = ConnectionItem[keyof ConnectionItem];
 
@@ -34,7 +34,7 @@ export class ConnectionsCollection {
     return this.findIndex(matchValue) > 0;
   }
 
-  public find(matchValue: Comparable): ConnectionItem {
+  public find(matchValue: Comparable): ConnectionItem | null {
     const index = this.findIndex(matchValue);
 
     if (this.isIndexValid(index)) {
