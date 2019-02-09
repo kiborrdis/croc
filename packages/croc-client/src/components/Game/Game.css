@@ -2,18 +2,13 @@
 .Game {
   display: flex;
   align-items: stretch;
-  background-color: #60c64e;
   min-height: 700px;
   min-width: 1200px;
 }
 
 .Sidebar {
   width: 300px;
-}
-
-.Players {
-  height: 100%;
-  background-color: #6da57f;
+  padding: 0 10px;
 }
 
 .Main {

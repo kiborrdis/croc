@@ -7,7 +7,7 @@ interface PlayersProps {
 };
 
 const Players = (props: PlayersProps) => (
-  <div>
+  <div className="Players">
     {
       props.players.map(({ id, ...rest }) => (
         <Player key={id} {...rest} />
