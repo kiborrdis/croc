@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import MessageList from './MessageList';
-import NewMessage from './NewMessage';
+import ApplicableInput from '../ApplicableInput';
 import './Messages.css';
 
 function Messages<M>(props: {
@@ -17,7 +17,7 @@ function Messages<M>(props: {
       </div>
       {props.onNewMessage && (
         <div className="Message-footer">
-          <NewMessage onNewMessage={props.onNewMessage} />
+          <ApplicableInput onApply={props.onNewMessage} />
         </div>
       )}
     </div>

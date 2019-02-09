@@ -1,18 +1,18 @@
 import React, { RefObject, ChangeEvent, SyntheticEvent } from 'react';
 import TextInput from '../TextInput';
-import './NewMessage.css';
+import './ApplicableInput.css';
 
-interface NewMessageProps {
-  onNewMessage: (message: { text: string }) => void;
+interface ApplicableInputProps {
+  onApply: (message: { text: string }) => void;
   defaultValue?: string;
 }
 
-class NewMessage extends React.Component<NewMessageProps> {
+class ApplicableInput extends React.Component<ApplicableInputProps> {
   state = {
     value: '',
   }
 
-  constructor(props: NewMessageProps) {
+  constructor(props: ApplicableInputProps) {
     super(props);
 
     if (props.defaultValue) {
@@ -21,10 +21,10 @@ class NewMessage extends React.Component<NewMessageProps> {
   }
 
   handleClick = () => {
-    const { onNewMessage } = this.props;
+    const { onApply } = this.props;
 
     if (this.state.value) {
-      onNewMessage({ text: this.state.value });
+      onApply({ text: this.state.value });
 
       this.setState({ value: '' });
     }
@@ -38,7 +38,7 @@ class NewMessage extends React.Component<NewMessageProps> {
 
   render() {
     return (
-      <div className="NewMessage">
+      <div className="ApplicableInput">
         <TextInput onChange={this.onChange} value={this.state.value} />
         <button onClick={this.handleClick}>Apply</button>
       </div>
@@ -46,4 +46,4 @@ class NewMessage extends React.Component<NewMessageProps> {
   }
 }
 
-export default NewMessage;
+export default ApplicableInput;

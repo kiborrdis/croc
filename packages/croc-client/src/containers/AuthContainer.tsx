@@ -13,7 +13,7 @@ class AuthContainer extends Component<AuthContainerProps> {
   render() {
     const { children, authed } = this.props;
 
-    if (!authed) {
+    if (false) {
       return <div>Not authed</div>;
     }
 
