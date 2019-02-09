@@ -3,12 +3,16 @@ import WebSocket from 'ws';
 interface ConnectionItem {
   name: string;
   ws: WebSocket;
-};
+}
 
 type Comparable = ConnectionItem[keyof ConnectionItem];
 
+function isWebsocket(test: any): test is WebSocket {
+  return test.send && test.on && test.once;
+}
+
 export class ConnectionsCollection {
-  private connections: ConnectionItem[] = [];
+  public connections: ConnectionItem[] = [];
 
   public set(name: string, ws: WebSocket) {
     if (!this.contains(ws)) {
@@ -23,7 +27,7 @@ export class ConnectionsCollection {
   public delete(matchValue: Comparable) {
     const index = this.findIndex(matchValue);
 
-    if (this.isIndexValid(index)) {
+    if (this.isIndexInvalid(index)) {
       return;
     }
 
@@ -31,13 +35,13 @@ export class ConnectionsCollection {
   }
 
   public contains(matchValue: Comparable) {
-    return this.findIndex(matchValue) > 0;
+    return !this.isIndexInvalid(this.findIndex(matchValue));
   }
 
   public find(matchValue: Comparable): ConnectionItem | null {
     const index = this.findIndex(matchValue);
 
-    if (this.isIndexValid(index)) {
+    if (this.isIndexInvalid(index)) {
       return null;
     }
 
@@ -48,14 +52,18 @@ export class ConnectionsCollection {
     this.connections.forEach(cb);
   }
 
-  private isIndexValid(index: number) {
+  public get length() {
+    return this.connections.length;
+  }
+
+  private isIndexInvalid(index: number) {
     return index < 0 || index === undefined;
   }
 
   private findIndex(matchValue: Comparable) {
     let index: number;
 
-    if (matchValue instanceof WebSocket) {
+    if (isWebsocket(matchValue)) {
       index = this.connections.findIndex(({ ws: testWs }) => testWs === matchValue);
     } else {
       index = this.connections.findIndex(({ name: testName }) => testName === matchValue);

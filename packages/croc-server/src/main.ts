@@ -1,5 +1,5 @@
 import express from 'express';
-import expressWs from 'express-ws';
+import expressWs, { WebsocketMethod } from 'express-ws';
 import WebSocket from 'ws';
 import { Actions } from 'croc-actions';
 import {
@@ -98,6 +98,7 @@ function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) 
       ));
     }
   } else {
+    console.log(`New player '${message.name}'`);
     connections.set(message.name, ws);
 
     responder.broadcastMessage(buildActionMessage(
