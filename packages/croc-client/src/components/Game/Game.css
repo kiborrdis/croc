@@ -31,11 +31,6 @@
   flex: 1;
 }
 
-.Canvas {
-  flex: 1;
-  background-color: #bdbe3a;
-}
-
 .Tools {
   width: 100px;
   background-color: #1ab0da;
