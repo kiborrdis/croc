@@ -1,23 +1,45 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, ChangeEvent, SyntheticEvent } from 'react';
+import TextInput from '../TextInput';
 import './NewMessage.css';
 
-class NewMessage extends React.Component<{
+interface NewMessageProps {
   onNewMessage: (message: { text: string }) => void;
-}> {
-  inputRef: RefObject<HTMLInputElement> = React.createRef();
+  defaultValue?: string;
+}
+
+class NewMessage extends React.Component<NewMessageProps> {
+  state = {
+    value: '',
+  }
+
+  constructor(props: NewMessageProps) {
+    super(props);
+
+    if (props.defaultValue) {
+      this.state.value = props.defaultValue;
+    }
+  }
 
   handleClick = () => {
-    if (this.inputRef.current) {
-      const { onNewMessage } = this.props;
+    const { onNewMessage } = this.props;
 
-      onNewMessage({ text: this.inputRef.current.value });
+    if (this.state.value) {
+      onNewMessage({ text: this.state.value });
+
+      this.setState({ value: '' });
     }
+  }
+
+  onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      value: e.currentTarget.value,
+    });
   }
 
   render() {
     return (
       <div className="NewMessage">
-        <input ref={this.inputRef} />
+        <TextInput onChange={this.onChange} value={this.state.value} />
         <button onClick={this.handleClick}>Apply</button>
       </div>
     )
