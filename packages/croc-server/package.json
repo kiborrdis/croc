@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "start": "node dist/main.js",
+    "start": "yarn build && node dist/main.js",
     "build": "tsc",
     "lint:fix": "tslint -p . --fix",
     "lint": "tslint -p ."
