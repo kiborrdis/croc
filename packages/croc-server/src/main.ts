@@ -3,12 +3,36 @@ import expressWs, { WebsocketMethod } from 'express-ws';
 import WebSocket from 'ws';
 import { Actions } from 'croc-actions';
 import {
-  buildActionMessage, isActionMessage, isIntroductionMessage, ActionMessage, IntroductionMessage,
+  buildActionMessage,
+  buildIntroductionMessage,
+  isActionMessage,
+  isIntroductionMessage,
+  IntroductionMessage,
+  ActionMessage,
 } from 'croc-messages';
+import uuid from 'uuid';
 import { ConnectionsCollection } from './ConnectionsCollection';
 
 const app = express();
 const wsApp = expressWs(app);
+
+class Player {
+  private playerName: string;
+  private playerId: string;
+
+  constructor(name: string) {
+    this.playerName = name;
+    this.playerId = uuid();
+  }
+
+  get name() {
+    return this.playerName;
+  }
+
+  get id() {
+    return this.playerId;
+  }
+}
 
 class Responder {
   private connections: ConnectionsCollection;
@@ -32,6 +56,7 @@ class Responder {
   }
 }
 
+const players: Player[] = [];
 const connections = new ConnectionsCollection();
 const responder = new Responder(connections);
 
@@ -101,6 +126,19 @@ function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) 
     console.log(`New player '${message.name}'`);
     connections.set(message.name, ws);
 
+    const newPlayer = new Player(message.name);
+
+    players.push(newPlayer);
+
+    responder.sendMessage(ws, buildIntroductionMessage(newPlayer.name, newPlayer.id));
+
+    responder.broadcastMessage(buildActionMessage(
+      Actions.addPlayers(players.map((player) => ({
+        id: player.id,
+        name: player.name,
+      }))),
+      'server',
+    ));
     responder.broadcastMessage(buildActionMessage(
       Actions.addChatMessages([{ text: `New connection with name '${message.name}'` }]),
       'server',
