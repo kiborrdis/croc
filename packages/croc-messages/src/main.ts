@@ -22,12 +22,24 @@ export function isIntroductionMessage(message: any): message is IntroductionMess
 }
 
 export function buildActionMessage(action: Actions, from?: string): ActionMessage {
+  const actionToSend: Actions = {
+    ...action,
+    meta: undefined,
+  };
+
+  if (from) {
+    actionToSend.syncData = { from };
+  }
+
   return {
-    type: 'action',
-    action: {
-      ...action,
-      syncData: { from },
-      meta: undefined,
-    },
+    type: ACTION_MESSAGE,
+    action: actionToSend,
+  };
+}
+
+export function buildIntroductionMessage(name: string): IntroductionMessage {
+  return {
+    type: INTRODUCTION_MESSAGE,
+    name,
   };
 }
