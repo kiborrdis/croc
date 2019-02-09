@@ -1,5 +1,6 @@
-import React, { RefObject, ChangeEvent, SyntheticEvent } from 'react';
+import React, { ChangeEvent } from 'react';
 import TextInput from '../TextInput';
+import Button from '../Button';
 import './ApplicableInput.css';
 
 interface ApplicableInputProps {
@@ -40,7 +41,7 @@ class ApplicableInput extends React.Component<ApplicableInputProps> {
     return (
       <div className="ApplicableInput">
         <TextInput onChange={this.onChange} value={this.state.value} />
-        <button onClick={this.handleClick}>Apply</button>
+        <Button onClick={this.handleClick} text="Apply" />
       </div>
     )
   }
