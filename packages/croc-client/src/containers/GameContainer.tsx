@@ -6,14 +6,19 @@ import { Actions } from '../modules/connections';
 
 interface GameContainerProps {
   loaded: boolean;
+  username?: string;
   connect: typeof Actions.connectRequest,
 }
 
 class GameContainer extends Component<GameContainerProps> {
   componentDidMount() {
-    const { connect } = this.props;
+    const { connect, username } = this.props;
 
-    connect(Math.random().toString(36).substring(7));
+    if (username) {
+      connect(username);
+    } else {
+      throw new Error('Username in store is not defined');
+    }
   }
 
   render() {
@@ -28,6 +33,7 @@ class GameContainer extends Component<GameContainerProps> {
 const mapStateToProps = (store: Store) => {
   return {
     loaded: store.connection.status.connected,
+    username: store.user.name,
   };
 }
 

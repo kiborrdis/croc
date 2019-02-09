@@ -1,5 +1,6 @@
 import React, { Component, ReactElement } from 'react';
 import { connect, } from 'react-redux';
+import Auth from '../components/Auth';
 import { Store } from '../store';
 import { isAuthed, Actions } from '../modules/user';
 
@@ -10,11 +11,15 @@ interface AuthContainerProps {
 }
 
 class AuthContainer extends Component<AuthContainerProps> {
+  handleAuth = (data: { text: string }) => {
+    this.props.auth(data.text);
+  }
+
   render() {
     const { children, authed } = this.props;
 
-    if (false) {
-      return <div>Not authed</div>;
+    if (!authed) {
+      return <Auth onAuth={this.handleAuth} />;
     }
 
     return (
