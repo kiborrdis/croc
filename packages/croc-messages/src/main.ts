@@ -11,6 +11,7 @@ export interface ActionMessage {
 export interface IntroductionMessage {
   type: typeof INTRODUCTION_MESSAGE;
   name: string;
+  playerId?: string;
 }
 
 export function isActionMessage(message: any): message is ActionMessage {
@@ -37,9 +38,10 @@ export function buildActionMessage(action: Actions, from?: string): ActionMessag
   };
 }
 
-export function buildIntroductionMessage(name: string): IntroductionMessage {
+export function buildIntroductionMessage(name: string, playerId?: string ): IntroductionMessage {
   return {
     type: INTRODUCTION_MESSAGE,
     name,
+    playerId,
   };
 }
