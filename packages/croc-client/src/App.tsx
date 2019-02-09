@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux'
 import createStore from './store/createStore';
-import Game from './components/Game';
 import GameContainer from './containers/GameContainer';
+import AuthContainer from './containers/AuthContainer';
 import './App.css';
 
 const store = createStore();
@@ -12,7 +12,9 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div className="App">
-          <GameContainer />
+          <AuthContainer>
+            <GameContainer />
+          </AuthContainer>
         </div>
       </Provider>
     );
