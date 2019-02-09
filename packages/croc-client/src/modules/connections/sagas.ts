@@ -62,7 +62,7 @@ function* messageHandlerSaga(message: any) {
 }
 
 function* handleActionMessage(action: WebsocketAction) {
-  yield put({ type: 'fff' });
+  yield put(action.payload.action);
 }
 
 function* connectSaga(action: ReturnType<typeof Actions.connectRequest>) {
