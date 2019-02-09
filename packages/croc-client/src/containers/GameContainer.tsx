@@ -13,7 +13,7 @@ class GameContainer extends Component<GameContainerProps> {
   componentDidMount() {
     const { connect } = this.props;
 
-    connect('some name');
+    connect(Math.random().toString(36).substring(7));
   }
 
   render() {
