@@ -43,25 +43,25 @@ export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
 
 export const Actions = {
   addPlayers: (players: Array<{ id: string, name?: string, score?: number }>) => {
-    return createAction(ADD_PLAYERS, players);
+    return createAction(ADD_PLAYERS, players, { sync: true });
   },
   changePlayerScore: (player: { id: string, newScore: number }) => {
-    return createAction(CHANGE_PLAYER_SCORE, player);
+    return createAction(CHANGE_PLAYER_SCORE, player, { sync: true });
   },
   addAnswers: (answers: Array<{ id: string, answer: string, right?: boolean }>) => {
-    return createAction(ADD_ANSWERS, answers);
+    return createAction(ADD_ANSWERS, answers, { sync: true });
   },
   proposeAnswer: (answer: { answer: string }) => {
-    return createAction(PROPOSE_ANSWER, answer);
+    return createAction(PROPOSE_ANSWER, answer, { sync: true });
   },
   addChatMessages: (messages: Array<{ text: string }>) => {
-    return createAction(ADD_CHAT_MESSAGES, messages);
+    return createAction(ADD_CHAT_MESSAGES, messages, { sync: true });
   },
   setLeader: (id: string) => {
-    return createAction(SET_LEADER, id);
+    return createAction(SET_LEADER, id, { sync: true });
   },
   startRound: () => {
-    return createAction(START_ROUND, undefined);
+    return createAction(START_ROUND, undefined, { sync: true });
   },
   // addDrawActions
 };
