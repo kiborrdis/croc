@@ -2,6 +2,7 @@ import React from 'react';
 import ChatContainer from '../../containers/ChatContainer';
 import AnswersContainer from '../../containers/AnswersContainer';
 import CanvasContainer from '../../containers/CanvasContainer';
+import PlayersContainer from '../../containers/PlayersContainer';
 import './Game.css';
 
 interface GameProps {
@@ -18,8 +19,7 @@ const Game = (props: GameProps) => {
   return (
     <div className="Game">
       <div className="Sidebar">
-        <div className="Players">
-        </div>
+        <PlayersContainer />
       </div>
 
       <div className="Main">
