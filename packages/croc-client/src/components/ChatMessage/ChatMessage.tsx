@@ -1,8 +1,8 @@
 import React from 'react';
 
-const ChatMessage = (props: { text: string }) => (
+const ChatMessage = (props: { text: string, from?: string }) => (
   <div>
-    {props.text}
+    {`${props.from ? props.from  : 'you'}: ${props.text}`}
   </div>
 );
 

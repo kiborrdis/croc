@@ -1,0 +1,12 @@
+.MessageList {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 10px;
+  font-size: 14px;
+  color: white;
+}
+
+.MessageList > * + * {
+  margin-top: 5px;
+}

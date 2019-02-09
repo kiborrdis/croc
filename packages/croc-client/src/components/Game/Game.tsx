@@ -31,9 +31,12 @@ const Game = (props: GameProps) => {
         </div>
 
         <div className="Chats">
-          <AnswersContainer />
-
-          <ChatContainer />
+          <div className="Chat">
+            <AnswersContainer />
+          </div>
+          <div className="Chat">
+            <ChatContainer />
+          </div>
         </div>
       </div>
 

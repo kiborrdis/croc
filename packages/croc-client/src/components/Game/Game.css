@@ -2,8 +2,8 @@
 .Game {
   display: flex;
   align-items: stretch;
-  min-height: 700px;
-  min-width: 1200px;
+  height: 700px;
+  width: 1200px;
 }
 
 .Sidebar {
@@ -29,6 +29,7 @@
 .Tools {
   width: 100px;
   background-color: #1ab0da;
+  margin-left: 5px;
 }
 
 .Chats {
@@ -36,14 +37,14 @@
   justify-content: stretch;
   align-items: stretch;
   height: 200px;
-}
-
-.Answers {
-  flex: 1;
-  background-color: #ea9214;
+  padding: 10px 0;
 }
 
 .Chat {
   flex: 1;
-  background-color: #911201;
+  display: flex;
+}
+
+.Chat + .Chat {
+  margin-left: 10px;
 }
