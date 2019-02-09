@@ -3,7 +3,8 @@ import {
 } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga'
 import { Actions as CrocActions} from 'croc-actions';
-import { Actions, CONNECT_REQUEST, websocketMessage } from './actions';
+import { buildIntroductionMessage, buildActionMessage } from 'croc-messages';
+import { Actions, CONNECT_REQUEST, WEBSOCKET_MESSAGE, websocketMessage, WebsocketAction } from './actions';
 import { AnyAction } from 'redux';
 import { WebsocketConnection } from '../../utils/WebsocketConnection';
 
@@ -40,20 +41,18 @@ function* websocketChannelWatcher(watchedConnection: WebsocketConnection) {
   }
 }
 
+const syncMessagePredicate = (action: AnyAction): action is CrocActions => {
+  return !!(action.meta && action.meta.sync);
+}
+
 function* syncActionsWatcher(syncConnection: WebsocketConnection) {
-  const syncActionsChannel = yield actionChannel((action: any) => !!(action.meta && action.meta.sync));
+  const syncActionsChannel = yield actionChannel(syncMessagePredicate);
 
   try {
     while (true) {
-      const { type, payload } = yield take(syncActionsChannel);
+      const action: CrocActions = yield take(syncActionsChannel);
 
-      syncConnection.sendMessage({
-        type: 'action',
-        action: {
-          type,
-          payload,
-        },
-      })
+      syncConnection.sendMessage(buildActionMessage(action));
     }
   } finally {}
 }
@@ -62,11 +61,11 @@ function* messageHandlerSaga(message: any) {
   yield put(websocketMessage(message));
 }
 
-function* handleActionMessage(action: AnyAction) {
+function* handleActionMessage(action: WebsocketAction) {
   yield put({ type: 'fff' });
 }
 
-function* connectSaga(action: Actions) {
+function* connectSaga(action: ReturnType<typeof Actions.connectRequest>) {
   try {
     yield call(() => connection.open());
   } catch(e) {
@@ -75,14 +74,17 @@ function* connectSaga(action: Actions) {
     return;
   }
 
+  connection.sendMessage(buildIntroductionMessage(action.payload.name));
+
   yield put(Actions.connectSuccess());
+
 
   yield fork(websocketChannelWatcher, connection);
   yield fork(syncActionsWatcher, connection);
 }
 
-const actionMessagePredicate = (action: AnyAction): action is CrocActions => {
-  return action.meta && action.meta.sync;
+const actionMessagePredicate = (action: AnyAction): action is WebsocketAction => {
+  return action.type === WEBSOCKET_MESSAGE && action.payload.type === 'action';
 }
 
 export function* saga() {
