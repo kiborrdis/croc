@@ -25,65 +25,6 @@
   color: #61dafb;
 }
 
-.Game {
-  display: flex;
-  align-items: stretch;
-  background-color: #60c64e;
-  min-height: 700px;
-  min-width: 1200px;
-}
-
-.Sidebar {
-  width: 300px;
-}
-
-.Players {
-  height: 100%;
-  background-color: #6da57f;
-}
-
-.Main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  align-items: stretch;
-}
-
-.DrawZone {
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  flex: 1;
-}
-
-.Canvas {
-  flex: 1;
-  background-color: #bdbe3a;
-}
-
-.Tools {
-  width: 100px;
-  background-color: #1ab0da;
-}
-
-.Chats {
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  height: 200px;
-}
-
-.Answers {
-  flex: 1;
-  background-color: #ea9214;
-}
-
-.Chat {
-  flex: 1;
-  background-color: #911201;
-}
-
 
 @keyframes App-logo-spin {
   from {

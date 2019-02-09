@@ -1,4 +1,6 @@
 import React from 'react';
+import ChatContainer from '../../containers/ChatContainer';
+import AnswersContainer from '../../containers/AnswersContainer';
 import './Game.css';
 
 interface GameProps {
@@ -29,11 +31,9 @@ const Game = (props: GameProps) => {
         </div>
 
         <div className="Chats">
-          <div className="Answers">
-          </div>
+          <AnswersContainer />
 
-          <div className="Chat">
-          </div>
+          <ChatContainer />
         </div>
       </div>
 
