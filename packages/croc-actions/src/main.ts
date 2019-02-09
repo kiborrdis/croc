@@ -63,6 +63,9 @@ export const Actions = {
   startRound: () => {
     return createAction(START_ROUND, undefined, { sync: true });
   },
+  addDrawActions: (drawActions: any[]) => {
+    return createAction(ADD_DRAW_ACTIONS, drawActions, { sync: true });
+  },
   // addDrawActions
 };
 
