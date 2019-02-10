@@ -3,6 +3,7 @@ import ChatContainer from '../../containers/ChatContainer';
 import AnswersContainer from '../../containers/AnswersContainer';
 import CanvasContainer from '../../containers/CanvasContainer';
 import PlayersContainer from '../../containers/PlayersContainer';
+import DrawZoneContainer from '../../containers/DrawZoneContainer';
 import './Game.css';
 
 interface GameProps {
@@ -23,12 +24,7 @@ const Game = (props: GameProps) => {
       </div>
 
       <div className="Main">
-
-        <div className="DrawZone">
-          <CanvasContainer />
-          <div className="Tools">
-          </div>
-        </div>
+        <DrawZoneContainer />
 
         <div className="Chats">
           <div className="Chat">

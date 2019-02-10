@@ -1,11 +1,49 @@
 import React, { Component, RefObject } from 'react';
-import { Pixelizer, BrowserInteractionAdapter, RectangleTool, TwoPointRecorder, ActionSerializer,  ActionObject as DrawAction } from 'pixelizer';
+import {
+  Pixelizer,
+  BrowserInteractionAdapter,
+  RectangleTool,
+  MultilineTool,
+  NPointRecorder,
+  TwoPointRecorder,
+  ActionSerializer,
+  ActionObject as DrawAction,
+  PixelizerConfig,
+  LineTool,
+
+} from 'pixelizer';
+import { CanvasSettings, CanvasTool } from '../../types/drawZoneTypes';
 import './Canvas.css';
 
 interface CanvasProps {
   onNewAction: (action: any) => void;
   drawActions: DrawAction[];
+  settings: CanvasSettings;
 }
+
+const canvasToolToPixelizerConfig: { [tool in CanvasTool]: PixelizerConfig } = {
+  [CanvasTool.Brush]: {
+    tool: new MultilineTool(),
+    recorderCreator: (...args) => new NPointRecorder(...args),
+  },
+  [CanvasTool.Circle]: {
+    tool: new RectangleTool(),
+    recorderCreator: (...args) => new TwoPointRecorder(...args),
+  },
+  [CanvasTool.Rectangle]: {
+    tool: new RectangleTool(),
+    recorderCreator: (...args) => new TwoPointRecorder(...args),
+  },
+  [CanvasTool.Polyline]: {
+    tool: new MultilineTool(),
+    recorderCreator: (...args) => new NPointRecorder(...args),
+  },
+  [CanvasTool.Line]: {
+    tool: new LineTool(),
+    recorderCreator: (...args) => new TwoPointRecorder(...args)
+  }
+};
+
 
 class Canvas extends Component<CanvasProps> {
   rootRef: RefObject<HTMLDivElement>  = React.createRef();
@@ -17,21 +55,24 @@ class Canvas extends Component<CanvasProps> {
     this.pixelizer = new Pixelizer(adapter);
 
     this.pixelizer.mountCanvasInDOMElement(this.rootRef.current as HTMLElement);
-    this.pixelizer.setConfig({
-      recorderCreator: (...args) => new TwoPointRecorder(...args),
-      tool: new RectangleTool(),
-    })
-    this.pixelizer.setStyle({
-      color: '#ff0000',
-      lineWidth: 5,
-    });
     this.pixelizer.addNewActionListener(this.handleNewAction);
-
     this.applyNotAppliedActions();
+    this.useSettings();
   }
 
   componentDidUpdate() {
     this.applyNotAppliedActions();
+    this.useSettings();
+  }
+
+  useSettings() {
+    const { settings: { tool, ...restSettings } } = this.props;
+
+    if (this.pixelizer) {
+      this.pixelizer.setConfig(canvasToolToPixelizerConfig[tool]);
+
+      this.pixelizer.setStyle({ ...restSettings });
+    }
   }
 
   applyNotAppliedActions() {

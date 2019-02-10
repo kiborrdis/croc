@@ -1,0 +1,12 @@
+.DrawZone {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 1;
+}
+
+.Tools {
+  width: 100px;
+  background-color: #1ab0da;
+  margin-left: 5px;
+}

@@ -4,8 +4,10 @@ import { Actions } from 'croc-actions';
 import { ActionObject as DrawAction } from 'pixelizer';
 import { Store } from '../store';
 import Canvas from '../components/Canvas';
+import { CanvasSettings } from '../types/drawZoneTypes';
 
 interface CanvasContainerProps {
+  settings: CanvasSettings,
   drawActions: DrawAction[];
   addDrawActions: typeof Actions.addDrawActions;
 }
@@ -16,11 +18,12 @@ class CanvasContainer extends Component<CanvasContainerProps> {
   }
 
   render() {
-    const { drawActions } = this.props;
+    const { drawActions, settings } = this.props;
 
     return (
       <Canvas
         drawActions={drawActions}
+        settings={settings}
         onNewAction={this.handleNewAction}
       />
     );
