@@ -4,6 +4,7 @@
   align-items: stretch;
   height: 700px;
   width: 1200px;
+  flex-shrink: 0;
 }
 
 .Sidebar {

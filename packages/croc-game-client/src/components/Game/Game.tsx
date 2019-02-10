@@ -38,8 +38,8 @@ const Game = (props: GameProps) => {
             <ChatContainer />
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   )
 }
