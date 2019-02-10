@@ -1,5 +1,5 @@
 {
-  "name": "croc-server",
+  "name": "croc-game-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
