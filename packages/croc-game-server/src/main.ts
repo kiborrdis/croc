@@ -34,7 +34,7 @@ class Player {
   }
 }
 
-class Responder {
+class WebsocketsResponder {
   private connections: ConnectionsCollection;
 
   constructor(responderConnections: ConnectionsCollection) {
@@ -58,7 +58,7 @@ class Responder {
 
 const players: Player[] = [];
 const connections = new ConnectionsCollection();
-const responder = new Responder(connections);
+const responder = new WebsocketsResponder(connections);
 
 wsApp.app.ws('/ws', (ws, request) => {
   ws.on('message', (msg) => {
