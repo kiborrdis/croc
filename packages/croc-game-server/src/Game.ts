@@ -83,6 +83,7 @@ export class Game {
     this.players[id].disconnected = true;
 
     this.sendPlayer(id);
+    this.handleDisconnectedPlayer(id);
 
     this.deleteTimeouts[id] = setTimeout(() => {
       this.sendDeletePlayer(id);
@@ -115,7 +116,23 @@ export class Game {
     ]);
   }
 
+  protected get numberOfPlayers() {
+    return Object.keys(this.players).length;
+  }
+
+  protected get numberOfConnectedPlayers() {
+    return Object.keys(this.players).filter((id) => !this.players[id].disconnected).length;
+  }
+
   protected handleNewPlayer(playerId: string) {
+
+  }
+
+  protected handleDisconnectedPlayer(playerId: string) {
+
+  }
+
+  protected handleDeletedPlayer(playerId: string) {
 
   }
 
