@@ -32,6 +32,7 @@ export function createAction<T extends string, P, M>(type: T, payload: P, meta?:
 }
 
 export const ADD_PLAYERS = 'ADD_PLAYERS';
+export const DELETE_PLAYER = 'DELETE_PLAYER';
 export const CHANGE_PLAYER_SCORE = 'CHANGE_PLAYER_SCORE';
 export const ADD_ANSWERS = 'ADD_ANSWERS';
 export const PROPOSE_ANSWER = 'PROPOSE_ANSWER';
@@ -42,8 +43,11 @@ export const ADD_DRAW_ACTIONS = 'ADD_DRAW_ACTIONS';
 export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
 
 export const Actions = {
-  addPlayers: (players: Array<{ id: string, name?: string, score?: number }>) => {
+  addPlayers: (players: Array<{ id: string, name?: string, score?: number, disconnected?: boolean }>) => {
     return createAction(ADD_PLAYERS, players, { sync: true });
+  },
+  deletePlayer: (playerId: string) => {
+    return createAction(DELETE_PLAYER, playerId);
   },
   changePlayerScore: (player: { id: string, newScore: number }) => {
     return createAction(CHANGE_PLAYER_SCORE, player, { sync: true });
