@@ -3,13 +3,15 @@ import { Actions } from 'croc-actions';
 const ACTION_MESSAGE = 'action';
 const INTRODUCTION_MESSAGE = 'introduction';
 
-export interface ActionMessage {
-  type: typeof ACTION_MESSAGE;
+export interface Message<T extends string = string> {
+  type: T;
+}
+
+export interface ActionMessage extends Message<typeof ACTION_MESSAGE> {
   action: Actions;
 }
 
-export interface IntroductionMessage {
-  type: typeof INTRODUCTION_MESSAGE;
+export interface IntroductionMessage extends Message<typeof INTRODUCTION_MESSAGE> {
   name: string;
   playerId?: string;
 }
