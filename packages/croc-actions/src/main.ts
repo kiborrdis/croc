@@ -41,6 +41,7 @@ export const SET_LEADER = 'SET_LEADER';
 export const SET_PICKER = 'SET_PICKER';
 export const PICK_WORD = 'PICK_WORD';
 export const START_ROUND = 'START_ROUND';
+export const WAIT = 'WAIT';
 export const END_ROUND = 'END_ROUND';
 export const ADD_DRAW_ACTIONS = 'ADD_DRAW_ACTIONS';
 export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
@@ -78,6 +79,9 @@ export const Actions = {
   },
   endRound: () => {
     return createAction(END_ROUND, undefined);
+  },
+  wait: () => {
+    return createAction(WAIT, undefined);
   },
   addDrawActions: (drawActions: any[]) => {
     return createAction(ADD_DRAW_ACTIONS, drawActions, { sync: true });
