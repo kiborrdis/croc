@@ -38,7 +38,10 @@ export const ADD_ANSWERS = 'ADD_ANSWERS';
 export const PROPOSE_ANSWER = 'PROPOSE_ANSWER';
 export const ADD_CHAT_MESSAGES = 'ADD_CHAT_MESSAGES';
 export const SET_LEADER = 'SET_LEADER';
+export const SET_PICKER = 'SET_PICKER';
+export const PICK_WORD = 'PICK_WORD';
 export const START_ROUND = 'START_ROUND';
+export const END_ROUND = 'END_ROUND';
 export const ADD_DRAW_ACTIONS = 'ADD_DRAW_ACTIONS';
 export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
 
@@ -52,20 +55,29 @@ export const Actions = {
   changePlayerScore: (player: { id: string, newScore: number }) => {
     return createAction(CHANGE_PLAYER_SCORE, player, { sync: true });
   },
-  addAnswers: (answers: Array<{ id: string, answer: string, right?: boolean }>) => {
+  addAnswers: (answers: Array<{ answer: string, right?: boolean, from?: string }>) => {
     return createAction(ADD_ANSWERS, answers, { sync: true });
   },
-  proposeAnswer: (answer: { answer: string }) => {
+  proposeAnswer: (answer: string) => {
     return createAction(PROPOSE_ANSWER, answer, { sync: true });
   },
-  addChatMessages: (messages: Array<{ text: string }>) => {
+  addChatMessages: (messages: Array<{ text: string, from?: string }>) => {
     return createAction(ADD_CHAT_MESSAGES, messages, { sync: true });
   },
   setLeader: (id: string) => {
-    return createAction(SET_LEADER, id, { sync: true });
+    return createAction(SET_LEADER, id);
   },
-  startRound: () => {
-    return createAction(START_ROUND, undefined, { sync: true });
+  setPicker: (id?: string) => {
+    return createAction(SET_PICKER, id);
+  },
+  pickWord: (word: string) => {
+    return createAction(PICK_WORD, word, { sync: true });
+  },
+  startRound: (word?: string) => {
+    return createAction(START_ROUND, { word });
+  },
+  endRound: () => {
+    return createAction(END_ROUND, undefined);
   },
   addDrawActions: (drawActions: any[]) => {
     return createAction(ADD_DRAW_ACTIONS, drawActions, { sync: true });
