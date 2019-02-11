@@ -17,9 +17,15 @@ class DrawZoneContainer extends Component<DrawZoneContainerProps, DrawZoneContai
     },
   }
 
+  handleSettingsChange = (newSettings: CanvasSettings) => {
+    this.setState({
+      settings: newSettings,
+    });
+  }
+
   render() {
     return (
-      <DrawZone settings={this.state.settings} />
+      <DrawZone settings={this.state.settings} onSettingsChange={this.handleSettingsChange} />
     );
   }
 }
