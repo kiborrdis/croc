@@ -8,6 +8,7 @@ import {
   SET_PICKER,
   START_ROUND,
   END_ROUND,
+  WAIT,
   Actions,
 } from 'croc-actions';
 import { CrocGame } from './CrocGame';
@@ -25,6 +26,7 @@ class MockResponder implements Responder {
 const config = {
   reconnectionTimeout: 10,
   pickWord: () => 'sadness',
+  timeForRound: 50,
 };
 
 const msgValidator = (type: any, payload: any, from?: string) => {
@@ -48,7 +50,6 @@ describe('Game', () => {
   let id: string;
   let game: CrocGame;
   let responder: MockResponder;
-
 
   function messageToGame(senderId: string, action: Actions) {
     game.handleMessage(senderId, buildActionMessage(action));
@@ -300,14 +301,68 @@ describe('Game', () => {
       roundShouldNotStart(secondId, 'grief');
     });
 
-    test('should reset picker after start round', () => {
+    test('should reset picker after end round', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
       messageToGame(id, Actions.pickWord('grief'));
+      messageToGame(thirdId, Actions.proposeAnswer('grief'));
 
       expect(responder.enqueueResponseForOne).toBeCalledWith(
         id,
         msgValidator(SET_PICKER, undefined),
       );
+    });
+
+    test('should ignore proposed answers from picker', () => {
+      messageToGame(secondId, Actions.proposeAnswer('sadness'));
+      messageToGame(id, Actions.pickWord('grief'));
+      messageToGame(id, Actions.proposeAnswer('tsdtstdst'));
+
+      expect(responder.enqueueResponseForAll).not.toBeCalledWith(msgValidator(
+        ADD_ANSWERS,
+        [{ answer: 'tsdtstdst', right: false }],
+        id,
+      ));
+    });
+
+    test('should start round if picker disconnected and didnt pick a word', () => {
+      messageToGame(secondId, Actions.proposeAnswer('sadness'));
+      game.disconnectPlayerWithId(id);
+
+      roundShouldStart(secondId);
+    });
+
+    test('should end round and start a new one if leader disconnected', () => {
+      game.disconnectPlayerWithId(id);
+
+      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
+        END_ROUND,
+        undefined,
+      ));
+      roundShouldStart(secondId);
+    });
+
+    test('should send wait if only one player left', () => {
+      game.disconnectPlayerWithId(thirdId);
+      game.disconnectPlayerWithId(secondId);
+
+      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
+        END_ROUND,
+        undefined,
+      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
+        WAIT,
+        undefined,
+      ));
+    });
+
+    test('should end round if time has ended', async () => {
+      await delay(config.timeForRound + 100);
+
+      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
+        END_ROUND,
+        undefined,
+      ));
+
     });
   });
 });
