@@ -3,6 +3,8 @@ import { Message } from 'croc-messages';
 import { Responder } from './interfaces/Responder';
 import { Player } from './interfaces/Player';
 import { GameData } from './GameData';
+import { GameContext } from './GameContext';
+import { GameState } from './states/GameState';
 
 interface GameConfig {
   reconnectionTimeout: number;
@@ -19,11 +21,19 @@ export class Game<D extends GameData = GameData> {
   private deleteTimeouts: { [id: string]: NodeJS.Timeout } = {};
   protected responder: Responder;
   protected data: D;
+  protected context: GameContext<D>;
 
   constructor(params: { responder: Responder, config: GameConfig, gameDataInitializer: () => D }) {
     this.responder = params.responder;
     this.config = params.config;
     this.data = params.gameDataInitializer();
+    this.context = this.initializeContext();
+  }
+
+  protected initializeContext() {
+    const state = new GameState<D>();
+
+    return new GameContext<D>(state, this.data, this.responder);
   }
 
   public connectPlayerWithInfo(info: IntroductionInfo): string {

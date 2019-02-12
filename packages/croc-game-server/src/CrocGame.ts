@@ -9,6 +9,9 @@ import {
 import { Responder } from './interfaces/Responder';
 import { Game } from './Game';
 import { CrocGameData } from './CrocGameData';
+import { CrocGameContext } from './CrocGameContext';
+import { GameState } from './states/GameState';
+import { WaitState } from './states/WaitState';
 
 interface CrocGameConfig {
   reconnectionTimeout: number;
@@ -41,6 +44,12 @@ export class CrocGame extends Game<CrocGameData> {
 
     this.pickWord = params.config.pickWord;
     this.timePerRound = params.config.timeForRound;
+  }
+
+  protected initializeContext() {
+    const state = new WaitState();
+
+    return new CrocGameContext(state, this.data, this.responder);
   }
 
   public handleMessage(fromId: string, message: Message) {
