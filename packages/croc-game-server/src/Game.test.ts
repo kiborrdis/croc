@@ -1,8 +1,7 @@
-import { buildActionMessage } from 'croc-messages';
-import { ADD_PLAYERS, DELETE_PLAYER, Actions } from 'croc-actions';
-import { Game, Player } from './Game';
+import { Game } from './Game';
+import { GameData } from './GameData';
 import { Responder } from './interfaces/Responder';
-import { arrayWith, objWith, anyOfStrings } from './testUtils/predicates';
+import { Player } from './interfaces/Player';
 
 const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
@@ -33,7 +32,11 @@ const config = {
 };
 
 test('Can create new game without throwing', () => {
-  const game = new Game(new MockResponder(), config);
+  const game = new Game({
+    responder: new MockResponder(),
+    config,
+    gameDataInitializer: () => new GameData(),
+  });
 });
 
 describe('Game', () => {
@@ -43,7 +46,7 @@ describe('Game', () => {
 
   beforeEach(() => {
     responder = new MockResponder();
-    game = new Game(responder, config);
+    game = new Game({ responder, config, gameDataInitializer: () => new GameData() });
     id = game.connectPlayerWithInfo({ name: 'foo' });
   });
 

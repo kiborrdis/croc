@@ -12,6 +12,7 @@ import {
   Actions,
 } from 'croc-actions';
 import { CrocGame } from './CrocGame';
+import { CrocGameData } from './CrocGameData';
 import { Responder } from './interfaces/Responder';
 import { Action } from 'redux';
 
@@ -43,7 +44,9 @@ const msgValidator = (type: any, payload: any, from?: string) => {
 };
 
 test('Can create new game without throwing', () => {
-  const game = new CrocGame(new MockResponder(), config);
+  const game = new CrocGame({
+    responder: new MockResponder(), config, gameDataInitializer: () => new CrocGameData(),
+  });
 });
 
 describe('Game', () => {
@@ -79,7 +82,7 @@ describe('Game', () => {
 
   beforeEach(() => {
     responder = new MockResponder();
-    game = new CrocGame(responder, config);
+    game = new CrocGame({responder, config, gameDataInitializer: () => new CrocGameData()});
     id = game.connectPlayerWithInfo({ name: 'Meow' });
   });
 
@@ -362,7 +365,6 @@ describe('Game', () => {
         END_ROUND,
         undefined,
       ));
-
     });
   });
 });

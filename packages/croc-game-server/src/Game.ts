@@ -1,13 +1,8 @@
 import uuid from 'uuid';
 import { Message } from 'croc-messages';
 import { Responder } from './interfaces/Responder';
-
-export interface Player {
-  id: string;
-  name: string;
-  score: number;
-  disconnected?: boolean;
-}
+import { Player } from './interfaces/Player';
+import { GameData } from './GameData';
 
 interface GameConfig {
   reconnectionTimeout: number;
@@ -19,16 +14,16 @@ interface IntroductionInfo {
   name: string;
 }
 
-export class Game {
+export class Game<D extends GameData = GameData> {
   private config: GameConfig;
   private deleteTimeouts: { [id: string]: NodeJS.Timeout } = {};
   protected responder: Responder;
-  protected players: { [id: string]: Player } = {};
+  protected data: D;
 
-  constructor(responder: Responder, config: GameConfig) {
-    this.responder = responder;
-
-    this.config = config;
+  constructor(params: { responder: Responder, config: GameConfig, gameDataInitializer: () => D }) {
+    this.responder = params.responder;
+    this.config = params.config;
+    this.data = params.gameDataInitializer();
   }
 
   public connectPlayerWithInfo(info: IntroductionInfo): string {
@@ -41,7 +36,7 @@ export class Game {
     const newId = uuid();
     const newPlayer = { id: newId, name: info.name };
 
-    this.players[newId] = { ...newPlayer, score: 0 };
+    this.data.players[newId] = { ...newPlayer, score: 0 };
 
     this.sendAllPlayersTo(newId);
     this.sendPlayer(newId);
@@ -68,19 +63,19 @@ export class Game {
   }
 
   private findPlayerByConnectionInfo(info: IntroductionInfo): Player | null {
-    const oldPlayerId = Object.keys(this.players).find(
-      (id) => this.players[id].name === info.name,
+    const oldPlayerId = Object.keys(this.data.players).find(
+      (id) => this.data.players[id].name === info.name,
     );
 
     if (oldPlayerId) {
-      return this.players[oldPlayerId];
+      return this.data.players[oldPlayerId];
     }
 
     return null;
   }
 
   public disconnectPlayerWithId(id: string) {
-    this.players[id].disconnected = true;
+    this.data.players[id].disconnected = true;
 
     this.sendPlayer(id);
     this.handleDisconnectedPlayer(id);
@@ -91,10 +86,10 @@ export class Game {
   }
 
   private sendPlayer(id: string) {
-    if (this.players[id]) {
+    if (this.data.players[id]) {
       this.responder.enqueueResponseForAll([
         this.config.addPlayersMessageCreator(
-          [{ ...this.players[id] }],
+          [{ ...this.data.players[id] }],
         ),
       ]);
     }
@@ -103,7 +98,7 @@ export class Game {
   private sendAllPlayersTo(id: string) {
     this.responder.enqueueResponseForOne(id, [
       this.config.addPlayersMessageCreator(
-        Object.keys(this.players).map((playerId) => this.players[playerId]),
+        Object.keys(this.data.players).map((playerId) => this.data.players[playerId]),
       ),
     ]);
   }
@@ -117,11 +112,11 @@ export class Game {
   }
 
   protected get numberOfPlayers() {
-    return Object.keys(this.players).length;
+    return Object.keys(this.data.players).length;
   }
 
   protected get numberOfConnectedPlayers() {
-    return Object.keys(this.players).filter((id) => !this.players[id].disconnected).length;
+    return Object.keys(this.data.players).filter((id) => !this.data.players[id].disconnected).length;
   }
 
   protected handleNewPlayer(playerId: string) {

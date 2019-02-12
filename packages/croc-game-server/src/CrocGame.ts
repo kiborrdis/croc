@@ -1,4 +1,4 @@
-import { buildActionMessage, isActionMessage, Message, ActionMessage} from 'croc-messages';
+import { buildActionMessage, isActionMessage, Message } from 'croc-messages';
 import {
   Actions,
   ADD_CHAT_MESSAGES,
@@ -8,6 +8,7 @@ import {
 } from 'croc-actions';
 import { Responder } from './interfaces/Responder';
 import { Game } from './Game';
+import { CrocGameData } from './CrocGameData';
 
 interface CrocGameConfig {
   reconnectionTimeout: number;
@@ -15,22 +16,9 @@ interface CrocGameConfig {
   pickWord: () => string;
 }
 
-interface GameState {
-  leader: string | null;
-  picker: string | null;
-  word: string | null;
-  roundInProgress: boolean;
-}
-
 const RIGHT_GUESS_SCORE_DELTA = 10;
 
-export class CrocGame extends Game {
-  private state: GameState = {
-    leader: null,
-    picker: null,
-    word: null,
-    roundInProgress: false,
-  };
+export class CrocGame extends Game<CrocGameData> {
   private pickWord: () => string;
   private chatMessages: Array<{ text: string, from: string }> = [];
   private answers: Array<{ answer: string, right: boolean, from: string }> = [];
@@ -38,9 +26,9 @@ export class CrocGame extends Game {
   private timePerRound: number;
   private roundTimeout?: NodeJS.Timeout;
 
-  constructor(responder: Responder, config: CrocGameConfig) {
-    super(responder, {
-      reconnectionTimeout: config.reconnectionTimeout,
+  constructor(params: { responder: Responder, config: CrocGameConfig, gameDataInitializer: () => CrocGameData }) {
+    super({ responder: params.responder, config: {
+      reconnectionTimeout: params.config.reconnectionTimeout,
       deletePlayerMessageCreator: (id: string) => buildActionMessage(
         Actions.deletePlayer(id),
         'server',
@@ -49,10 +37,10 @@ export class CrocGame extends Game {
         Actions.addPlayers(players),
         'server',
       ),
-    });
+    }, gameDataInitializer: params.gameDataInitializer });
 
-    this.pickWord = config.pickWord;
-    this.timePerRound = config.timeForRound;
+    this.pickWord = params.config.pickWord;
+    this.timePerRound = params.config.timeForRound;
   }
 
   public handleMessage(fromId: string, message: Message) {
@@ -72,7 +60,7 @@ export class CrocGame extends Game {
 
         break;
       case ADD_DRAW_ACTIONS:
-        if (this.state.leader === fromId) {
+        if (this.data.leader === fromId) {
           this.sendActionToAllButOne(fromId, action, fromId);
 
           this.drawActions.push(...action.payload);
@@ -80,8 +68,8 @@ export class CrocGame extends Game {
 
         break;
       case PROPOSE_ANSWER:
-        if (this.state.leader !== fromId && this.state.picker !== fromId) {
-          const rightAnswer = this.state.word === action.payload;
+        if (this.data.leader !== fromId && this.data.picker !== fromId) {
+          const rightAnswer = this.data.word === action.payload;
 
           this.sendActionToAll(Actions.addAnswers([{
             answer: action.payload,
@@ -89,14 +77,14 @@ export class CrocGame extends Game {
           }]), fromId);
           this.answers.push({ answer: action.payload, right: rightAnswer, from: fromId });
 
-          if (this.state.word === action.payload) {
+          if (this.data.word === action.payload) {
             this.finalizeRound(fromId);
           }
         }
         break;
       case PICK_WORD:
-        if (!this.state.roundInProgress && this.state.picker === fromId) {
-          this.state.word = action.payload;
+        if (!this.data.roundInProgress && this.data.picker === fromId) {
+          this.data.word = action.payload;
 
           this.startNewRound();
         }
@@ -110,30 +98,30 @@ export class CrocGame extends Game {
       clearTimeout(this.roundTimeout);
     }
 
-    const prevLeader = this.state.leader;
+    const prevLeader = this.data.leader;
 
-    this.state.roundInProgress = false;
+    this.data.roundInProgress = false;
 
-    if (this.state.picker) {
-      this.sendActionTo(this.state.picker, Actions.setPicker());
+    if (this.data.picker) {
+      this.sendActionTo(this.data.picker, Actions.setPicker());
 
-      this.state.picker = null;
+      this.data.picker = null;
     }
 
-    this.state.leader = winnerId;
-    this.state.word = null;
-    this.players[winnerId].score += RIGHT_GUESS_SCORE_DELTA;
+    this.data.leader = winnerId;
+    this.data.word = null;
+    this.data.players[winnerId].score += RIGHT_GUESS_SCORE_DELTA;
 
     this.sendActionToAll(Actions.endRound());
     this.sendActionToAll(Actions.setLeader(winnerId));
-    this.sendActionToAll(Actions.changePlayerScore({ id: winnerId, newScore: this.players[winnerId].score}));
+    this.sendActionToAll(Actions.changePlayerScore({ id: winnerId, newScore: this.data.players[winnerId].score}));
 
-    if (!prevLeader || Object.keys(this.players).length === 2) {
+    if (!prevLeader || Object.keys(this.data.players).length === 2) {
       this.startNewRound();
     } else {
-      this.state.picker = prevLeader;
+      this.data.picker = prevLeader;
 
-      this.sendActionTo(this.state.picker, Actions.setPicker(prevLeader));
+      this.sendActionTo(this.data.picker, Actions.setPicker(prevLeader));
     }
   }
 
@@ -142,25 +130,25 @@ export class CrocGame extends Game {
       clearTimeout(this.roundTimeout);
     }
 
-    this.state.leader = Object.keys(this.players).find((id) => !this.players[id].disconnected) || null;
+    this.data.leader = Object.keys(this.data.players).find((id) => !this.data.players[id].disconnected) || null;
 
-    if (this.state.leader) {
-      this.sendActionToAll(Actions.setLeader(this.state.leader));
+    if (this.data.leader) {
+      this.sendActionToAll(Actions.setLeader(this.data.leader));
     }
 
-    if (this.state.picker) {
-      this.sendActionTo(this.state.picker, Actions.setPicker());
+    if (this.data.picker) {
+      this.sendActionTo(this.data.picker, Actions.setPicker());
 
-      this.state.picker = null;
+      this.data.picker = null;
     }
-    this.state.word = null;
+    this.data.word = null;
 
     this.sendActionToAll(Actions.endRound());
   }
 
   protected handleNewPlayer(playerId: string) {
-    if (Object.keys(this.players).length === 1) {
-      this.state.leader = playerId;
+    if (Object.keys(this.data.players).length === 1) {
+      this.data.leader = playerId;
 
       this.sendActionToAll(Actions.setLeader(playerId));
       return;
@@ -168,21 +156,21 @@ export class CrocGame extends Game {
 
     this.sendCurrentGameStateToPlayer(playerId);
 
-    if (Object.keys(this.players).length === 2 && this.state.leader) {
+    if (Object.keys(this.data.players).length === 2 && this.data.leader) {
       this.startNewRound();
     }
   }
 
   private startNewRound() {
-    if (!this.state.word) {
-      this.state.word = this.pickWord();
+    if (!this.data.word) {
+      this.data.word = this.pickWord();
     }
 
-    if (this.state.leader) {
-      this.state.roundInProgress = true;
+    if (this.data.leader) {
+      this.data.roundInProgress = true;
 
-      this.sendActionToAllButOne(this.state.leader, Actions.startRound());
-      this.sendActionTo(this.state.leader, Actions.startRound(this.state.word));
+      this.sendActionToAllButOne(this.data.leader, Actions.startRound());
+      this.sendActionTo(this.data.leader, Actions.startRound(this.data.word));
 
       this.roundTimeout = setTimeout(() => {
         this.finalizeRoundWithoutWinner();
@@ -191,8 +179,8 @@ export class CrocGame extends Game {
   }
 
   private sendCurrentGameStateToPlayer(playerId: string) {
-    if (this.state.leader) {
-      this.sendActionTo(playerId, Actions.setLeader(this.state.leader));
+    if (this.data.leader) {
+      this.sendActionTo(playerId, Actions.setLeader(this.data.leader));
     }
 
     if (this.chatMessages.length > 0) {
@@ -210,23 +198,23 @@ export class CrocGame extends Game {
 
   protected handleDisconnectedPlayer(playerId: string) {
     if (this.numberOfConnectedPlayers < 2) {
-      this.state.leader = null;
-      this.state.picker = null;
-      this.state.word = null;
+      this.data.leader = null;
+      this.data.picker = null;
+      this.data.word = null;
 
       this.finalizeRoundWithoutWinner();
       this.sendActionToAll(Actions.wait());
       return;
     }
 
-    if (this.state.picker === playerId && !this.state.roundInProgress) {
+    if (this.data.picker === playerId && !this.data.roundInProgress) {
       this.startNewRound();
-    } else if (this.state.leader === playerId) {
-      this.state.leader = null;
+    } else if (this.data.leader === playerId) {
+      this.data.leader = null;
 
-      if (this.state.picker) {
-        this.sendActionTo(this.state.picker, Actions.setPicker());
-        this.state.picker = null;
+      if (this.data.picker) {
+        this.sendActionTo(this.data.picker, Actions.setPicker());
+        this.data.picker = null;
       }
 
       this.finalizeRoundWithoutWinner();
