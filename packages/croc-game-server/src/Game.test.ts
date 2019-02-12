@@ -2,8 +2,15 @@ import { Game } from './Game';
 import { GameData } from './GameData';
 import { Responder } from './interfaces/Responder';
 import { Player } from './interfaces/Player';
+import { NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
+import { DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
+import { DELETE_PLAYER_MESSAGE } from './messages/DeletePlayerMessage';
 
 const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
+
+class MockGame extends Game {
+  public handleMessage = jest.fn();
+}
 
 class MockResponder implements Responder {
   public enqueueResponseForAll = jest.fn();
@@ -41,12 +48,12 @@ test('Can create new game without throwing', () => {
 
 describe('Game', () => {
   let id: string;
-  let game: Game;
+  let game: MockGame;
   let responder: MockResponder;
 
   beforeEach(() => {
     responder = new MockResponder();
-    game = new Game({ responder, config, gameDataInitializer: () => new GameData() });
+    game = new MockGame({ responder, config, gameDataInitializer: () => new GameData() });
     id = game.connectPlayerWithInfo({ name: 'foo' });
   });
 
@@ -102,5 +109,32 @@ describe('Game', () => {
     expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
       [{ id, disconnected: false }],
     ));
+  });
+
+  test(`should call handle message on new player `, async () => {
+    expect(game.handleMessage).toBeCalledWith(
+      'self',
+      { type: NEW_PLAYER_MESSAGE, playerId: id },
+    );
+  });
+
+  test(`should call handle message on disconnected player `, async () => {
+    game.disconnectPlayerWithId(id);
+
+    expect(game.handleMessage).toBeCalledWith(
+      'self',
+      { type: DISCONNECTED_MESSAGE, playerId: id },
+    );
+  });
+
+  test(`should call handle message on disconnected player `, async () => {
+    game.disconnectPlayerWithId(id);
+
+    await delay(reconnectionTimeout + 10);
+
+    expect(game.handleMessage).toBeCalledWith(
+      'self',
+      { type: DELETE_PLAYER_MESSAGE, playerId: id },
+    );
   });
 });

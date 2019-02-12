@@ -1,15 +1,18 @@
 import uuid from 'uuid';
-import { Message } from 'croc-messages';
+import { AnyMessage } from 'croc-messages';
 import { Responder } from './interfaces/Responder';
 import { Player } from './interfaces/Player';
 import { GameData } from './GameData';
 import { GameContext } from './GameContext';
 import { GameState } from './states/GameState';
+import { DELETE_PLAYER_MESSAGE } from './messages/DeletePlayerMessage';
+import { DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
+import { NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
 
 interface GameConfig {
   reconnectionTimeout: number;
-  addPlayersMessageCreator: (players: Player[]) => Message;
-  deletePlayerMessageCreator: (id: string) => Message;
+  addPlayersMessageCreator: (players: Player[]) => AnyMessage;
+  deletePlayerMessageCreator: (id: string) => AnyMessage;
 }
 
 interface IntroductionInfo {
@@ -50,7 +53,7 @@ export class Game<D extends GameData = GameData> {
 
     this.sendAllPlayersTo(newId);
     this.sendPlayer(newId);
-    this.handleNewPlayer(newId);
+    this.notifyAboutNewPlayer(newId);
 
     return newId;
   }
@@ -88,10 +91,11 @@ export class Game<D extends GameData = GameData> {
     this.data.players[id].disconnected = true;
 
     this.sendPlayer(id);
-    this.handleDisconnectedPlayer(id);
+    this.notifyAboutDisconnectedPlayer(id);
 
     this.deleteTimeouts[id] = setTimeout(() => {
       this.sendDeletePlayer(id);
+      this.notifyAboutDeletedPlayer(id);
     }, this.config.reconnectionTimeout);
   }
 
@@ -129,19 +133,28 @@ export class Game<D extends GameData = GameData> {
     return Object.keys(this.data.players).filter((id) => !this.data.players[id].disconnected).length;
   }
 
-  protected handleNewPlayer(playerId: string) {
-
+  protected notifyAboutNewPlayer(playerId: string) {
+    this.handleMessage('self', {
+      type: NEW_PLAYER_MESSAGE,
+      playerId,
+    });
   }
 
-  protected handleDisconnectedPlayer(playerId: string) {
-
+  protected notifyAboutDisconnectedPlayer(playerId: string) {
+    this.handleMessage('self', {
+      type: DISCONNECTED_MESSAGE,
+      playerId,
+    });
   }
 
-  protected handleDeletedPlayer(playerId: string) {
-
+  protected notifyAboutDeletedPlayer(playerId: string) {
+    this.handleMessage('self', {
+      type: DELETE_PLAYER_MESSAGE,
+      playerId,
+    });
   }
 
-  public handleMessage(fromId: string, message: Message) {
+  public handleMessage(fromId: string, message: AnyMessage) {
 
   }
 }

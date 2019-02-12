@@ -1,4 +1,4 @@
-import { buildActionMessage, isActionMessage, Message } from 'croc-messages';
+import { buildActionMessage, isActionMessage, AnyMessage } from 'croc-messages';
 import {
   Actions,
   ADD_CHAT_MESSAGES,
@@ -10,8 +10,17 @@ import { Responder } from './interfaces/Responder';
 import { Game } from './Game';
 import { CrocGameData } from './CrocGameData';
 import { CrocGameContext } from './CrocGameContext';
-import { GameState } from './states/GameState';
 import { WaitState } from './states/WaitState';
+import { DISCONNECTED_MESSAGE, DisconnectedMessage } from './messages/DisconnectPlayerMessage';
+import { NEW_PLAYER_MESSAGE, NewPlayerMessage } from './messages/NewPlayerMessage';
+
+function isNewPlayerMessage(message: AnyMessage): message is NewPlayerMessage {
+  return message.type === NEW_PLAYER_MESSAGE;
+}
+
+function isDisconnectMessage(message: AnyMessage): message is DisconnectedMessage {
+  return message.type === DISCONNECTED_MESSAGE;
+}
 
 interface CrocGameConfig {
   reconnectionTimeout: number;
@@ -52,9 +61,13 @@ export class CrocGame extends Game<CrocGameData> {
     return new CrocGameContext(state, this.data, this.responder);
   }
 
-  public handleMessage(fromId: string, message: Message) {
+  public handleMessage(fromId: string, message: AnyMessage) {
     if (isActionMessage(message)) {
       this.handleAction(fromId, message.action);
+    } else if (isDisconnectMessage(message)) {
+      this.handleDisconnectedPlayer(message.playerId);
+    } else if (isNewPlayerMessage(message)) {
+      this.handleNewPlayer(message.playerId);
     }
   }
 
