@@ -7,8 +7,14 @@ export class GameState<D extends GameData, C extends GameContext<D> = GameContex
 
   public enter(context: C) {
     this.context = context;
+    this.handleEnter();
   }
 
+  public exit() {
+    this.handleExit();
+  }
+
+  public handleEnter() {}
+  public handleExit() {}
   public handleMessage(fromId: string, message: Message) {}
-  public exit() {}
 }

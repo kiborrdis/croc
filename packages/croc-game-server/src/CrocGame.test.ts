@@ -14,7 +14,6 @@ import {
 import { CrocGame } from './CrocGame';
 import { CrocGameData } from './CrocGameData';
 import { Responder } from './interfaces/Responder';
-import { Action } from 'redux';
 
 const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
@@ -27,6 +26,7 @@ class MockResponder implements Responder {
 const config = {
   reconnectionTimeout: 10,
   pickWord: () => 'sadness',
+  pickLeaderStrategy: (ids: string[]) => ids[0],
   timeForRound: 50,
 };
 
