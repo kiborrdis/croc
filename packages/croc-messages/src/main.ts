@@ -24,6 +24,10 @@ export function isIntroductionMessage(message: any): message is IntroductionMess
   return message.type === INTRODUCTION_MESSAGE;
 }
 
+export interface AnyMessage extends Message {
+  [key: string]: any;
+}
+
 export function buildActionMessage(action: Actions, from?: string): ActionMessage {
   const actionToSend: Actions = {
     ...action,
