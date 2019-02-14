@@ -11,8 +11,8 @@ interface AuthContainerProps {
 }
 
 class AuthContainer extends Component<AuthContainerProps> {
-  handleAuth = (data: { text: string }) => {
-    this.props.auth(data.text);
+  handleAuth = (text: string) => {
+    this.props.auth(text);
   }
 
   render() {

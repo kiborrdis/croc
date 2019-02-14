@@ -4,7 +4,7 @@ import Button from '../Button';
 import './ApplicableInput.css';
 
 interface ApplicableInputProps {
-  onApply: (message: { text: string }) => void;
+  onApply: (text: string) => void;
   defaultValue?: string;
 }
 
@@ -25,7 +25,7 @@ class ApplicableInput extends React.Component<ApplicableInputProps> {
     const { onApply } = this.props;
 
     if (this.state.value) {
-      onApply({ text: this.state.value });
+      onApply(this.state.value);
 
       this.setState({ value: '' });
     }

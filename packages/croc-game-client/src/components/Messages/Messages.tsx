@@ -6,7 +6,7 @@ import './Messages.css';
 function Messages<M>(props: {
   messages: M[],
   messageComponent: FunctionComponent<M>,
-  onNewMessage?: (message: { text: string }) => void,
+  onNewMessage?: (text: string) => void,
 }) {
   return (
     <div className="Messages">

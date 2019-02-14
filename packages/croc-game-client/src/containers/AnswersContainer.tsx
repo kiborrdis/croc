@@ -12,8 +12,8 @@ interface AnswerContainerProps {
 }
 
 class AnswersContainer extends Component<AnswerContainerProps> {
-  handleNewMessage = (message: { text: string }) => {
-    this.props.proposeAnswer(message.text);
+  handleNewMessage = (text: string) => {
+    this.props.proposeAnswer(text);
   }
 
   render() {

@@ -3,7 +3,7 @@ import ApplicableInput from '../ApplicableInput';
 import './Auth.css';
 
 interface AuthProps {
-  onAuth: (e: { text: string }) => void;
+  onAuth: (text: string) => void;
 };
 
 const Auth = (props: AuthProps) => (

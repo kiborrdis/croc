@@ -12,8 +12,8 @@ interface ChatContainerProps {
 }
 
 class ChatContainer extends Component<ChatContainerProps> {
-  handleNewMessage = (message: { text: string }) => {
-    this.props.addMessages([{ text: message.text }]);
+  handleNewMessage = (text: string) => {
+    this.props.addMessages([{ text }]);
   }
 
   render() {
