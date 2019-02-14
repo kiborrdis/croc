@@ -1,7 +1,7 @@
 import express from 'express';
 import expressWs, { WebsocketMethod } from 'express-ws';
 import WebSocket from 'ws';
-import { Actions } from 'croc-actions';
+import { setAfterCallHandler } from './utils/DelayCall';
 import {
   buildActionMessage,
   buildIntroductionMessage,
@@ -10,55 +10,31 @@ import {
   IntroductionMessage,
   ActionMessage,
 } from 'croc-messages';
-import uuid from 'uuid';
 import { ConnectionsCollection } from './ConnectionsCollection';
+import { WebsocketResponder } from './WebsocketResponder';
+import { CrocGame } from './CrocGame';
+import { CrocGameData } from './CrocGameData';
 
 const app = express();
 const wsApp = expressWs(app);
 
-class Player {
-  private playerName: string;
-  private playerId: string;
-
-  constructor(name: string) {
-    this.playerName = name;
-    this.playerId = uuid();
-  }
-
-  get name() {
-    return this.playerName;
-  }
-
-  get id() {
-    return this.playerId;
-  }
-}
-
-class WebsocketsResponder {
-  private connections: ConnectionsCollection;
-
-  constructor(responderConnections: ConnectionsCollection) {
-    this.connections = connections;
-  }
-
-  public broadcastMessage(message: ActionMessage | IntroductionMessage, except: WebSocket[] = []) {
-    this.connections.forEach((connection) => {
-      if (except.indexOf(connection.ws) === -1) {
-        this.sendMessage(connection.ws, message);
-      }
-    });
-  }
-
-  public sendMessage(ws: WebSocket, message: ActionMessage | IntroductionMessage) {
-    if (ws.readyState === ws.OPEN) {
-      ws.send(JSON.stringify(message));
-    }
-  }
-}
-
-const players: Player[] = [];
 const connections = new ConnectionsCollection();
-const responder = new WebsocketsResponder(connections);
+const responder = new WebsocketResponder(connections);
+
+setAfterCallHandler(() => {
+  responder.sendAllEnqueuedMessages();
+});
+
+const game = new CrocGame({
+  responder,
+  gameDataInitializer: () => new CrocGameData(),
+  config: {
+    pickLeaderStrategy: (ids) => ids[0],
+    pickWord: () => 'word',
+    reconnectionTimeout: 1000,
+    timeForRound: 3 * 60 * 1000,
+  },
+});
 
 wsApp.app.ws('/ws', (ws, request) => {
   ws.on('message', (msg) => {
@@ -73,19 +49,20 @@ wsApp.app.ws('/ws', (ws, request) => {
     }
 
     handleMessage(jsonMessage, ws);
+
+    responder.sendAllEnqueuedMessages();
   });
 
   ws.on('close', () => {
     const connection = connections.find(ws);
 
+    if (connection) {
+      game.disconnectPlayerWithId(connection.name);
+    }
+
     connections.delete(ws);
 
-    if (connection) {
-      responder.broadcastMessage(buildActionMessage(
-        Actions.addChatMessages([{ text: `'${connection.name}' disconnected` }]),
-        'server',
-      ));
-    }
+    responder.sendAllEnqueuedMessages();
   });
 });
 
@@ -104,10 +81,8 @@ function handleMessage(message: { type: string, [name: string]: any}, ws: WebSoc
 function handleActionMessage(message: ActionMessage, ws: WebSocket) {
   const connection = connections.find(ws);
 
-  console.log(message.action);
-
   if (connection) {
-    responder.broadcastMessage(buildActionMessage(message.action, connection.name), [ ws ]);
+    game.handleMessage(connection.name, message);
   }
 }
 
@@ -115,34 +90,21 @@ function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) 
   if (connections.contains(ws)) {
     const connection = connections.find(ws);
 
-    connections.set(message.name, ws);
     if (connection) {
-      responder.broadcastMessage(buildActionMessage(
-        Actions.addChatMessages([{ text: `Rename '${connection.name}' to '${message.name}'` }]),
-        'server',
-      ));
+      const recievedId = game.connectPlayerWithInfo({
+        id: connection.name,
+        name: message.name,
+      });
+      connections.set(recievedId, ws);
     }
   } else {
-    console.log(`New player '${message.name}'`);
-    connections.set(message.name, ws);
+    const playerId = game.connectPlayerWithInfo({
+      name: message.name,
+    });
 
-    const newPlayer = new Player(message.name);
+    connections.set(playerId, ws);
 
-    players.push(newPlayer);
-
-    responder.sendMessage(ws, buildIntroductionMessage(newPlayer.name, newPlayer.id));
-
-    responder.broadcastMessage(buildActionMessage(
-      Actions.addPlayers(players.map((player) => ({
-        id: player.id,
-        name: player.name,
-      }))),
-      'server',
-    ));
-    responder.broadcastMessage(buildActionMessage(
-      Actions.addChatMessages([{ text: `New connection with name '${message.name}'` }]),
-      'server',
-    ));
+    responder.enqueueResponseForOne(playerId, [buildIntroductionMessage(message.name, playerId)]);
   }
 }
 

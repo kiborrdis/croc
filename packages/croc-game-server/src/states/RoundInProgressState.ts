@@ -1,14 +1,15 @@
 import { Actions, ADD_DRAW_ACTIONS, PROPOSE_ANSWER } from 'croc-actions';
 import { CrocGameState } from './CrocGameState';
 import { EndRoundState } from './EndRoundState';
+import { delayCall, DelayedCall } from '../utils/DelayCall';
 
 const RIGHT_GUESS_SCORE_DELTA = 10;
 
 export class RoundInProgressState extends CrocGameState {
-  private roundTimeout?: NodeJS.Timeout;
+  private roundEndDelay?: DelayedCall;
 
   public handleEnter() {
-    this.roundTimeout = setTimeout(() => {
+    this.roundEndDelay = delayCall(() => {
       this.context.setState(new EndRoundState());
     }, this.context.data.timePerRound);
   }
@@ -58,8 +59,9 @@ export class RoundInProgressState extends CrocGameState {
   }
 
   public handleEnd() {
-    if (this.roundTimeout) {
-      clearTimeout(this.roundTimeout);
+    if (this.roundEndDelay) {
+      this.roundEndDelay.cancel();
+      this.roundEndDelay = undefined;
     }
   }
 }

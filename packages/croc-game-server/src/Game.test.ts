@@ -2,6 +2,7 @@ import { Game } from './Game';
 import { GameData } from './GameData';
 import { Responder } from './interfaces/Responder';
 import { Player } from './interfaces/Player';
+import { delayCall } from './utils/DelayCall';
 import { NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
 import { DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
 import { DELETE_PLAYER_MESSAGE } from './messages/DeletePlayerMessage';
@@ -91,9 +92,9 @@ describe('Game', () => {
 
   test('should not send delete player after set timeout after player reconnect', async () => {
     game.disconnectPlayerWithId(id);
-    game.connectPlayerWithInfo({ name: 'foo' });
+    game.connectPlayerWithInfo({ id, name: 'foo' });
 
-    await delay(reconnectionTimeout + 10);
+    await delay(reconnectionTimeout + 5);
 
     expect(responder.enqueueResponseForAll).not.toBeCalledWith(msgValidator(
       id,
@@ -102,7 +103,7 @@ describe('Game', () => {
 
   test(`should send player after reconnect `, async () => {
     game.disconnectPlayerWithId(id);
-    game.connectPlayerWithInfo({ name: 'foo' });
+    game.connectPlayerWithInfo({ name: 'foo', id });
 
     await delay(reconnectionTimeout + 10);
 

@@ -5,6 +5,7 @@ import { Player } from './interfaces/Player';
 import { GameData } from './GameData';
 import { GameContext } from './GameContext';
 import { GameState } from './states/GameState';
+import { delayCall, DelayedCall } from './utils/DelayCall';
 import { DELETE_PLAYER_MESSAGE } from './messages/DeletePlayerMessage';
 import { DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
 import { NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
@@ -17,11 +18,12 @@ interface GameConfig {
 
 interface IntroductionInfo {
   name: string;
+  id?: string;
 }
 
 export class Game<D extends GameData = GameData> {
   private config: GameConfig;
-  private deleteTimeouts: { [id: string]: NodeJS.Timeout } = {};
+  private delayedDeletes: { [id: string]: DelayedCall } = {};
   protected responder: Responder;
   protected data: D;
   protected context: GameContext<D>;
@@ -69,16 +71,17 @@ export class Game<D extends GameData = GameData> {
 
     this.sendPlayer(oldPlayer.id);
 
-    clearTimeout(this.deleteTimeouts[oldPlayer.id]);
-    delete this.deleteTimeouts[oldPlayer.id];
+    if (this.delayedDeletes[oldPlayer.id]) {
+      this.delayedDeletes[oldPlayer.id].cancel();
+
+      delete this.delayedDeletes[oldPlayer.id];
+    }
 
     return oldPlayer.id;
   }
 
   private findPlayerByConnectionInfo(info: IntroductionInfo): Player | null {
-    const oldPlayerId = Object.keys(this.data.players).find(
-      (id) => this.data.players[id].name === info.name,
-    );
+    const oldPlayerId = info.id;
 
     if (oldPlayerId) {
       return this.data.players[oldPlayerId];
@@ -93,7 +96,9 @@ export class Game<D extends GameData = GameData> {
     this.sendPlayer(id);
     this.notifyAboutDisconnectedPlayer(id);
 
-    this.deleteTimeouts[id] = setTimeout(() => {
+    this.delayedDeletes[id] = delayCall(() => {
+      delete this.data.players[id];
+
       this.sendDeletePlayer(id);
       this.notifyAboutDeletedPlayer(id);
     }, this.config.reconnectionTimeout);

@@ -44,6 +44,7 @@ export class BeforeRoundState extends CrocGameState {
     const word = this.context.data.word || this.chooseWord();
 
     if (leader) {
+      this.context.data.leader = leader;
       this.context.data.word = word;
       this.context.data.roundInProgress = true;
 
@@ -57,8 +58,9 @@ export class BeforeRoundState extends CrocGameState {
 
   private chooseLeader() {
     const players = this.context.data.players;
+    const variants = Object.keys(players).filter((id) => !players[id].disconnected);
 
-    return Object.keys(players).find((id) => !players[id].disconnected) || null;
+    return this.context.data.pickLeaderStrategy(variants) || null;
   }
 
   private chooseWord() {
