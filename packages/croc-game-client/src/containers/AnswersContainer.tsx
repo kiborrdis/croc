@@ -13,7 +13,7 @@ interface AnswerContainerProps {
 
 class AnswersContainer extends Component<AnswerContainerProps> {
   handleNewMessage = (message: { text: string }) => {
-    this.props.proposeAnswer({ answer: message.text });
+    this.props.proposeAnswer(message.text);
   }
 
   render() {

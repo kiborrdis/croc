@@ -82,7 +82,7 @@ class Canvas extends Component<CanvasProps> {
       return;
     }
 
-    if (this.pixelizer) {
+    if (this.pixelizer && drawActions.length > 0) {
       this.pixelizer.applyActions(
         drawActions.slice(this.lastAppliedActionIndex, drawActions.length).map(rawAction => ActionSerializer.deserializeFromObj(rawAction))
       )
