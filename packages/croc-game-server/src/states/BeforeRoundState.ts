@@ -5,7 +5,7 @@ import { WaitState } from './WaitState';
 
 export class BeforeRoundState extends CrocGameState {
   public handleEnter() {
-    if (this.context.data.numberOfConnectedPlayers === 2) {
+    if (this.context.data.numberOfConnectedPlayers === 2 || !this.context.data.picker) {
       this.startTwoPlayerRound();
     }
   }
@@ -24,7 +24,9 @@ export class BeforeRoundState extends CrocGameState {
     switch (action.type) {
       case PICK_WORD:
         if (this.context.data.picker === fromId) {
-          this.context.data.word = action.payload;
+          if (action.payload) {
+            this.context.data.word = action.payload;
+          }
 
           this.startNewRound();
         }
@@ -47,6 +49,8 @@ export class BeforeRoundState extends CrocGameState {
       this.context.data.leader = leader;
       this.context.data.word = word;
       this.context.data.roundInProgress = true;
+      this.context.data.answers = [];
+      this.context.data.drawActions = [];
 
       this.context.sendActionToAll(Actions.setLeader(leader));
       this.context.sendActionToAllButOne(leader, Actions.startRound());

@@ -71,7 +71,7 @@ export const Actions = {
   setPicker: (id?: string) => {
     return createAction(SET_PICKER, id);
   },
-  pickWord: (word: string) => {
+  pickWord: (word?: string) => {
     return createAction(PICK_WORD, word, { sync: true });
   },
   startRound: (word?: string) => {
