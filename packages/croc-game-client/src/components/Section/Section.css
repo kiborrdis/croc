@@ -5,4 +5,10 @@
   padding: 10px;
   color: white;
   box-shadow: inset 0px 6px 224px 0px rgba(0,0,0,0.15), 0px 6px 36px -2px rgba(0,0,0,0.44);
+  align-items: center;
+  justify-content: center;
+}
+
+.Section--tight {
+  padding: 0;
 }

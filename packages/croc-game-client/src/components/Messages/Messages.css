@@ -1,17 +1,15 @@
 .Messages {
-  flex: 1;
-  display: flex;
   flex-direction: column;
-  background-color: #4a4a4a;
-  box-shadow: 0px 6px 36px -2px rgba(0,0,0,0.44);
 }
 
 .Message-content {
   flex: 1;
+  width: 100%;
 }
 
 .Message-footer {
   padding: 5px;
   display: flex;
   background-color: #474747;
+  width: 100%;
 }

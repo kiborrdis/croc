@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+import Section from '../Section';
 import MessageList from './MessageList';
 import ApplicableInput from '../ApplicableInput';
 import './Messages.css';
@@ -9,7 +10,7 @@ function Messages<M>(props: {
   onNewMessage?: (text: string) => void,
 }) {
   return (
-    <div className="Messages">
+    <Section tight className="Messages">
       <div className="Message-content">
         <MessageList
           messages={props.messages}
@@ -20,7 +21,7 @@ function Messages<M>(props: {
           <ApplicableInput onApply={props.onNewMessage} />
         </div>
       )}
-    </div>
+    </Section>
   )
 };
 
