@@ -278,8 +278,7 @@ describe('Game', () => {
     test('should set picker after end round', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 
-      expect(responder.enqueueResponseForOne).toBeCalledWith(
-        id,
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
         msgValidator(SET_PICKER, id),
       );
     });
@@ -309,8 +308,7 @@ describe('Game', () => {
       messageToGame(id, Actions.pickWord('grief'));
       messageToGame(thirdId, Actions.proposeAnswer('grief'));
 
-      expect(responder.enqueueResponseForOne).toBeCalledWith(
-        id,
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
         msgValidator(SET_PICKER, undefined),
       );
     });
