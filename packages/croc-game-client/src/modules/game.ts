@@ -1,4 +1,4 @@
-import { Actions, START_ROUND, ADD_ANSWERS, ADD_PLAYERS, SET_LEADER, SET_PICKER, END_ROUND } from 'croc-actions';
+import { Actions, START_ROUND, SET_LEADER, SET_PICKER, END_ROUND } from 'croc-actions';
 import { Store } from '../store';
 
 export enum GameStatus {
@@ -46,8 +46,8 @@ export const reducer = (state: Game = {
         leader: null,
         picker: null,
         secretWord: null,
-      };
-    }
+      }
+    };
     default:
       return state;
   }
@@ -56,7 +56,7 @@ export const reducer = (state: Game = {
 export function getGameStatus(store: Store): GameStatus {
   let status: GameStatus;
 
-  if (Object.keys(store.players).length < 2) {
+  if (Object.keys(store.players).filter((id) => !store.players[id].disconnected).length < 2) {
     status = GameStatus.waiting;
   } else if (store.game.roundStarted) {
     status = GameStatus.started;
