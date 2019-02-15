@@ -31,7 +31,7 @@ const game = new CrocGame({
   config: {
     pickLeaderStrategy: (ids) => ids[0],
     pickWord: () => 'word',
-    reconnectionTimeout: 1000,
+    reconnectionTimeout: 60000,
     timeForRound: 3 * 60 * 1000,
   },
 });
