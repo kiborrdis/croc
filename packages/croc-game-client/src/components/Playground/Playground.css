@@ -1,4 +1,14 @@
 .Playground {
   flex: 1;
   display: flex;
+  position: relative;
+}
+
+.Playground-header {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  color: white;
+  font-size: 20px;
+  padding-bottom: 10px;
 }
