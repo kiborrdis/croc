@@ -7,7 +7,7 @@ export class CrocGameData extends GameData {
   public leader: string | null = null;
   public picker: string | null = null;
   public word: string | null = null;
-  public roundInProgress: boolean = false;
+  public roundStartedAt: number = 0;
   public pickWord: () => string = () => 'default';
   public pickLeaderStrategy: (playerIds: string[]) => string = (ids) => ids[0];
   public timePerRound: number = 100;

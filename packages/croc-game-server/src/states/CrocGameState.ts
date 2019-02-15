@@ -58,8 +58,10 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
       this.context.sendActionTo(playerId, Actions.setLeader(data.leader));
     }
 
-    if (data.roundInProgress) {
-      this.context.sendActionTo(playerId, Actions.startRound());
+    if (data.roundStartedAt) {
+      this.context.sendActionTo(playerId, Actions.startRound({
+        remainingTime: new Date().getTime() - data.roundStartedAt,
+      }));
     }
 
     if (data.chatMessages.length > 0) {

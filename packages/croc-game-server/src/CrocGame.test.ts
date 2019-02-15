@@ -61,22 +61,22 @@ describe('Game', () => {
   function roundShouldNotStart(leaderId: string, word = 'sadness') {
     expect(responder.enqueueResponseForAllButOne).not.toBeCalledWith(
       leaderId,
-      msgValidator(START_ROUND, {}),
+      msgValidator(START_ROUND, { remainingTime: config.timeForRound }),
     );
     expect(responder.enqueueResponseForOne).not.toBeCalledWith(
       leaderId,
-      msgValidator(START_ROUND, { word }),
+      msgValidator(START_ROUND, { word, remainingTime: config.timeForRound }),
     );
   }
 
   function roundShouldStart(leaderId: string, word = 'sadness') {
     expect(responder.enqueueResponseForAllButOne).toBeCalledWith(
       leaderId,
-      msgValidator(START_ROUND, {}),
+      msgValidator(START_ROUND, { remainingTime: config.timeForRound }),
     );
     expect(responder.enqueueResponseForOne).toBeCalledWith(
       leaderId,
-      msgValidator(START_ROUND, { word }),
+      msgValidator(START_ROUND, { word, remainingTime: config.timeForRound }),
     );
   }
 

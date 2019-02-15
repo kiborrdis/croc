@@ -48,13 +48,18 @@ export class BeforeRoundState extends CrocGameState {
     if (leader) {
       this.context.data.leader = leader;
       this.context.data.word = word;
-      this.context.data.roundInProgress = true;
+      this.context.data.roundStartedAt = new Date().getTime();
       this.context.data.answers = [];
       this.context.data.drawActions = [];
 
       this.context.sendActionToAll(Actions.setLeader(leader));
-      this.context.sendActionToAllButOne(leader, Actions.startRound());
-      this.context.sendActionTo(leader, Actions.startRound(word));
+      this.context.sendActionToAllButOne(leader, Actions.startRound({
+        remainingTime: this.context.data.timePerRound,
+      }));
+      this.context.sendActionTo(leader, Actions.startRound({
+        word,
+        remainingTime: this.context.data.timePerRound,
+      }));
 
       this.context.setState(new RoundInProgressState());
     }

@@ -24,7 +24,7 @@ export class EndRoundState extends CrocGameState {
 
     this.unsetPicker();
     data.word = null;
-    data.roundInProgress = false;
+    data.roundStartedAt = 0;
 
     if (this.winnerId) {
       this.processWinner(this.winnerId);

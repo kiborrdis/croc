@@ -74,8 +74,8 @@ export const Actions = {
   pickWord: (word?: string) => {
     return createAction(PICK_WORD, word, { sync: true });
   },
-  startRound: (word?: string) => {
-    return createAction(START_ROUND, { word });
+  startRound: (params: { word?: string, remainingTime: number }) => {
+    return createAction(START_ROUND, { word: params.word, remainingTime: params.remainingTime });
   },
   endRound: () => {
     return createAction(END_ROUND, undefined);
