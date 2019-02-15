@@ -60,7 +60,7 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
 
     if (data.roundStartedAt) {
       this.context.sendActionTo(playerId, Actions.startRound({
-        remainingTime: new Date().getTime() - data.roundStartedAt,
+        remainingTime: data.timePerRound - (new Date().getTime() - data.roundStartedAt),
       }));
     }
 
