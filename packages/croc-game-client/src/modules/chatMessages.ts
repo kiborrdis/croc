@@ -1,9 +1,5 @@
 import { Actions, ADD_CHAT_MESSAGES } from 'croc-actions';
-
-export interface ChatMessage {
-  text: string,
-  from?: string,
-};
+import { ChatMessage } from '../types/ChatMessage';
 
 export const reducer = (state: ChatMessage[] = [], action: Actions) => {
   switch (action.type) {

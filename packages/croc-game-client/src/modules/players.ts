@@ -1,10 +1,5 @@
-import { Actions, ADD_CHAT_MESSAGES, ADD_ANSWERS, ADD_PLAYERS } from 'croc-actions';
-
-export interface Player {
-  id: string,
-  name: string,
-  score?: number,
-};
+import { Actions, ADD_PLAYERS, DELETE_PLAYER } from 'croc-actions';
+import { Player } from '../types/Player';
 
 export const reducer = (state: { [id: string]: Player } = {}, action: Actions) => {
   switch (action.type) {
@@ -16,6 +11,10 @@ export const reducer = (state: { [id: string]: Player } = {}, action: Actions) =
       }, {});
 
       return { ...state, ...newPlayers };
+    case DELETE_PLAYER:
+      let { [action.payload]: player, ...restPlayers } = state;
+
+      return restPlayers;
     default:
       return state;
   }

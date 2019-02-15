@@ -4,7 +4,7 @@ import { Actions } from 'croc-actions';
 import { Store } from '../store';
 import Messages from '../components/Messages';
 import AnswerMessage from '../components/AnswerMessage';
-import { Answer } from '../modules/answers';
+import { Answer } from '../types/Answer';
 
 interface AnswerContainerProps {
   messages: Answer[];

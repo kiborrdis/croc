@@ -1,9 +1,10 @@
 import React from 'react';
 import Player from './Player';
+import { Player as PlayerType } from '../../types/Player';
 import './Players.css';
 
 interface PlayersProps {
-  players: Array<{ id: string, name: string, score: number }>,
+  players: Array<PlayerType>,
 };
 
 const Players = (props: PlayersProps) => (

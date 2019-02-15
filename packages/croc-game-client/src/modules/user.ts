@@ -20,7 +20,11 @@ export const Actions = {
 
 export type Actions = ActionsUnion<typeof Actions>;
 
-export const reducer = (state: User = {}, action: Actions) => {
+const defaultUser = {
+  name: process.env.NODE_ENV === 'development' ? Math.random().toString(36).substring(7) : undefined,
+}
+
+export const reducer = (state: User = defaultUser, action: Actions) => {
   switch (action.type) {
     case SET_USER_NAME:
       return { ...state, name: action.payload };

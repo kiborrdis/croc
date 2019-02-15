@@ -1,4 +1,4 @@
-import { Actions, ADD_DRAW_ACTIONS } from 'croc-actions';
+import { Actions, ADD_DRAW_ACTIONS, START_ROUND } from 'croc-actions';
 import { ActionObject as DrawAction } from 'pixelizer';
 
 export const reducer = (state: DrawAction[] = [], action: Actions) => {
@@ -7,6 +7,8 @@ export const reducer = (state: DrawAction[] = [], action: Actions) => {
       let newDrawActions = action.payload;
 
       return [...state, ...newDrawActions];
+    case START_ROUND:
+      return [];
     default:
       return state;
   }

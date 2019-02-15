@@ -4,7 +4,7 @@ import { Actions } from 'croc-actions';
 import { Store } from '../store';
 import Messages from '../components/Messages';
 import ChatMessageComponent from '../components/ChatMessage';
-import { ChatMessage } from '../modules/chatMessages';
+import { ChatMessage } from '../types/ChatMessage';
 
 interface ChatContainerProps {
   messages: ChatMessage[];

@@ -5,7 +5,7 @@ import { reducer as answersReducer } from '../modules/answers';
 import { reducer as playersReducer } from '../modules/players';
 import { reducer as drawActionsReducer } from '../modules/drawActions';
 import { reducer as userReducer } from '../modules/user';
-
+import { reducer as gameReducer } from '../modules/game';
 
 export default combineReducers({
   connection: connectionReducer,
@@ -14,4 +14,5 @@ export default combineReducers({
   players: playersReducer,
   drawActions: drawActionsReducer,
   user: userReducer,
+  game: gameReducer,
 });

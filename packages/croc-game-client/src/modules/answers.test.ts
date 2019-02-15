@@ -2,15 +2,15 @@ import { Actions } from 'croc-actions';
 import { reducer } from './answers';
 
 describe('answers reducer', () => {
-  let initialState: ReturnType<typeof reducer>;
+  let state: ReturnType<typeof reducer>;
 
   beforeEach(() => {
     // @ts-ignore
-    initialState = reducer(undefined, { type: 'bar' });
+    state = reducer(undefined, { type: 'bar' });
   })
 
   test('should return initial state', () => {
-    expect(initialState).toEqual([]);
+    expect(state).toEqual([]);
   });
 
   test('should add Answers on AddAnswers', () => {
@@ -23,7 +23,7 @@ describe('answers reducer', () => {
       },
     ];
 
-    expect(reducer(initialState, Actions.addAnswers(newAnswers))).toEqual(newAnswers);
+    expect(reducer(state, Actions.addAnswers(newAnswers))).toEqual(newAnswers);
   });
 
   test('should add Answers on AddAnswers and keep the old ones', () => {
@@ -40,7 +40,7 @@ describe('answers reducer', () => {
         id: 's',
       },
     ];
-    const tempState = reducer(initialState, Actions.addAnswers(Answers1));
+    const tempState = reducer(state, Actions.addAnswers(Answers1));
 
     expect(reducer(tempState, Actions.addAnswers(Answers2))).toEqual([
       ...Answers1,
@@ -61,8 +61,26 @@ describe('answers reducer', () => {
     const action = Actions.addAnswers(newAnswers);
     action.syncData = { from: 'me' };
 
-    expect(reducer(initialState, action)).toEqual(
+    expect(reducer(state, action)).toEqual(
       newAnswers.map(msg => ({ ...msg, from: 'me' }))
     );
+  });
+
+  test('should empty all answers on start round', () => {
+    const newAnswers = [
+      {
+        answer: 'foo',
+        id: 's',
+      },
+      {
+        answer: 'baz',
+        id: 's',
+      },
+    ];
+
+    state = reducer(state, Actions.addAnswers(newAnswers));
+    state = reducer(state, Actions.startRound());
+
+    expect(state).toEqual([]);
   });
 })
