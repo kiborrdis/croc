@@ -381,8 +381,6 @@ describe('Game', () => {
       ));
     });
 
-
-
     test('should not send end round when time is up and round has already been ended', async () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 

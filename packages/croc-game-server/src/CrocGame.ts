@@ -33,6 +33,7 @@ export class CrocGame extends Game<CrocGameData> {
     });
 
     this.data.pickWord = params.config.pickWord;
+    this.data.pickLeaderStrategy = params.config.pickLeaderStrategy;
     this.data.timePerRound = params.config.timeForRound;
   }
 
