@@ -9,6 +9,7 @@ import { Answer } from '../types/Answer';
 interface AnswerContainerProps {
   messages: Answer[];
   proposeAnswer: typeof Actions.proposeAnswer;
+  canSendAnswer: boolean;
 }
 
 class AnswersContainer extends Component<AnswerContainerProps> {
@@ -17,13 +18,13 @@ class AnswersContainer extends Component<AnswerContainerProps> {
   }
 
   render() {
-    const { messages } = this.props;
+    const { messages, canSendAnswer } = this.props;
 
     return (
       <Messages
         messages={messages}
         messageComponent={AnswerMessage}
-        onNewMessage={this.handleNewMessage}
+        onNewMessage={canSendAnswer ? this.handleNewMessage: undefined}
       />
     );
   }
@@ -32,6 +33,7 @@ class AnswersContainer extends Component<AnswerContainerProps> {
 const mapStateToProps = (store: Store) => {
   return {
     messages: store.answers,
+    canSendAnswer: store.game.picker !== store.user.playerId && store.game.leader !== store.user.playerId,
   };
 }
 
