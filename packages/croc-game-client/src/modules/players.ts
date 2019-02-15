@@ -1,4 +1,4 @@
-import { Actions, ADD_PLAYERS, DELETE_PLAYER } from 'croc-actions';
+import { Actions, ADD_PLAYERS, DELETE_PLAYER, CHANGE_PLAYER_SCORE } from 'croc-actions';
 import { Player } from '../types/Player';
 
 export const reducer = (state: { [id: string]: Player } = {}, action: Actions) => {
@@ -11,10 +11,16 @@ export const reducer = (state: { [id: string]: Player } = {}, action: Actions) =
       }, {});
 
       return { ...state, ...newPlayers };
-    case DELETE_PLAYER:
-      let { [action.payload]: player, ...restPlayers } = state;
+    case DELETE_PLAYER: {
+      const { [action.payload]: player, ...restPlayers } = state;
 
       return restPlayers;
+    }
+    case CHANGE_PLAYER_SCORE: {
+      const { [action.payload.id]: player, ...restPlayers } = state;
+
+      return { ...restPlayers, [player.id]: { ...player, score: action.payload.newScore } };
+    }
     default:
       return state;
   }

@@ -56,4 +56,19 @@ describe('Players reducer', () => {
       b: { id: 'b', name: 'me', score: 10 },
     });
   });
+
+  test('should update score on change score', () => {
+    const newPlayers = [
+      { id: 'a', name: 'you', },
+      { id: 'b', name: 'me', },
+    ];
+
+    state = reducer(state, Actions.addPlayers(newPlayers));
+    state = reducer(state, Actions.changePlayerScore({id: 'a', newScore: 30}));
+
+    expect(state).toEqual({
+      b: { id: 'b', name: 'me', score: 0, },
+      a: { id: 'a', name: 'you', score: 30, },
+    });
+  });
 })
