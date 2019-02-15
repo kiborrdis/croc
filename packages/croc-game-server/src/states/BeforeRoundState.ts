@@ -26,7 +26,10 @@ export class BeforeRoundState extends CrocGameState {
         if (this.context.data.picker === fromId) {
           if (action.payload) {
             this.context.data.word = action.payload;
+          } else {
+            this.unsetPicker();
           }
+
           this.startNewRound();
         }
 

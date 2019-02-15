@@ -296,6 +296,22 @@ describe('Game', () => {
       roundShouldStart(secondId, 'grief');
     });
 
+    test('should start round if empty was passed by picker', () => {
+      messageToGame(secondId, Actions.proposeAnswer('sadness'));
+      messageToGame(id, Actions.pickWord());
+
+      roundShouldStart(secondId, 'sadness');
+    });
+
+    test('should reset picker if empty was passed by picker', () => {
+      messageToGame(secondId, Actions.proposeAnswer('sadness'));
+      messageToGame(id, Actions.pickWord());
+
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(SET_PICKER, undefined),
+      );
+    });
+
     test('should not start round if word was picked by not picker', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
       messageToGame(thirdId, Actions.pickWord('grief'));
@@ -364,6 +380,8 @@ describe('Game', () => {
         undefined,
       ));
     });
+
+
 
     test('should not send end round when time is up and round has already been ended', async () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
