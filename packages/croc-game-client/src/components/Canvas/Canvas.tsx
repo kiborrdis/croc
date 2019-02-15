@@ -18,6 +18,7 @@ import './Canvas.css';
 interface CanvasProps {
   onNewAction: (action: any) => void;
   drawActions: DrawAction[];
+  drawingEnabled: boolean;
   settings: CanvasSettings;
 }
 
@@ -66,23 +67,35 @@ class Canvas extends Component<CanvasProps> {
   }
 
   useSettings() {
-    const { settings: { tool, ...restSettings } } = this.props;
+    const { settings: { tool, ...restSettings }, drawingEnabled } = this.props;
 
     if (this.pixelizer) {
       this.pixelizer.setConfig(canvasToolToPixelizerConfig[tool]);
 
       this.pixelizer.setStyle({ ...restSettings });
+
+      this.pixelizer.enableInteractions(drawingEnabled);
     }
   }
 
   applyNotAppliedActions() {
     const { drawActions } = this.props;
 
-    if (this.lastAppliedActionIndex > drawActions.length) {
+    if (!this.pixelizer) {
       return;
     }
 
-    if (this.pixelizer && drawActions.length > 0) {
+    if (this.lastAppliedActionIndex > drawActions.length) {
+      if (drawActions.length === 0 && this.lastAppliedActionIndex > 0) {
+        this.pixelizer.clear();
+
+        this.lastAppliedActionIndex = 0;
+      }
+
+      return;
+    }
+
+    if (drawActions.length > 0) {
       this.pixelizer.applyActions(
         drawActions.slice(this.lastAppliedActionIndex, drawActions.length).map(rawAction => ActionSerializer.deserializeFromObj(rawAction))
       )

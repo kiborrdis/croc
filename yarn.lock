@@ -9232,7 +9232,7 @@ pirates@^4.0.0:
 
 pixelizer@radiansz/pixelizer:
   version "1.0.0"
-  resolved "https://codeload.github.com/radiansz/pixelizer/tar.gz/5461c08bca8ba60ec397fcc0ebe44d2a5323d965"
+  resolved "https://codeload.github.com/radiansz/pixelizer/tar.gz/1dc039545969f0e2d197f41dddda6cecbd53f0ba"
   dependencies:
     typescript "^3.2.4"
 

@@ -3,28 +3,49 @@ import { connect } from 'react-redux';
 import { Actions } from 'croc-actions';
 import { ActionObject as DrawAction } from 'pixelizer';
 import { Store } from '../store';
-import Canvas from '../components/Canvas';
-import { CanvasSettings } from '../types/drawZoneTypes';
+import DrawZone from '../components/DrawZone';
+import { CanvasSettings, CanvasTool } from '../types/drawZoneTypes';
 
 interface CanvasContainerProps {
-  settings: CanvasSettings,
   drawActions: DrawAction[];
+  drawingEnabled: boolean;
   addDrawActions: typeof Actions.addDrawActions;
 }
 
-class CanvasContainer extends Component<CanvasContainerProps> {
+interface CanvasContainerState {
+  settings: CanvasSettings,
+}
+
+class CanvasContainer extends Component<CanvasContainerProps, CanvasContainerState> {
+  state = {
+    settings: {
+      tool: CanvasTool.Brush,
+      color: '#00ff00',
+      lineWidth: 5,
+    },
+  }
+
+  handleSettingsChange = (newSettings: CanvasSettings) => {
+    this.setState({
+      settings: newSettings,
+    });
+  }
+
   handleNewAction = (action: any) => {
     this.props.addDrawActions([action]);
   }
 
   render() {
-    const { drawActions, settings } = this.props;
+    const { drawActions, drawingEnabled } = this.props;
+    const { settings } = this.state;
 
     return (
-      <Canvas
+      <DrawZone
         drawActions={drawActions}
         settings={settings}
+        drawingEnabled={drawingEnabled}
         onNewAction={this.handleNewAction}
+        onSettingsChange={this.handleSettingsChange}
       />
     );
   }
@@ -33,6 +54,7 @@ class CanvasContainer extends Component<CanvasContainerProps> {
 const mapStateToProps = (store: Store) => {
   return {
     drawActions: store.drawActions,
+    drawingEnabled: !!(store.game.leader && store.game.leader === store.user.playerId),
   };
 }
 

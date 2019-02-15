@@ -1,9 +1,8 @@
 import React from 'react';
 import ChatContainer from '../../containers/ChatContainer';
 import AnswersContainer from '../../containers/AnswersContainer';
-import CanvasContainer from '../../containers/CanvasContainer';
+import PlaygroundContainer from '../../containers/PlaygroundContainer';
 import PlayersContainer from '../../containers/PlayersContainer';
-import DrawZoneContainer from '../../containers/DrawZoneContainer';
 import './Game.css';
 
 interface GameProps {
@@ -24,7 +23,7 @@ const Game = (props: GameProps) => {
       </div>
 
       <div className="Main">
-        <DrawZoneContainer />
+        <PlaygroundContainer />
 
         <div className="Chats">
           <div className="Chat">
