@@ -356,13 +356,30 @@ describe('Game', () => {
       ));
     });
 
-    test('should end round if time has ended', async () => {
+    test('should end round if time is up', async () => {
       await delay(config.timeForRound + 100);
 
       expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
         END_ROUND,
         undefined,
       ));
+    });
+
+    test('should not send end round when time is up and round has already been ended', async () => {
+      messageToGame(secondId, Actions.proposeAnswer('sadness'));
+
+      await delay(config.timeForRound + 100);
+
+      let numberOfEndRounds = 0;
+
+      // @ts-ignore
+      responder.enqueueResponseForAll.mock.calls.forEach((args: any[]) => {
+        if (args[0][0].action.type === END_ROUND) {
+          numberOfEndRounds++;
+        }
+      });
+
+      expect(numberOfEndRounds).toBe(1);
     });
   });
 });

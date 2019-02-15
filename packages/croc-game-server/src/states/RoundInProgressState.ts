@@ -3,8 +3,6 @@ import { CrocGameState } from './CrocGameState';
 import { EndRoundState } from './EndRoundState';
 import { delayCall, DelayedCall } from '../utils/DelayCall';
 
-const RIGHT_GUESS_SCORE_DELTA = 10;
-
 export class RoundInProgressState extends CrocGameState {
   private roundEndDelay?: DelayedCall;
 
@@ -58,7 +56,7 @@ export class RoundInProgressState extends CrocGameState {
     );
   }
 
-  public handleEnd() {
+  public handleExit() {
     if (this.roundEndDelay) {
       this.roundEndDelay.cancel();
       this.roundEndDelay = undefined;

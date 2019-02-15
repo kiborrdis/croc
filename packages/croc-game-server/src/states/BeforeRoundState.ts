@@ -27,7 +27,6 @@ export class BeforeRoundState extends CrocGameState {
           if (action.payload) {
             this.context.data.word = action.payload;
           }
-
           this.startNewRound();
         }
 
@@ -42,6 +41,7 @@ export class BeforeRoundState extends CrocGameState {
   }
 
   private startNewRound() {
+
     const leader = this.context.data.leader || this.chooseLeader();
     const word = this.context.data.word || this.chooseWord();
 
