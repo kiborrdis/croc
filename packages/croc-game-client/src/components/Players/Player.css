@@ -4,10 +4,15 @@
   display: flex;
   padding: 10px;
   width: 100%;
+  border: 2px solid #4a4a4a;
 }
 
 .Player.is-disconnected {
   opacity: 0.5;
+}
+
+.Player--me {
+  border: 2px solid #6a6a6a;
 }
 
 .Player-image {
@@ -21,6 +26,14 @@
   flex-direction: column;
   text-align: left;
   justify-content: space-around;
+}
+
+.Player-extra {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  justify-content: center;
+  margin-left: auto;
 }
 
 .Player-name {

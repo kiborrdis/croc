@@ -5,7 +5,12 @@ import Players from '../components/Players';
 
 const mapStateToProps = (store: Store) => {
   return {
-    players: Object.keys(store.players).map(key => store.players[key]),
+    players: Object.keys(store.players).map(id => ({
+      ...store.players[id],
+      leader: id === store.game.leader,
+      picker: id === store.game.picker,
+      isMe: id === store.user.playerId,
+    })),
   };
 }
 

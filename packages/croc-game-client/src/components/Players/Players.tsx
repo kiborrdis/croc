@@ -4,7 +4,7 @@ import { Player as PlayerType } from '../../types/Player';
 import './Players.css';
 
 interface PlayersProps {
-  players: Array<PlayerType>,
+  players: Array<PlayerType & { picker: boolean, leader: boolean, isMe: boolean }>,
 };
 
 const Players = (props: PlayersProps) => (
