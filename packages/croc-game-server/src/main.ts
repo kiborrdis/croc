@@ -1,9 +1,8 @@
 import express from 'express';
-import expressWs, { WebsocketMethod } from 'express-ws';
+import expressWs from 'express-ws';
 import WebSocket from 'ws';
 import { setAfterCallHandler } from './utils/DelayCall';
 import {
-  buildActionMessage,
   buildIntroductionMessage,
   isActionMessage,
   isIntroductionMessage,
@@ -14,6 +13,7 @@ import { ConnectionsCollection } from './ConnectionsCollection';
 import { WebsocketResponder } from './WebsocketResponder';
 import { CrocGame } from './CrocGame';
 import { CrocGameData } from './CrocGameData';
+import dictionary from './rusDictionary';
 
 const app = express();
 const wsApp = expressWs(app);
@@ -25,14 +25,18 @@ setAfterCallHandler(() => {
   responder.sendAllEnqueuedMessages();
 });
 
+function pickRandomValueFrom<V>(array: V[]): V {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 const game = new CrocGame({
   responder,
   gameDataInitializer: () => new CrocGameData(),
   config: {
-    pickLeaderStrategy: (ids) => ids[0],
-    pickWord: () => 'word',
+    pickLeaderStrategy: (ids) => pickRandomValueFrom(ids),
+    pickWord: () => pickRandomValueFrom(dictionary),
     reconnectionTimeout: 20000,
-    timeForRound: 1 * 60 * 1000,
+    timeForRound: 10 * 1000,
   },
 });
 
