@@ -79,7 +79,7 @@ describe('answers reducer', () => {
     ];
 
     state = reducer(state, Actions.addAnswers(newAnswers));
-    state = reducer(state, Actions.startRound());
+    state = reducer(state, Actions.startRound({ remainingTime: 10 }));
 
     expect(state).toEqual([]);
   });

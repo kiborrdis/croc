@@ -3,6 +3,13 @@ import { reducer } from './game';
 
 describe('Game reducer', () => {
   let state: ReturnType<typeof reducer>;
+  const initialState = {
+    roundStartedAt: 0,
+    remainingTimeFromStart: 0,
+    leader: null,
+    picker: null,
+    secretWord: null,
+  };
 
   beforeEach(() => {
     // @ts-ignore
@@ -10,44 +17,39 @@ describe('Game reducer', () => {
   })
 
   test('should return initial state', () => {
-    expect(state).toEqual({
-      roundStarted: false,
-      leader: null,
-      picker: null,
-      secretWord: null,
-    });
+    expect(state).toEqual(initialState);
   });
 
   test('should start round on start round', () => {
-    state = reducer(state, Actions.startRound());
+    state = reducer(state, Actions.startRound({ remainingTime: 10 }));
 
     expect(state).toEqual({
-      roundStarted: true,
-      leader: null,
-      picker: null,
-      secretWord: null,
+      ...initialState,
+      roundStartedAt: expect.anything(),
+      remainingTimeFromStart: 10,
     });
+    // TODO mock Date ffs
+    expect(state.roundStartedAt / 100).toBeCloseTo(new Date().getTime() / 100, 0);
   });
 
   test('should start round on start round and set secret word if it was passed', () => {
-    state = reducer(state, Actions.startRound('word'));
+    state = reducer(state, Actions.startRound({ remainingTime: 10, word: 'word' }));
 
     expect(state).toEqual({
-      roundStarted: true,
-      leader: null,
-      picker: null,
+      ...initialState,
+      roundStartedAt: expect.anything(),
+      remainingTimeFromStart: 10,
       secretWord: 'word',
     });
+    expect(state.roundStartedAt / 100).toBeCloseTo(new Date().getTime() / 100, 0);
   });
 
   test('should set leader if it was passed', () => {
     state = reducer(state, Actions.setLeader('leader'));
 
     expect(state).toEqual({
-      roundStarted: false,
+      ...initialState,
       leader: 'leader',
-      picker: null,
-      secretWord: null,
     });
   });
 
@@ -56,10 +58,8 @@ describe('Game reducer', () => {
     state = reducer(state, Actions.setPicker('picker'));
 
     expect(state).toEqual({
-      roundStarted: false,
-      leader: null,
+      ...initialState,
       picker: 'picker',
-      secretWord: null,
     });
   });
 
@@ -67,25 +67,15 @@ describe('Game reducer', () => {
     state = reducer(state, Actions.setPicker('picker'));
     state = reducer(state, Actions.setPicker());
 
-    expect(state).toEqual({
-      roundStarted: false,
-      leader: null,
-      picker: null,
-      secretWord: null,
-    });
+    expect(state).toEqual(initialState);
   });
 
   test('should unset all on round end', () => {
     state = reducer(state, Actions.setPicker('picker'));
     state = reducer(state, Actions.setLeader('leader'));
-    state = reducer(state, Actions.startRound('word'));
+    state = reducer(state, Actions.startRound({ remainingTime: 10, word: 'word' }));
     state = reducer(state, Actions.endRound());
 
-    expect(state).toEqual({
-      roundStarted: false,
-      leader: null,
-      picker: null,
-      secretWord: null,
-    });
+    expect(state).toEqual(initialState);
   });
 })

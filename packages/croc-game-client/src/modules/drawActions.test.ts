@@ -34,7 +34,7 @@ describe('DrawActions reducer', () => {
     state = reducer(state, Actions.addDrawActions([
       { tool: { type: 'c' }, record: { type: 'e' } },
     ]));
-    state = reducer(state, Actions.startRound());
+    state = reducer(state, Actions.startRound({ remainingTime: 10 }));
 
     expect(state).toEqual([]);
   })

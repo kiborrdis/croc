@@ -8,14 +8,16 @@ export enum GameStatus {
 };
 
 export interface Game {
-  roundStarted: boolean;
+  roundStartedAt: number;
+  remainingTimeFromStart: number;
   leader: string | null;
   picker: string | null;
   secretWord: string | null;
 };
 
 export const reducer = (state: Game = {
-  roundStarted: false,
+  roundStartedAt: 0,
+  remainingTimeFromStart: 0,
   leader: null,
   picker: null,
   secretWord: null,
@@ -24,7 +26,8 @@ export const reducer = (state: Game = {
     case START_ROUND: {
       return {
         ...state,
-        roundStarted: true,
+        roundStartedAt: new Date().getTime(),
+        remainingTimeFromStart: action.payload.remainingTime,
         secretWord: action.payload.word || null,
       };
     }
@@ -42,7 +45,8 @@ export const reducer = (state: Game = {
     }
     case END_ROUND: {
       return {
-        roundStarted: false,
+        roundStartedAt: 0,
+        remainingTimeFromStart: 0,
         leader: null,
         picker: null,
         secretWord: null,
@@ -58,7 +62,7 @@ export function getGameStatus(store: Store): GameStatus {
 
   if (Object.keys(store.players).filter((id) => !store.players[id].disconnected).length < 2) {
     status = GameStatus.waiting;
-  } else if (store.game.roundStarted) {
+  } else if (store.game.roundStartedAt) {
     status = GameStatus.started;
   } else {
     status = GameStatus.picking;
