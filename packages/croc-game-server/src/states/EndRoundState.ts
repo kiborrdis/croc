@@ -37,7 +37,7 @@ export class EndRoundState extends CrocGameState {
     if (prevLeader) {
       data.picker = prevLeader;
 
-      this.context.sendActionTo(prevLeader, Actions.setPicker(prevLeader));
+      this.context.sendActionToAll(Actions.setPicker(prevLeader));
     }
 
     if (data.numberOfConnectedPlayers < 2) {

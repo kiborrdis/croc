@@ -58,6 +58,10 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
       this.context.sendActionTo(playerId, Actions.setLeader(data.leader));
     }
 
+    if (data.roundInProgress) {
+      this.context.sendActionTo(playerId, Actions.startRound());
+    }
+
     if (data.chatMessages.length > 0) {
       this.context.sendActionTo(playerId, Actions.addChatMessages([...data.chatMessages]));
     }
@@ -79,7 +83,7 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
     const data = this.context.data;
 
     if (data.picker) {
-      this.context.sendActionTo(data.picker, Actions.setPicker());
+      this.context.sendActionToAll(Actions.setPicker());
 
       data.picker = null;
     }
