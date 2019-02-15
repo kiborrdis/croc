@@ -70,7 +70,9 @@ export class BeforeRoundState extends CrocGameState {
 
   private chooseLeader() {
     const players = this.context.data.players;
-    const variants = Object.keys(players).filter((id) => !players[id].disconnected);
+    const variants = Object.keys(players)
+      .filter((id) => !players[id].disconnected)
+      .filter((id) => id !== this.context.data.picker);
 
     return this.context.data.pickLeaderStrategy(variants) || null;
   }
