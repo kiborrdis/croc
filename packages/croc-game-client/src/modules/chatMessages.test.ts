@@ -51,4 +51,31 @@ describe('chatMessages reducer', () => {
       newMessages.map(msg => ({ ...msg, from: 'me' }))
     );
   });
+
+  test('should add messages on AddMessages and append from to them if there is syncData', () => {
+    const newMessages = [
+      { text: 'foo' },
+      { text: 'baz' },
+    ];
+    const action = Actions.addChatMessages(newMessages);
+    action.syncData = { from: 'me' };
+
+    expect(reducer(initialState, action)).toEqual(
+      newMessages.map(msg => ({ ...msg, from: 'me' }))
+    );
+  });
+
+  test(`should prefer 'from' from message over syncData`, () => {
+    const newMessages = [
+      { text: 'foo', from: 'you' },
+      { text: 'baz' },
+    ];
+    const action = Actions.addChatMessages(newMessages);
+    action.syncData = { from: 'me' };
+
+    expect(reducer(initialState, action)).toEqual([
+      { text: 'foo', from: 'you' },
+      { text: 'baz', from: 'me' },
+    ]);
+  });
 })

@@ -66,6 +66,35 @@ describe('answers reducer', () => {
     );
   });
 
+  test(`should prefer 'from' from answer over syncData`, () => {
+    const newAnswers = [
+      {
+        answer: 'foo',
+        id: 's',
+      },
+      {
+        answer: 'baz',
+        id: 's',
+        from: 'you',
+      },
+    ];
+    const action = Actions.addAnswers(newAnswers);
+    action.syncData = { from: 'me' };
+
+    expect(reducer(state, action)).toEqual([
+      {
+        answer: 'foo',
+        id: 's',
+        from: 'me',
+      },
+      {
+        answer: 'baz',
+        id: 's',
+        from: 'you',
+      },
+    ]);
+  });
+
   test('should empty all answers on start round', () => {
     const newAnswers = [
       {
