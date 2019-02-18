@@ -8,12 +8,34 @@ import {
   isIntroductionMessage,
   IntroductionMessage,
   ActionMessage,
+  AnyMessage,
 } from 'croc-messages';
 import { ConnectionsCollection } from './ConnectionsCollection';
 import { WebsocketResponder } from './WebsocketResponder';
 import { CrocGame } from './CrocGame';
 import { CrocGameData } from './CrocGameData';
 import dictionary from './rusDictionary';
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json(),
+  ),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple(),
+
+  }));
+}
 
 const app = express();
 const wsApp = expressWs(app);
@@ -47,7 +69,7 @@ wsApp.app.ws('/ws', (ws, request) => {
     try {
       jsonMessage = JSON.parse(msg.toString());
     } catch (e) {
-      console.log('Error parsing json from message', msg);
+      logger.log('error', 'Error parsing json from message', msg);
 
       return;
     }
@@ -61,6 +83,8 @@ wsApp.app.ws('/ws', (ws, request) => {
     const connection = connections.find(ws);
 
     if (connection) {
+      logger.log('info', `Player '${connection.name}' disconnected`);
+
       game.disconnectPlayerWithId(connection.name);
     }
 
@@ -86,30 +110,54 @@ function handleActionMessage(message: ActionMessage, ws: WebSocket) {
   const connection = connections.find(ws);
 
   if (connection) {
-    game.handleMessage(connection.name, message);
+    if (Array.isArray(message.action.payload)) {
+      logger.log(
+        'info',
+        `Recieved '${message.action.type}' message from ${connection.name}`,
+        message.action.payload.length,
+      );
+    } else {
+      logger.log(
+        'info',
+        `Recieved '${message.action.type}' message from ${connection.name}`,
+        message.action.payload,
+      );
+    }
+
+    handleGameMessage(connection.name, message);
   }
 }
 
 function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) {
   if (connections.contains(ws)) {
-    const connection = connections.find(ws);
+    logger.log('info', `Trying to reconnect '${message.playerId}'`);
 
-    if (connection) {
-      const recievedId = game.connectPlayerWithInfo({
-        id: connection.name,
-        name: message.name,
-      });
-      connections.set(recievedId, ws);
-    }
+    const recievedId = game.connectPlayerWithInfo({
+      id: message.playerId,
+      name: message.name,
+    });
+
+    logger.log('info', `Player '${message.name}' with id '${message.playerId}' reconnected`);
+
+    connections.set(recievedId, ws);
   } else {
     const playerId = game.connectPlayerWithInfo({
       name: message.name,
     });
 
-    connections.set(playerId, ws);
+    logger.log('info', `Player '${message.name}' with id '${playerId}' connected`);
 
+    connections.set(playerId, ws);
     responder.enqueueResponseForOne(playerId, [buildIntroductionMessage(message.name, playerId)]);
   }
 }
 
-app.listen(8000, () => console.log(`Server listening on port ${8000}!`));
+function handleGameMessage(id: string, message: AnyMessage) {
+  try {
+    game.handleMessage(id, message);
+  } catch (e) {
+    logger.log('error', e);
+  }
+}
+
+app.listen(8000, () => logger.log('info', `Server listening on port ${8000}!`));
