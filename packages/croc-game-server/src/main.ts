@@ -16,6 +16,10 @@ import { CrocGame } from './CrocGame';
 import { CrocGameData } from './CrocGameData';
 import dictionary from './rusDictionary';
 import winston from 'winston';
+import yargs from 'yargs';
+
+const timePerRound = parseInt(yargs.argv.TR as string, 10) || 120;
+const port = parseInt(yargs.argv.P as string, 10) || 8000;
 
 const logger = winston.createLogger({
   level: 'info',
@@ -58,7 +62,7 @@ const game = new CrocGame({
     pickLeaderStrategy: (ids) => pickRandomValueFrom(ids),
     pickWord: () => pickRandomValueFrom(dictionary),
     reconnectionTimeout: 20000,
-    timeForRound: 10 * 1000,
+    timeForRound: timePerRound * 1000,
   },
 });
 
@@ -160,4 +164,4 @@ function handleGameMessage(id: string, message: AnyMessage) {
   }
 }
 
-app.listen(8000, () => logger.log('info', `Server listening on port ${8000}!`));
+app.listen(port, () => logger.log('info', `Server listening on port ${port}!`));
