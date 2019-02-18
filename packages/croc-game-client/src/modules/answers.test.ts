@@ -7,7 +7,7 @@ describe('answers reducer', () => {
   beforeEach(() => {
     // @ts-ignore
     state = reducer(undefined, { type: 'bar' });
-  })
+  });
 
   test('should return initial state', () => {
     expect(state).toEqual([]);
@@ -46,8 +46,7 @@ describe('answers reducer', () => {
       ...Answers1,
       ...Answers2,
     ]);
-  })
-
+  });
 
   test('should add Answers on AddAnswers and append from to them if there is syncData', () => {
     const newAnswers = [
@@ -62,7 +61,7 @@ describe('answers reducer', () => {
     action.syncData = { from: 'me' };
 
     expect(reducer(state, action)).toEqual(
-      newAnswers.map(msg => ({ ...msg, from: 'me' }))
+      newAnswers.map((msg) => ({ ...msg, from: 'me' })),
     );
   });
 
@@ -112,4 +111,4 @@ describe('answers reducer', () => {
 
     expect(state).toEqual([]);
   });
-})
+});

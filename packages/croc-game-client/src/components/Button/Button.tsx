@@ -6,7 +6,7 @@ interface ButtonProps {
 }
 
 const Button = (props: ButtonProps) => {
-  const { text, ...rest } =props;
+  const { text, ...rest } = props;
 
   return (
     <button {...rest}>

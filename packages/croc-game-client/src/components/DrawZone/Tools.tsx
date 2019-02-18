@@ -10,42 +10,42 @@ interface ToolsProps {
 }
 
 class Tools extends PureComponent<ToolsProps> {
-  handleToolChange = (newTool: CanvasTool) => {
+  public handleToolChange = (newTool: CanvasTool) => {
     this.props.onSettingsChange({
       ...this.props.settings,
       tool: newTool,
     });
   }
 
-  handleWidthChange = (newWidth: number) => {
+  public handleWidthChange = (newWidth: number) => {
     this.props.onSettingsChange({
       ...this.props.settings,
       lineWidth: newWidth,
     });
   }
 
-  handleColorChange = (newColor: ColorResult) => {
+  public handleColorChange = (newColor: ColorResult) => {
     this.props.onSettingsChange({
       ...this.props.settings,
       color: newColor.hex,
     });
   }
 
-  render() {
+  public render() {
     const { settings: { color } } = this.props;
 
     return (
-      <div className="Tools">
-        <ToolButton label="Brush" value={CanvasTool.Brush} onClick={this.handleToolChange} />
-        <ToolButton label="Line" value={CanvasTool.Line} onClick={this.handleToolChange} />
-        <ToolButton label="Circle" value={CanvasTool.Circle} onClick={this.handleToolChange} />
-        <ToolButton label="Rectangle" value={CanvasTool.Rectangle} onClick={this.handleToolChange} />
-        <ToolButton label="Polyline" value={CanvasTool.Polyline} onClick={this.handleToolChange} />
+      <div className='Tools'>
+        <ToolButton label='Brush' value={CanvasTool.Brush} onClick={this.handleToolChange} />
+        <ToolButton label='Line' value={CanvasTool.Line} onClick={this.handleToolChange} />
+        <ToolButton label='Circle' value={CanvasTool.Circle} onClick={this.handleToolChange} />
+        <ToolButton label='Rectangle' value={CanvasTool.Rectangle} onClick={this.handleToolChange} />
+        <ToolButton label='Polyline' value={CanvasTool.Polyline} onClick={this.handleToolChange} />
 
-        <ToolButton label="2" value={5} onClick={this.handleWidthChange} />
-        <ToolButton label="5" value={5} onClick={this.handleWidthChange} />
-        <ToolButton label="10" value={10} onClick={this.handleWidthChange} />
-        <ToolButton label="15" value={15} onClick={this.handleWidthChange} />
+        <ToolButton label='2' value={5} onClick={this.handleWidthChange} />
+        <ToolButton label='5' value={5} onClick={this.handleWidthChange} />
+        <ToolButton label='10' value={10} onClick={this.handleWidthChange} />
+        <ToolButton label='15' value={15} onClick={this.handleWidthChange} />
         <div>
           <HuePicker
             color={color}
@@ -53,7 +53,7 @@ class Tools extends PureComponent<ToolsProps> {
           />
         </div>
       </div>
-    )
+    );
   }
 }
 

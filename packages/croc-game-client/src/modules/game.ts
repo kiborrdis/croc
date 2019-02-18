@@ -5,7 +5,7 @@ export enum GameStatus {
   waiting,
   started,
   picking,
-};
+}
 
 export interface Game {
   roundStartedAt: number;
@@ -13,7 +13,7 @@ export interface Game {
   leader: string | null;
   picker: string | null;
   secretWord: string | null;
-};
+}
 
 export const reducer = (state: Game = {
   roundStartedAt: 0,
@@ -21,7 +21,7 @@ export const reducer = (state: Game = {
   leader: null,
   picker: null,
   secretWord: null,
-}, action: Actions) => {
+},                      action: Actions) => {
   switch (action.type) {
     case START_ROUND: {
       return {
@@ -35,13 +35,13 @@ export const reducer = (state: Game = {
       return {
         ...state,
         leader: action.payload,
-      }
+      };
     }
     case SET_PICKER: {
       return {
         ...state,
         picker: action.payload || null,
-      }
+      };
     }
     case END_ROUND: {
       return {
@@ -50,12 +50,12 @@ export const reducer = (state: Game = {
         leader: null,
         picker: null,
         secretWord: null,
-      }
-    };
+      };
+    }
     default:
       return state;
   }
-}
+};
 
 export function getGameStatus(store: Store): GameStatus {
   let status: GameStatus;

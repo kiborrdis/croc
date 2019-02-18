@@ -3,7 +3,7 @@ export enum CanvasTool {
   Line = 'Line',
   Rectangle = 'Rectangle',
   Polyline = 'Polyline',
-  Circle ='Circle',
+  Circle = 'Circle',
 }
 
 export interface CanvasSettings {

@@ -5,7 +5,7 @@ describe('DrawActions reducer', () => {
   let state: ReturnType<typeof reducer>;
 
   beforeEach(() => {
-    //@ts-ignore
+    // @ts-ignore
     state = reducer(undefined, { type: 'foo' });
   });
 
@@ -37,5 +37,5 @@ describe('DrawActions reducer', () => {
     state = reducer(state, Actions.startRound({ remainingTime: 10 }));
 
     expect(state).toEqual([]);
-  })
+  });
 });

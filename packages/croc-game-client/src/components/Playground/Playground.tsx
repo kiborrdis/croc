@@ -17,17 +17,17 @@ function renderCanvasContent(status: GameStatus) {
 }
 
 interface PlaygroundProps {
-  status: GameStatus
-  remainingTime: number,
-  roundStartedAt: number,
-  secretWord: string |  null,
+  status: GameStatus;
+  remainingTime: number;
+  roundStartedAt: number;
+  secretWord: string |  null;
 }
 
 const Playground = (props: PlaygroundProps) => {
   return (
-    <div className="Playground">
+    <div className='Playground'>
       {props.status === GameStatus.started && (
-        <div className="Playground-header">
+        <div className='Playground-header'>
           <Counter remainingTime={props.remainingTime} startTime={props.roundStartedAt} />
           {props.secretWord && <div>Draw the word: '{props.secretWord}'</div>}
         </div>

@@ -16,13 +16,13 @@ interface User {
 export const Actions = {
   setUsername: (name: string) => createAction(SET_USER_NAME, name),
   setUser: (user: { name?: string, playerId?: string }) => createAction(SET_USER, user),
-}
+};
 
 export type Actions = ActionsUnion<typeof Actions>;
 
 const defaultUser = {
   name: process.env.NODE_ENV === 'development' ? Math.random().toString(36).substring(7) : undefined,
-}
+};
 
 export const reducer = (state: User = defaultUser, action: Actions) => {
   switch (action.type) {
@@ -33,11 +33,11 @@ export const reducer = (state: User = defaultUser, action: Actions) => {
     default:
       return state;
   }
-}
+};
 
 function* introductionReceiverSaga(action: WebsocketAction) {
   if (isIntroductionMessage(action.payload)) {
-    yield put(Actions.setUser({ name: action.payload.name, playerId: action.payload.playerId }))
+    yield put(Actions.setUser({ name: action.payload.name, playerId: action.payload.playerId }));
   }
 }
 
@@ -48,5 +48,3 @@ export function isAuthed(store: ReturnType<typeof reducer>): boolean {
 export function* saga() {
   yield takeEvery(WEBSOCKET_MESSAGE, introductionReceiverSaga);
 }
-
-

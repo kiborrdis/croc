@@ -16,7 +16,6 @@ const TextInput = (props: InputProps) => {
   return (
     <input {...rest}/>
   );
-}
+};
 
 export default TextInput;
-

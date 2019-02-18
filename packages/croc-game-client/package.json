@@ -27,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:fix": "tslint -p . --fix",
+    "lint": "tslint -p ."
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,6 +41,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react-color": "^2.14.0"
+    "@types/react-color": "^2.14.0",
+    "tslint": "^5.12.1"
   }
 }

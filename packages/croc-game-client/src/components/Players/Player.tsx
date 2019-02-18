@@ -10,7 +10,7 @@ interface PlayerProps {
   leader: boolean;
   picker: boolean;
   isMe: boolean;
-};
+}
 
 const Player = (props: PlayerProps) => (
   <Section tight>
@@ -19,19 +19,19 @@ const Player = (props: PlayerProps) => (
       'Player--me': props.isMe,
       })}>
       <img
-        className="Player-image"
+        className='Player-image'
         src={`https://loremflickr.com/100/100/${props.name}?lock=1`}
         />
 
-      <div className="Player-info">
-        <div className="Player-name">
+      <div className='Player-info'>
+        <div className='Player-name'>
           {props.name}
         </div>
-        <div className="Player-score">
+        <div className='Player-score'>
           {`${props.score} points`}
         </div>
       </div>
-      <div className="Player-extra">
+      <div className='Player-extra'>
         <div>{props.picker && 'Picking word'}</div>
         <div>{props.leader && 'Drawing'}</div>
       </div>

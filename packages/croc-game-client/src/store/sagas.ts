@@ -4,7 +4,7 @@ import { saga as userSaga } from '../modules/user';
 function getDefaultSagas(): { [key: string]: any } {
   return {
     connectionSaga,
-    userSaga
+    userSaga,
   };
 }
 

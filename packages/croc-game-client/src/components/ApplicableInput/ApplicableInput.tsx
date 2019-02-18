@@ -9,9 +9,9 @@ interface ApplicableInputProps {
 }
 
 class ApplicableInput extends React.Component<ApplicableInputProps> {
-  state = {
+  public state = {
     value: '',
-  }
+  };
 
   constructor(props: ApplicableInputProps) {
     super(props);
@@ -21,7 +21,7 @@ class ApplicableInput extends React.Component<ApplicableInputProps> {
     }
   }
 
-  handleClick = () => {
+  public handleClick = () => {
     const { onApply } = this.props;
 
     if (this.state.value) {
@@ -31,19 +31,19 @@ class ApplicableInput extends React.Component<ApplicableInputProps> {
     }
   }
 
-  onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  public onChange = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       value: e.currentTarget.value,
     });
   }
 
-  render() {
+  public render() {
     return (
-      <div className="ApplicableInput">
+      <div className='ApplicableInput'>
         <TextInput onChange={this.onChange} value={this.state.value} />
-        <Button onClick={this.handleClick} text="Apply" />
+        <Button onClick={this.handleClick} text='Apply' />
       </div>
-    )
+    );
   }
 }
 

@@ -1,11 +1,11 @@
 import { WebsocketConnection } from '../WebsocketConnection';
 import { Server } from 'mock-socket';
 
-const delay = (time: number) => new Promise(resolve => setTimeout(resolve, time));
+const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
 describe('WebsocketConnection', () => {
   let connection: WebsocketConnection;
-  let url = 'ws://localhost:8000';
+  const url = 'ws://localhost:8000';
   let server: Server;
 
   beforeEach(() => {
@@ -54,7 +54,7 @@ describe('WebsocketConnection', () => {
     connection.closeHandler = test;
 
     await connection.open();
-    //@ts-ignore
+    // @ts-ignore
     server.simulate('error');
 
     expect(test).toBeCalled();
@@ -75,7 +75,7 @@ describe('WebsocketConnection', () => {
     const test = jest.fn();
     const msgData = { tmp: 'hello world' };
     server.on('connection', (socket) => {
-      //@ts-ignore
+      // @ts-ignore
       socket.on('message', test);
     });
 
@@ -91,7 +91,7 @@ describe('WebsocketConnection', () => {
     connection.closeHandler = test;
 
     const openPromise = connection.open();
-    //@ts-ignore
+    // @ts-ignore
     server.simulate('error');
 
     await openPromise.catch(test);

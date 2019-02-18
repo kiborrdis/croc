@@ -7,7 +7,7 @@ describe('chatMessages reducer', () => {
   beforeEach(() => {
     // @ts-ignore
     initialState = reducer(undefined, { type: 'bar' });
-  })
+  });
 
   test('should return initial state', () => {
     expect(initialState).toEqual([]);
@@ -36,8 +36,7 @@ describe('chatMessages reducer', () => {
       ...messages1,
       ...messages2,
     ]);
-  })
-
+  });
 
   test('should add messages on AddMessages and append from to them if there is syncData', () => {
     const newMessages = [
@@ -48,7 +47,7 @@ describe('chatMessages reducer', () => {
     action.syncData = { from: 'me' };
 
     expect(reducer(initialState, action)).toEqual(
-      newMessages.map(msg => ({ ...msg, from: 'me' }))
+      newMessages.map((msg) => ({ ...msg, from: 'me' })),
     );
   });
 
@@ -61,7 +60,7 @@ describe('chatMessages reducer', () => {
     action.syncData = { from: 'me' };
 
     expect(reducer(initialState, action)).toEqual(
-      newMessages.map(msg => ({ ...msg, from: 'me' }))
+      newMessages.map((msg) => ({ ...msg, from: 'me' })),
     );
   });
 
@@ -78,4 +77,4 @@ describe('chatMessages reducer', () => {
       { text: 'baz', from: 'me' },
     ]);
   });
-})
+});

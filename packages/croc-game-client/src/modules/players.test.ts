@@ -7,7 +7,7 @@ describe('Players reducer', () => {
   beforeEach(() => {
     // @ts-ignore
     state = reducer(undefined, { type: 'bar' });
-  })
+  });
 
   test('should return initial state', () => {
     expect(state).toEqual({});
@@ -15,7 +15,7 @@ describe('Players reducer', () => {
 
   test('should add player with default score 0 on AddPlayers', () => {
     const newPlayers = [
-      { id: 'a', name: 'you', },
+      { id: 'a', name: 'you' },
       { id: 'b', name: 'me', score: 10 },
     ];
 
@@ -27,7 +27,7 @@ describe('Players reducer', () => {
 
   test('should extend player on AddPlayers if player already exists', () => {
     const newPlayers = [
-      { id: 'a', name: 'you', },
+      { id: 'a', name: 'you' },
       { id: 'b', name: 'me', score: 10 },
     ];
     const extendPlayer = [
@@ -45,7 +45,7 @@ describe('Players reducer', () => {
 
   test('should delete player with with passed id', () => {
     const newPlayers = [
-      { id: 'a', name: 'you', },
+      { id: 'a', name: 'you' },
       { id: 'b', name: 'me', score: 10 },
     ];
 
@@ -59,16 +59,16 @@ describe('Players reducer', () => {
 
   test('should update score on change score', () => {
     const newPlayers = [
-      { id: 'a', name: 'you', },
-      { id: 'b', name: 'me', },
+      { id: 'a', name: 'you' },
+      { id: 'b', name: 'me' },
     ];
 
     state = reducer(state, Actions.addPlayers(newPlayers));
     state = reducer(state, Actions.changePlayerScore({id: 'a', newScore: 30}));
 
     expect(state).toEqual({
-      b: { id: 'b', name: 'me', score: 0, },
-      a: { id: 'a', name: 'you', score: 30, },
+      b: { id: 'b', name: 'me', score: 0 },
+      a: { id: 'a', name: 'you', score: 30 },
     });
   });
-})
+});

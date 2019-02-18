@@ -7,7 +7,7 @@ import './Game.css';
 
 interface GameProps {
   loading?: boolean;
-};
+}
 
 const Game = (props: GameProps) => {
   const { loading } = props;
@@ -17,26 +17,26 @@ const Game = (props: GameProps) => {
   }
 
   return (
-    <div className="Game">
-      <div className="Sidebar">
+    <div className='Game'>
+      <div className='Sidebar'>
         <PlayersContainer />
       </div>
 
-      <div className="Main">
+      <div className='Main'>
         <PlaygroundContainer />
 
-        <div className="Chats">
-          <div className="Chat">
+        <div className='Chats'>
+          <div className='Chat'>
             <AnswersContainer />
           </div>
-          <div className="Chat">
+          <div className='Chat'>
             <ChatContainer />
           </div>
         </div>
 
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Game;

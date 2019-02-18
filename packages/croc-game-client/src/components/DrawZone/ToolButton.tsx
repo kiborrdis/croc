@@ -8,14 +8,14 @@ interface ToolButtonProps<V> {
 }
 
 class ToolButton<V> extends PureComponent<ToolButtonProps<V>> {
-  handleClick = () => {
+  public handleClick = () => {
     this.props.onClick(this.props.value);
   }
 
-  render() {
+  public render() {
     return (
       <button onClick={this.handleClick}>{this.props.label}</button>
-    )
+    );
   }
 }
 

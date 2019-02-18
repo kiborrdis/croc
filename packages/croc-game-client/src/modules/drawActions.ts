@@ -4,7 +4,7 @@ import { ActionObject as DrawAction } from 'pixelizer';
 export const reducer = (state: DrawAction[] = [], action: Actions) => {
   switch (action.type) {
     case ADD_DRAW_ACTIONS:
-      let newDrawActions = action.payload;
+      const newDrawActions = action.payload;
 
       return [...state, ...newDrawActions];
     case START_ROUND:
@@ -12,4 +12,4 @@ export const reducer = (state: DrawAction[] = [], action: Actions) => {
     default:
       return state;
   }
-}
+};

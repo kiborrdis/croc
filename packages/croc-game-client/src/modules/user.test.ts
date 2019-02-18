@@ -6,7 +6,7 @@ describe('User reducer', () => {
   beforeEach(() => {
     // @ts-ignore
     state = reducer(undefined, { type: 'bar' });
-  })
+  });
 
   describe('reducer', () => {
     test('should return initial state', () => {

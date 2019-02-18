@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect, } from 'react-redux';
+import { connect } from 'react-redux';
 import { Actions } from 'croc-actions';
 import { Store } from '../store';
 import Messages from '../components/Messages';
@@ -13,18 +13,18 @@ interface AnswerContainerProps {
 }
 
 class AnswersContainer extends Component<AnswerContainerProps> {
-  handleNewMessage = (text: string) => {
+  public handleNewMessage = (text: string) => {
     this.props.proposeAnswer(text);
   }
 
-  render() {
+  public render() {
     const { messages, canSendAnswer } = this.props;
 
     return (
       <Messages
         messages={messages}
         messageComponent={AnswerMessage}
-        onNewMessage={canSendAnswer ? this.handleNewMessage: undefined}
+        onNewMessage={canSendAnswer ? this.handleNewMessage : undefined}
       />
     );
   }
@@ -35,7 +35,7 @@ const mapStateToProps = (store: Store) => {
     messages: store.answers,
     canSendAnswer: store.game.picker !== store.user.playerId && store.game.leader !== store.user.playerId,
   };
-}
+};
 
 export default connect(mapStateToProps, {
   proposeAnswer: Actions.proposeAnswer,

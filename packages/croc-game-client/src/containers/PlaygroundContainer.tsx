@@ -10,5 +10,5 @@ const mapStateToProps = (store: Store) => {
     roundStartedAt: store.game.roundStartedAt,
     secretWord: store.game.secretWord,
   };
-}
+};
 export default connect(mapStateToProps)(Playground);

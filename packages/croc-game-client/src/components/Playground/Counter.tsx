@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 interface CounterProps {
   startTime: number;
   remainingTime: number;
-};
+}
 
 interface CounterState {
   localTime: number;
-};
+}
 
 export default class Counter extends Component<CounterProps, CounterState> {
   private counterTimeout?: NodeJS.Timeout;
@@ -20,21 +20,21 @@ export default class Counter extends Component<CounterProps, CounterState> {
     };
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     this.countSecondIfNeeded();
   }
 
-  componentDidUpdate() {
+  public componentDidUpdate() {
     this.countSecondIfNeeded();
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     if (this.counterTimeout) {
       clearTimeout(this.counterTimeout);
     }
   }
 
-  countSecondIfNeeded() {
+  public countSecondIfNeeded() {
     if (this.state.localTime - this.props.startTime > this.props.remainingTime) {
       return;
     }
@@ -50,7 +50,7 @@ export default class Counter extends Component<CounterProps, CounterState> {
     return this.props.remainingTime - (this.state.localTime - this.props.startTime);
   }
 
-  render() {
+  public render() {
     return (
       <span>
         Remaining time: {Math.floor(this.remainingTime / 60000)}:{Math.floor((this.remainingTime % 60000) / 1000)}

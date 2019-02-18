@@ -5,15 +5,15 @@ import Tools from './Tools';
 import './DrawZone.css';
 
 interface DrawZoneProps {
-  settings: CanvasSettings,
+  settings: CanvasSettings;
   onSettingsChange: (newSettings: CanvasSettings) => void;
   onNewAction: (action: any) => void;
   drawActions: any[];
   drawingEnabled: boolean;
-};
+}
 
 const DrawZone = (props: DrawZoneProps) => (
-  <div className="DrawZone">
+  <div className='DrawZone'>
     <CanvasContainer
       drawActions={props.drawActions}
       settings={props.settings}
@@ -21,6 +21,6 @@ const DrawZone = (props: DrawZoneProps) => (
       onNewAction={props.onNewAction} />
     <Tools settings={props.settings} onSettingsChange={props.onSettingsChange} />
   </div>
-)
+);
 
 export default DrawZone;

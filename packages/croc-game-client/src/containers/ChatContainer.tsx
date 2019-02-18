@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect, } from 'react-redux';
+import { connect } from 'react-redux';
 import { Actions } from 'croc-actions';
 import { Store } from '../store';
 import Messages from '../components/Messages';
@@ -12,11 +12,11 @@ interface ChatContainerProps {
 }
 
 class ChatContainer extends Component<ChatContainerProps> {
-  handleNewMessage = (text: string) => {
+  public handleNewMessage = (text: string) => {
     this.props.addMessages([{ text }]);
   }
 
-  render() {
+  public render() {
     const { messages } = this.props;
 
     return (
@@ -33,8 +33,8 @@ const mapStateToProps = (store: Store) => {
   return {
     messages: store.chatMessages,
   };
-}
+};
 
 export default connect(mapStateToProps, {
-  addMessages: Actions.addChatMessages
+  addMessages: Actions.addChatMessages,
 })(ChatContainer);

@@ -14,7 +14,7 @@ describe('Game reducer', () => {
   beforeEach(() => {
     // @ts-ignore
     state = reducer(undefined, { type: 'bar' });
-  })
+  });
 
   test('should return initial state', () => {
     expect(state).toEqual(initialState);
@@ -53,7 +53,6 @@ describe('Game reducer', () => {
     });
   });
 
-
   test('should set picker if it was passed', () => {
     state = reducer(state, Actions.setPicker('picker'));
 
@@ -78,4 +77,4 @@ describe('Game reducer', () => {
 
     expect(state).toEqual(initialState);
   });
-})
+});

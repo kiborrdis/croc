@@ -5,7 +5,7 @@ import rootReducer from './reducers';
 import sagas from './sagas';
 
 export default function storeCreator() {
-  //@ts-ignore
+  // @ts-ignore
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const sagaMiddleware = createSagaMiddleware();
   const enhancers = [

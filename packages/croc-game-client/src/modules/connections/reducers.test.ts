@@ -6,7 +6,7 @@ describe('connection reducer', () => {
 
   beforeEach(() => {
     initialState = reducer(undefined, { type: 'bar' });
-  })
+  });
 
   test('should return initial state', async () => {
     expect(initialState).toEqual({
@@ -19,7 +19,6 @@ describe('connection reducer', () => {
     initialState.status.connected = true;
 
     const state = reducer(initialState, Actions.connectRequest('name'));
-
 
     expect(state).toEqual({
       info: { name: 'name' },

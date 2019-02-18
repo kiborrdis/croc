@@ -7,7 +7,7 @@ export const reducer = (state: Answer[] = [], action: Actions) => {
       let newAnswers = action.payload;
 
       if (action.syncData && action.syncData.from) {
-        newAnswers = newAnswers.map(message => ({ from: action.syncData.from, ...message, }));
+        newAnswers = newAnswers.map((message) => ({ from: action.syncData.from, ...message }));
       }
 
       return [...state, ...newAnswers];
@@ -16,4 +16,4 @@ export const reducer = (state: Answer[] = [], action: Actions) => {
     default:
       return state;
   }
-}
+};

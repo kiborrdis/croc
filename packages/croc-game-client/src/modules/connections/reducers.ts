@@ -4,7 +4,7 @@ import { CONNECT_REQUEST, CONNECT_SUCCESS, CONNECT_FAILURE, DISCONNECT, Actions 
 function connectionStatusReducer(state = {
   connected: false,
   connecting: false,
-}, action: Actions) {
+},                               action: Actions) {
   switch (action.type) {
     case CONNECT_REQUEST: {
       return {
@@ -16,7 +16,7 @@ function connectionStatusReducer(state = {
       return {
         connected: true,
         connecting: false,
-      }
+      };
     }
     case CONNECT_FAILURE: {
       return {
@@ -34,7 +34,7 @@ function connectionStatusReducer(state = {
       return state;
     }
   }
-};
+}
 
 function infoReducer(state: { name: string | null } = { name: null }, action: Actions) {
   switch (action.type) {

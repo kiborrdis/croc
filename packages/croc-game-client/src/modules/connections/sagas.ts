@@ -1,7 +1,7 @@
 import {
   call, put, take, fork, takeEvery, actionChannel,
 } from 'redux-saga/effects';
-import { eventChannel, END } from 'redux-saga'
+import { eventChannel, END } from 'redux-saga';
 import { Actions as CrocActions} from 'croc-actions';
 import { buildIntroductionMessage, buildActionMessage } from 'croc-messages';
 import { Actions, CONNECT_REQUEST, WEBSOCKET_MESSAGE, websocketMessage, WebsocketAction } from './actions';
@@ -10,22 +10,22 @@ import { WebsocketConnection } from '../../utils/WebsocketConnection';
 
 const connection = new WebsocketConnection('ws://localhost:8000/ws');
 
-const createWebsocketMessageChannel = (connection: WebsocketConnection) => {
-  return eventChannel(emitter => {
-    connection.messageHandler = (message) => {
+const createWebsocketMessageChannel = (wsConnection: WebsocketConnection) => {
+  return eventChannel((emitter) => {
+    wsConnection.messageHandler = (message) => {
       emitter(message);
     };
 
-    connection.closeHandler = () => {
+    wsConnection.closeHandler = () => {
       emitter(END);
-    }
+    };
 
     return () => {
-      connection.messageHandler = null;
-      connection.closeHandler = null;
-    }
-  })
-}
+      wsConnection.messageHandler = null;
+      wsConnection.closeHandler = null;
+    };
+  });
+};
 
 function* websocketChannelWatcher(watchedConnection: WebsocketConnection) {
   const websocketChannel = yield call(createWebsocketMessageChannel, watchedConnection);
@@ -37,13 +37,13 @@ function* websocketChannelWatcher(watchedConnection: WebsocketConnection) {
       yield call(messageHandlerSaga, message);
     }
   } finally {
-    yield put(Actions.disconnect())
+    yield put(Actions.disconnect());
   }
 }
 
 const syncMessagePredicate = (action: AnyAction): action is CrocActions => {
   return !!(action.meta && action.meta.sync);
-}
+};
 
 function* syncActionsWatcher(syncConnection: WebsocketConnection) {
   const syncActionsChannel = yield actionChannel(syncMessagePredicate);
@@ -54,7 +54,7 @@ function* syncActionsWatcher(syncConnection: WebsocketConnection) {
 
       syncConnection.sendMessage(buildActionMessage(action));
     }
-  } finally {}
+  } catch (e) {}
 }
 
 function* messageHandlerSaga(message: any) {
@@ -68,7 +68,7 @@ function* handleActionMessage(action: WebsocketAction) {
 function* connectSaga(action: ReturnType<typeof Actions.connectRequest>) {
   try {
     yield call(() => connection.open());
-  } catch(e) {
+  } catch (e) {
     yield put(Actions.connectFailure());
 
     return;
@@ -78,14 +78,13 @@ function* connectSaga(action: ReturnType<typeof Actions.connectRequest>) {
 
   yield put(Actions.connectSuccess());
 
-
   yield fork(websocketChannelWatcher, connection);
   yield fork(syncActionsWatcher, connection);
 }
 
 const actionMessagePredicate = (action: AnyAction): action is WebsocketAction => {
   return action.type === WEBSOCKET_MESSAGE && action.payload.type === 'action';
-}
+};
 
 export function* saga() {
   yield takeEvery(CONNECT_REQUEST, connectSaga);

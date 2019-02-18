@@ -6,7 +6,7 @@ interface SectionProps {
   children: ReactNode;
   className?: string;
   tight?: boolean;
-};
+}
 
 const Section = (props: SectionProps) => (
   <div className={classNames('Section', props.className, {

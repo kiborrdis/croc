@@ -11,10 +11,9 @@ export const Actions = {
   connectSuccess: () => createAction(CONNECT_SUCCESS, undefined),
   connectFailure: () => createAction(CONNECT_FAILURE, undefined),
   disconnect: () => createAction(DISCONNECT, undefined),
-}
+};
 
 export const websocketMessage = (message: any) => createAction(WEBSOCKET_MESSAGE, message);
 
 export type Actions = ActionsUnion<typeof Actions>;
 export type WebsocketAction = ReturnType<typeof websocketMessage>;
-

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect,  } from 'react-redux';
+import { connect } from 'react-redux';
 import { Store } from '../store';
 import Game from '../components/Game';
 import { Actions } from '../modules/connections';
@@ -7,21 +7,21 @@ import { Actions } from '../modules/connections';
 interface GameContainerProps {
   loaded: boolean;
   username?: string;
-  connect: typeof Actions.connectRequest,
+  connect: typeof Actions.connectRequest;
 }
 
 class GameContainer extends Component<GameContainerProps> {
-  componentDidMount() {
-    const { connect, username } = this.props;
+  public componentDidMount() {
+    const { connect: connectDispatch, username } = this.props;
 
     if (username) {
-      connect(username);
+      connectDispatch(username);
     } else {
       throw new Error('Username in store is not defined');
     }
   }
 
-  render() {
+  public render() {
     const { loaded } = this.props;
 
     return (
@@ -35,8 +35,8 @@ const mapStateToProps = (store: Store) => {
     loaded: store.connection.status.connected,
     username: store.user.name,
   };
-}
+};
 
 export default connect(mapStateToProps, {
-  connect: Actions.connectRequest
+  connect: Actions.connectRequest,
 })(GameContainer);

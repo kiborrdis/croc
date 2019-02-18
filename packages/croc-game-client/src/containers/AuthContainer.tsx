@@ -1,21 +1,21 @@
 import React, { Component, ReactElement } from 'react';
-import { connect, } from 'react-redux';
+import { connect } from 'react-redux';
 import Auth from '../components/Auth';
 import { Store } from '../store';
 import { isAuthed, Actions } from '../modules/user';
 
 interface AuthContainerProps {
-  authed: boolean,
-  auth: typeof Actions.setUsername,
-  children: ReactElement<any>,
+  authed: boolean;
+  auth: typeof Actions.setUsername;
+  children: ReactElement<any>;
 }
 
 class AuthContainer extends Component<AuthContainerProps> {
-  handleAuth = (text: string) => {
+  public handleAuth = (text: string) => {
     this.props.auth(text);
   }
 
-  render() {
+  public render() {
     const { children, authed } = this.props;
 
     if (!authed) {
@@ -32,7 +32,7 @@ const mapStateToProps = (store: Store) => {
   return {
     authed: isAuthed(store.user),
   };
-}
+};
 
 export default connect(mapStateToProps, {
   auth: Actions.setUsername,

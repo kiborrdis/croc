@@ -41,17 +41,16 @@ const canvasToolToPixelizerConfig: { [tool in CanvasTool]: PixelizerConfig } = {
   },
   [CanvasTool.Line]: {
     tool: new LineTool(),
-    recorderCreator: (...args) => new TwoPointRecorder(...args)
-  }
+    recorderCreator: (...args) => new TwoPointRecorder(...args),
+  },
 };
 
-
 class Canvas extends Component<CanvasProps> {
-  rootRef: RefObject<HTMLDivElement>  = React.createRef();
-  pixelizer: Pixelizer | null = null;
-  lastAppliedActionIndex = 0;
+  public rootRef: RefObject<HTMLDivElement>  = React.createRef();
+  public pixelizer: Pixelizer | null = null;
+  public lastAppliedActionIndex = 0;
 
-  componentDidMount() {
+  public componentDidMount() {
     const adapter = new BrowserInteractionAdapter();
     this.pixelizer = new Pixelizer(adapter);
 
@@ -61,12 +60,12 @@ class Canvas extends Component<CanvasProps> {
     this.useSettings();
   }
 
-  componentDidUpdate() {
+  public componentDidUpdate() {
     this.applyNotAppliedActions();
     this.useSettings();
   }
 
-  useSettings() {
+  public useSettings() {
     const { settings: { tool, ...restSettings }, drawingEnabled } = this.props;
 
     if (this.pixelizer) {
@@ -78,7 +77,7 @@ class Canvas extends Component<CanvasProps> {
     }
   }
 
-  applyNotAppliedActions() {
+  public applyNotAppliedActions() {
     const { drawActions } = this.props;
 
     if (!this.pixelizer) {
@@ -97,20 +96,22 @@ class Canvas extends Component<CanvasProps> {
 
     if (drawActions.length > 0) {
       this.pixelizer.applyActions(
-        drawActions.slice(this.lastAppliedActionIndex, drawActions.length).map(rawAction => ActionSerializer.deserializeFromObj(rawAction))
-      )
+        drawActions.slice(
+          this.lastAppliedActionIndex,
+          drawActions.length).map((rawAction) => ActionSerializer.deserializeFromObj(rawAction)),
+      );
 
       this.lastAppliedActionIndex = drawActions.length - 1;
     }
   }
 
-  handleNewAction = (action: any) => {
+  public handleNewAction = (action: any) => {
     this.props.onNewAction(ActionSerializer.serialize(action));
   }
 
-  render() {
+  public render() {
     return (
-      <div ref={this.rootRef} className="Canvas">
+      <div ref={this.rootRef} className='Canvas'>
       </div>
     );
   }

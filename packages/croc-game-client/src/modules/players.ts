@@ -4,7 +4,7 @@ import { Player } from '../types/Player';
 export const reducer = (state: { [id: string]: Player } = {}, action: Actions) => {
   switch (action.type) {
     case ADD_PLAYERS:
-      let newPlayers = action.payload.reduce((memo: { [id: string]: Player }, player) => {
+      const newPlayers = action.payload.reduce((memo: { [id: string]: Player }, player) => {
         memo[player.id] = { score: 0, ...state[player.id], ...player };
 
         return memo;
@@ -24,4 +24,4 @@ export const reducer = (state: { [id: string]: Player } = {}, action: Actions) =
     default:
       return state;
   }
-}
+};

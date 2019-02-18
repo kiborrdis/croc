@@ -13,29 +13,29 @@ interface CanvasContainerProps {
 }
 
 interface CanvasContainerState {
-  settings: CanvasSettings,
+  settings: CanvasSettings;
 }
 
 class CanvasContainer extends Component<CanvasContainerProps, CanvasContainerState> {
-  state = {
+  public state = {
     settings: {
       tool: CanvasTool.Brush,
       color: '#00ff00',
       lineWidth: 5,
     },
-  }
+  };
 
-  handleSettingsChange = (newSettings: CanvasSettings) => {
+  public handleSettingsChange = (newSettings: CanvasSettings) => {
     this.setState({
       settings: newSettings,
     });
   }
 
-  handleNewAction = (action: any) => {
+  public handleNewAction = (action: any) => {
     this.props.addDrawActions([action]);
   }
 
-  render() {
+  public render() {
     const { drawActions, drawingEnabled } = this.props;
     const { settings } = this.state;
 
@@ -56,8 +56,8 @@ const mapStateToProps = (store: Store) => {
     drawActions: store.drawActions,
     drawingEnabled: !!(store.game.leader && store.game.leader === store.user.playerId),
   };
-}
+};
 
 export default connect(mapStateToProps, {
-  addDrawActions: Actions.addDrawActions
+  addDrawActions: Actions.addDrawActions,
 })(CanvasContainer);

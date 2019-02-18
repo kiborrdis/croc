@@ -10,19 +10,19 @@ function Messages<M>(props: {
   onNewMessage?: (text: string) => void,
 }) {
   return (
-    <Section tight className="Messages">
-      <div className="Message-content">
+    <Section tight className='Messages'>
+      <div className='Message-content'>
         <MessageList
           messages={props.messages}
           component={props.messageComponent} />
       </div>
       {props.onNewMessage && (
-        <div className="Message-footer">
+        <div className='Message-footer'>
           <ApplicableInput onApply={props.onNewMessage} />
         </div>
       )}
     </Section>
-  )
-};
+  );
+}
 
 export default Messages;
