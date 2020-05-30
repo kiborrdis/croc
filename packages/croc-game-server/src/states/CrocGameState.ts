@@ -23,8 +23,8 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
       this.beforeHandleDisconnectedPlayer(message.playerId);
       this.handleDisconnectedPlayer(message.playerId);
     } else if (isNewPlayerMessage(message)) {
-      this.beforeHandleConnectedPlayer(message.playerId);
-      this.handleNewPlayer(message.playerId);
+      this.beforeHandleConnectedPlayer(message.player.id);
+      this.handleNewPlayer(message.player.id);
     }
   }
 

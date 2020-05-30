@@ -141,7 +141,7 @@ export class Game<D extends GameData = GameData> {
   protected notifyAboutNewPlayer(playerId: string) {
     this.handleMessage('self', {
       type: NEW_PLAYER_MESSAGE,
-      playerId,
+      player: { id: playerId },
     });
   }
 

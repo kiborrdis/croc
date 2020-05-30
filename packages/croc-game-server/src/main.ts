@@ -67,9 +67,10 @@ const game = new CrocGame({
 });
 
 wsApp.app.ws('/ws', (ws, request) => {
+  console.log('open');
   ws.on('message', (msg) => {
     let jsonMessage: any;
-
+    console.log('message');
     try {
       jsonMessage = JSON.parse(msg.toString());
     } catch (e) {

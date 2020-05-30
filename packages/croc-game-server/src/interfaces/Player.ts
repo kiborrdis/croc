@@ -1,6 +1,6 @@
 export interface Player {
   id: string;
   name: string;
-  score: number;
+  score?: number;
   disconnected?: boolean;
 }

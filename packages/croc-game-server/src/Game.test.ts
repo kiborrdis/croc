@@ -115,7 +115,7 @@ describe('Game', () => {
   test(`should call handle message on new player `, async () => {
     expect(game.handleMessage).toBeCalledWith(
       'self',
-      { type: NEW_PLAYER_MESSAGE, playerId: id },
+      { type: NEW_PLAYER_MESSAGE, player: { id } },
     );
   });
 
