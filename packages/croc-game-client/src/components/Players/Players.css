@@ -1,9 +1,0 @@
-.Players {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.Players > * + * {
-  margin-top: 10px;
-}
