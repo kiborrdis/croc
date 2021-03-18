@@ -14,7 +14,7 @@ export class EndRoundState extends CrocGameState {
     this.winnerId = winnerId || null;
   }
 
-  public handleEnter() {
+  public handleEnter(): void {
     this.finalizeRound();
   }
 

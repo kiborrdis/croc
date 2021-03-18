@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Action as ReduxAction } from 'redux';
 
 interface Action<T extends string, P, M> extends ReduxAction<T> {
@@ -10,15 +12,6 @@ type FunctionType = (...args: any[]) => any;
 
 interface ActionCreatorsMapObject {
   [actionCreator: string]: FunctionType;
-}
-
-interface AddMessageParams {
-  text: string;
-  service?: boolean;
-}
-
-interface SyncOptions {
-  sync?: boolean;
 }
 
 export type ActionsUnion<A extends ActionCreatorsMapObject> = ReturnType<

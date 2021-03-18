@@ -4,7 +4,7 @@ import { RoundInProgressState } from './RoundInProgressState';
 import { WaitState } from './WaitState';
 
 export class BeforeRoundState extends CrocGameState {
-  public handleEnter() {
+  public handleEnter(): void {
     if (
       this.context.data.numberOfConnectedPlayers === 2 ||
       !this.context.data.picker
@@ -13,7 +13,7 @@ export class BeforeRoundState extends CrocGameState {
     }
   }
 
-  public handleDisconnectedPlayer(playerId: string) {
+  public handleDisconnectedPlayer(playerId: string): void {
     if (this.context.data.numberOfConnectedPlayers < 2) {
       this.context.setState(new WaitState());
     }
@@ -23,7 +23,7 @@ export class BeforeRoundState extends CrocGameState {
     }
   }
 
-  public handleAction(fromId: string, action: Actions) {
+  public handleAction(fromId: string, action: Actions): void {
     switch (action.type) {
       case PICK_WORD:
         if (this.context.data.picker === fromId) {

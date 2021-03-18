@@ -6,13 +6,13 @@ import { delayCall, DelayedCall } from '../utils/DelayCall';
 export class RoundInProgressState extends CrocGameState {
   private roundEndDelay?: DelayedCall;
 
-  public handleEnter() {
+  public handleEnter(): void {
     this.roundEndDelay = delayCall(() => {
       this.context.setState(new EndRoundState());
     }, this.context.data.timePerRound);
   }
 
-  public handleAction(fromId: string, action: Actions) {
+  public handleAction(fromId: string, action: Actions): void {
     switch (action.type) {
       case ADD_DRAW_ACTIONS:
         if (this.context.data.leader === fromId) {
@@ -52,7 +52,7 @@ export class RoundInProgressState extends CrocGameState {
     }
   }
 
-  public handleDisconnectedPlayer(playerId: string) {
+  public handleDisconnectedPlayer(playerId: string): void {
     if (this.shouldEndRoundEarly()) {
       this.context.setState(new EndRoundState());
     }
@@ -67,7 +67,7 @@ export class RoundInProgressState extends CrocGameState {
     );
   }
 
-  public handleExit() {
+  public handleExit(): void {
     if (this.roundEndDelay) {
       this.roundEndDelay.cancel();
       this.roundEndDelay = undefined;

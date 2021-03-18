@@ -19,28 +19,28 @@ export class WebsocketResponder implements Responder {
     this.connections = connections;
   }
 
-  public enqueueResponseForAll(messages: Message[]) {
+  public enqueueResponseForAll(messages: Message[]): void {
     this.responseQueue.push({
       to: { recipients: 'all' },
       messages,
     });
   }
 
-  public enqueueResponseForAllButOne(id: string, messages: Message[]) {
+  public enqueueResponseForAllButOne(id: string, messages: Message[]): void {
     this.responseQueue.push({
       to: { recipients: 'all', except: [id] },
       messages,
     });
   }
 
-  public enqueueResponseForOne(id: string, messages: Message[]) {
+  public enqueueResponseForOne(id: string, messages: Message[]): void {
     this.responseQueue.push({
       to: { recipients: [id] },
       messages,
     });
   }
 
-  public sendAllEnqueuedMessages() {
+  public sendAllEnqueuedMessages(): void {
     this.responseQueue.forEach(({ to, messages }) => {
       messages.forEach((message) => {
         if (to.recipients === 'all') {
@@ -82,7 +82,7 @@ export class WebsocketResponder implements Responder {
     }
   }
 
-  public send(ws: WebSocket, message: Message) {
+  public send(ws: WebSocket, message: Message): void {
     ws.send(JSON.stringify(message));
   }
 }

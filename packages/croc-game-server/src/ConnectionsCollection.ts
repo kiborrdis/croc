@@ -7,14 +7,18 @@ interface ConnectionItem {
 
 type Comparable = ConnectionItem[keyof ConnectionItem];
 
-function isWebsocket(test: any): test is WebSocket {
-  return test.send && test.on && test.once;
+function isWebsocket(test: unknown): test is WebSocket {
+  if (typeof test === 'object' && test) {
+    return 'send' in test && 'on' in test && 'once' in test;
+  }
+
+  return false;
 }
 
 export class ConnectionsCollection {
   public connections: ConnectionItem[] = [];
 
-  public set(name: string, ws: WebSocket) {
+  public set(name: string, ws: WebSocket): void {
     if (!this.contains(ws)) {
       this.connections.push({ name, ws });
     } else {
@@ -24,7 +28,7 @@ export class ConnectionsCollection {
     }
   }
 
-  public delete(matchValue: Comparable) {
+  public delete(matchValue: Comparable): void {
     const index = this.findIndex(matchValue);
 
     if (this.isIndexInvalid(index)) {
@@ -34,7 +38,7 @@ export class ConnectionsCollection {
     this.connections.splice(index, 1);
   }
 
-  public contains(matchValue: Comparable) {
+  public contains(matchValue: Comparable): boolean {
     return !this.isIndexInvalid(this.findIndex(matchValue));
   }
 
@@ -48,11 +52,11 @@ export class ConnectionsCollection {
     return { ...this.connections[index] };
   }
 
-  public forEach(cb: (item: ConnectionItem) => void) {
+  public forEach(cb: (item: ConnectionItem) => void): void {
     this.connections.forEach(cb);
   }
 
-  public get length() {
+  public get length(): number {
     return this.connections.length;
   }
 

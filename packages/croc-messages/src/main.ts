@@ -17,18 +17,30 @@ export interface IntroductionMessage
   playerId?: string;
 }
 
-export function isActionMessage(message: any): message is ActionMessage {
-  return message.type === ACTION_MESSAGE && message.action;
+export function isActionMessage(message: unknown): message is ActionMessage {
+  if (message && typeof message === 'object') {
+    const { type, action } = message as { type: string; action: unknown };
+
+    return type === ACTION_MESSAGE && !!action;
+  }
+
+  return false;
 }
 
 export function isIntroductionMessage(
-  message: any,
+  message: unknown,
 ): message is IntroductionMessage {
-  return message.type === INTRODUCTION_MESSAGE;
+  if (message && typeof message === 'object') {
+    const { type } = message as { type: string };
+
+    return type === INTRODUCTION_MESSAGE;
+  }
+
+  return false;
 }
 
 export interface AnyMessage extends Message {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function buildActionMessage(

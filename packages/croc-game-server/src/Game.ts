@@ -39,7 +39,7 @@ export class Game<D extends GameData = GameData> {
     this.context = this.initializeContext();
   }
 
-  protected initializeContext() {
+  protected initializeContext(): GameContext<D> {
     const state = new GameState<D>();
 
     return new GameContext<D>(state, this.data, this.responder);
@@ -94,7 +94,7 @@ export class Game<D extends GameData = GameData> {
     return null;
   }
 
-  public disconnectPlayerWithId(id: string) {
+  public disconnectPlayerWithId(id: string): void {
     this.data.players[id].disconnected = true;
 
     this.sendPlayer(id);
@@ -132,36 +132,35 @@ export class Game<D extends GameData = GameData> {
     ]);
   }
 
-  protected get numberOfPlayers() {
+  protected get numberOfPlayers(): number {
     return Object.keys(this.data.players).length;
   }
 
-  protected get numberOfConnectedPlayers() {
+  protected get numberOfConnectedPlayers(): number {
     return Object.keys(this.data.players).filter(
       (id) => !this.data.players[id].disconnected,
     ).length;
   }
 
-  protected notifyAboutNewPlayer(playerId: string) {
+  protected notifyAboutNewPlayer(playerId: string): void {
     this.handleMessage('self', {
       type: NEW_PLAYER_MESSAGE,
       player: { id: playerId },
     });
   }
 
-  protected notifyAboutDisconnectedPlayer(playerId: string) {
+  protected notifyAboutDisconnectedPlayer(playerId: string): void {
     this.handleMessage('self', {
       type: DISCONNECTED_MESSAGE,
       playerId,
     });
   }
 
-  protected notifyAboutDeletedPlayer(playerId: string) {
+  protected notifyAboutDeletedPlayer(playerId: string): void {
     this.handleMessage('self', {
       type: DELETE_PLAYER_MESSAGE,
       playerId,
     });
   }
-
-  public handleMessage(fromId: string, message: AnyMessage) {}
+  public handleMessage(fromId: string, message: AnyMessage): void {}
 }

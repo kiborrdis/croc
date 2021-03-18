@@ -8,16 +8,16 @@ export class GameState<
 > {
   protected context!: C;
 
-  public enter(context: C) {
+  public enter(context: C): void {
     this.context = context;
     this.handleEnter();
   }
 
-  public exit() {
+  public exit(): void {
     this.handleExit();
   }
 
-  public handleEnter() {}
-  public handleExit() {}
-  public handleMessage(fromId: string, message: Message) {}
+  public handleEnter(): void {}
+  public handleExit(): void {}
+  public handleMessage(fromId: string, message: Message): void {}
 }

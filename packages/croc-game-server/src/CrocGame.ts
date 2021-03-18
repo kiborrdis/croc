@@ -24,10 +24,18 @@ export class CrocGame extends Game<CrocGameData> {
       gameDataInitializer: params.gameDataInitializer,
       config: {
         reconnectionTimeout: params.config.reconnectionTimeout,
-        deletePlayerMessageCreator: (id: string) =>
-          buildActionMessage(Actions.deletePlayer(id), 'server'),
-        addPlayersMessageCreator: (players) =>
-          buildActionMessage(Actions.addPlayers(players), 'server'),
+        deletePlayerMessageCreator: (id: string) => {
+          return (buildActionMessage(
+            Actions.deletePlayer(id),
+            'server',
+          ) as unknown) as AnyMessage;
+        },
+        addPlayersMessageCreator: (players) => {
+          return (buildActionMessage(
+            Actions.addPlayers(players),
+            'server',
+          ) as unknown) as AnyMessage;
+        },
       },
     });
 
@@ -36,13 +44,13 @@ export class CrocGame extends Game<CrocGameData> {
     this.data.timePerRound = params.config.timeForRound;
   }
 
-  protected initializeContext() {
+  protected initializeContext(): CrocGameContext {
     const state = new WaitState();
 
     return new CrocGameContext(state, this.data, this.responder);
   }
 
-  public handleMessage(fromId: string, message: AnyMessage) {
+  public handleMessage(fromId: string, message: AnyMessage): void {
     this.context.handleMessage(fromId, message);
   }
 }

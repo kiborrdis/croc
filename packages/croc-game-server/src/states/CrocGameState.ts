@@ -24,7 +24,7 @@ export abstract class CrocGameState extends GameState<
   CrocGameData,
   CrocGameContext
 > {
-  public handleMessage(fromId: string, message: Message) {
+  public handleMessage(fromId: string, message: Message): void {
     if (isActionMessage(message)) {
       this.beforeHandleAction(fromId, message.action);
       this.handleAction(fromId, message.action);
@@ -102,11 +102,11 @@ export abstract class CrocGameState extends GameState<
     }
   }
 
-  protected handleAction(fromId: string, action: Actions) {}
-  protected handleNewPlayer(playerId: string) {}
-  protected handleDisconnectedPlayer(playerId: string) {}
+  protected handleAction(fromId: string, action: Actions): void {}
+  protected handleNewPlayer(playerId: string): void {}
+  protected handleDisconnectedPlayer(playerId: string): void {}
 
-  protected unsetPicker() {
+  protected unsetPicker(): void {
     const data = this.context.data;
 
     if (data.picker) {

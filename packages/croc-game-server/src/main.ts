@@ -70,7 +70,7 @@ const game = new CrocGame({
 wsApp.app.ws('/ws', (ws, request) => {
   console.log('open');
   ws.on('message', (msg) => {
-    let jsonMessage: any;
+    let jsonMessage: unknown;
     console.log('message');
     try {
       jsonMessage = JSON.parse(msg.toString());
@@ -100,10 +100,7 @@ wsApp.app.ws('/ws', (ws, request) => {
   });
 });
 
-function handleMessage(
-  message: { type: string; [name: string]: any },
-  ws: WebSocket,
-) {
+function handleMessage(message: unknown, ws: WebSocket) {
   if (isIntroductionMessage(message)) {
     handleIntroductionMessage(message, ws);
   } else if (!connections.contains(ws)) {
@@ -133,7 +130,7 @@ function handleActionMessage(message: ActionMessage, ws: WebSocket) {
       );
     }
 
-    handleGameMessage(connection.name, message);
+    handleGameMessage(connection.name, (message as unknown) as AnyMessage);
   }
 }
 

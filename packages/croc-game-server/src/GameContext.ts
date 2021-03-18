@@ -15,7 +15,7 @@ export class GameContext<D extends GameData> {
     this.setState(initialState);
   }
 
-  public get data() {
+  public get data(): D {
     return this.gameData;
   }
 
@@ -23,7 +23,7 @@ export class GameContext<D extends GameData> {
     this.state.handleMessage(fromId, message);
   }
 
-  public setState(state: GameState<D>) {
+  public setState(state: GameState<D>): void {
     if (this.state) {
       this.state.exit();
     }
