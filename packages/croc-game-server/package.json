@@ -9,7 +9,8 @@
     "start": "yarn build && node dist/main.js",
     "build": "tsc",
     "lint:fix": "tslint -p . --fix",
-    "lint": "tslint -p ."
+    "lint": "tslint -p .",
+    "format": "prettier --write \"src/**/*.{ts,json}\""
   },
   "author": "",
   "license": "ISC",

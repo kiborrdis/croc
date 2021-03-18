@@ -1,6 +1,7 @@
 import { delayCall, setAfterCallHandler } from './DelayCall';
 
-const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
+const delay = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time));
 
 describe('DelayCall', () => {
   let testFn: () => {};

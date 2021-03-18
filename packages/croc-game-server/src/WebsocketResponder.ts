@@ -49,7 +49,6 @@ export class WebsocketResponder implements Responder {
           } else {
             this.sendToAll(message);
           }
-
         } else if (to.recipients.length === 1) {
           this.sendTo(to.recipients[0], message);
         }

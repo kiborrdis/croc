@@ -3,13 +3,13 @@
   "name": "croc",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "author": "",
   "license": "ISC",
-  "dependencies": {
-  },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "prettier": "^2.2.1"
+  }
 }

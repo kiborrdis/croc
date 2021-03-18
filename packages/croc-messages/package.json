@@ -8,6 +8,7 @@
     "test:watch": "jest --watchAll",
     "start": "rollup -c --watch",
     "build": "tsc",
+    "format": "prettier --write \"src/**/*.{ts,json}\"",
     "lint:fix": "tslint -p . --fix",
     "lint": "tslint -p ."
   },
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "jest": "^26.0.0",
+    "prettier": "^2.2.1",
     "ts-jest": "^26.1.0",
     "typescript": "^3.9.3"
   },

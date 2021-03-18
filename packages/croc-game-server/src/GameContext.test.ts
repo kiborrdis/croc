@@ -20,7 +20,11 @@ describe('GameContext', () => {
 
   beforeEach(() => {
     initialState = new MockGameState();
-    context = new GameContext(initialState, new GameData(), new MockResponder());
+    context = new GameContext(
+      initialState,
+      new GameData(),
+      new MockResponder(),
+    );
   });
 
   test('should enter initial state', () => {

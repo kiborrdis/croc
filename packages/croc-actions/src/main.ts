@@ -21,9 +21,15 @@ interface SyncOptions {
   sync?: boolean;
 }
 
-export type ActionsUnion<A extends ActionCreatorsMapObject> = ReturnType<A[keyof A]>;
+export type ActionsUnion<A extends ActionCreatorsMapObject> = ReturnType<
+  A[keyof A]
+>;
 
-export function createAction<T extends string, P, M>(type: T, payload: P, meta?: M): Action<T, P, M> {
+export function createAction<T extends string, P, M>(
+  type: T,
+  payload: P,
+  meta?: M,
+): Action<T, P, M> {
   return {
     type,
     payload,
@@ -47,22 +53,31 @@ export const ADD_DRAW_ACTIONS = 'ADD_DRAW_ACTIONS';
 export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
 
 export const Actions = {
-  addPlayers: (players: Array<{ id: string, name?: string, score?: number, disconnected?: boolean }>) => {
+  addPlayers: (
+    players: Array<{
+      id: string;
+      name?: string;
+      score?: number;
+      disconnected?: boolean;
+    }>,
+  ) => {
     return createAction(ADD_PLAYERS, players, { sync: true });
   },
   deletePlayer: (playerId: string) => {
     return createAction(DELETE_PLAYER, playerId);
   },
-  changePlayerScore: (player: { id: string, newScore: number }) => {
+  changePlayerScore: (player: { id: string; newScore: number }) => {
     return createAction(CHANGE_PLAYER_SCORE, player, { sync: true });
   },
-  addAnswers: (answers: Array<{ answer: string, right?: boolean, from?: string }>) => {
+  addAnswers: (
+    answers: Array<{ answer: string; right?: boolean; from?: string }>,
+  ) => {
     return createAction(ADD_ANSWERS, answers, { sync: true });
   },
   proposeAnswer: (answer: string) => {
     return createAction(PROPOSE_ANSWER, answer, { sync: true });
   },
-  addChatMessages: (messages: Array<{ text: string, from?: string }>) => {
+  addChatMessages: (messages: Array<{ text: string; from?: string }>) => {
     return createAction(ADD_CHAT_MESSAGES, messages, { sync: true });
   },
   setLeader: (id: string) => {
@@ -74,8 +89,11 @@ export const Actions = {
   pickWord: (word?: string) => {
     return createAction(PICK_WORD, word, { sync: true });
   },
-  startRound: (params: { word?: string, remainingTime: number }) => {
-    return createAction(START_ROUND, { word: params.word, remainingTime: params.remainingTime });
+  startRound: (params: { word?: string; remainingTime: number }) => {
+    return createAction(START_ROUND, {
+      word: params.word,
+      remainingTime: params.remainingTime,
+    });
   },
   endRound: () => {
     return createAction(END_ROUND, undefined);

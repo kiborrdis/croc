@@ -64,9 +64,13 @@ export class ConnectionsCollection {
     let index: number;
 
     if (isWebsocket(matchValue)) {
-      index = this.connections.findIndex(({ ws: testWs }) => testWs === matchValue);
+      index = this.connections.findIndex(
+        ({ ws: testWs }) => testWs === matchValue,
+      );
     } else {
-      index = this.connections.findIndex(({ name: testName }) => testName === matchValue);
+      index = this.connections.findIndex(
+        ({ name: testName }) => testName === matchValue,
+      );
     }
 
     return index;

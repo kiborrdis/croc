@@ -14,21 +14,20 @@ interface CrocGameConfig {
 }
 
 export class CrocGame extends Game<CrocGameData> {
-
-  constructor(params: { responder: Responder, config: CrocGameConfig, gameDataInitializer: () => CrocGameData }) {
+  constructor(params: {
+    responder: Responder;
+    config: CrocGameConfig;
+    gameDataInitializer: () => CrocGameData;
+  }) {
     super({
       responder: params.responder,
       gameDataInitializer: params.gameDataInitializer,
       config: {
         reconnectionTimeout: params.config.reconnectionTimeout,
-        deletePlayerMessageCreator: (id: string) => buildActionMessage(
-          Actions.deletePlayer(id),
-          'server',
-        ),
-        addPlayersMessageCreator: (players) => buildActionMessage(
-          Actions.addPlayers(players),
-          'server',
-        ),
+        deletePlayerMessageCreator: (id: string) =>
+          buildActionMessage(Actions.deletePlayer(id), 'server'),
+        addPlayersMessageCreator: (players) =>
+          buildActionMessage(Actions.addPlayers(players), 'server'),
       },
     });
 

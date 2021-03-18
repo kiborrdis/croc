@@ -35,10 +35,11 @@ const logger = winston.createLogger({
 });
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple(),
-
-  }));
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  );
 }
 
 const app = express();
@@ -99,7 +100,10 @@ wsApp.app.ws('/ws', (ws, request) => {
   });
 });
 
-function handleMessage(message: { type: string, [name: string]: any}, ws: WebSocket) {
+function handleMessage(
+  message: { type: string; [name: string]: any },
+  ws: WebSocket,
+) {
   if (isIntroductionMessage(message)) {
     handleIntroductionMessage(message, ws);
   } else if (!connections.contains(ws)) {
@@ -133,7 +137,10 @@ function handleActionMessage(message: ActionMessage, ws: WebSocket) {
   }
 }
 
-function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) {
+function handleIntroductionMessage(
+  message: IntroductionMessage,
+  ws: WebSocket,
+) {
   if (connections.contains(ws)) {
     logger.log('info', `Trying to reconnect '${message.playerId}'`);
 
@@ -142,7 +149,10 @@ function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) 
       name: message.name,
     });
 
-    logger.log('info', `Player '${message.name}' with id '${message.playerId}' reconnected`);
+    logger.log(
+      'info',
+      `Player '${message.name}' with id '${message.playerId}' reconnected`,
+    );
 
     connections.set(recievedId, ws);
   } else {
@@ -150,10 +160,15 @@ function handleIntroductionMessage(message: IntroductionMessage, ws: WebSocket) 
       name: message.name,
     });
 
-    logger.log('info', `Player '${message.name}' with id '${playerId}' connected`);
+    logger.log(
+      'info',
+      `Player '${message.name}' with id '${playerId}' connected`,
+    );
 
     connections.set(playerId, ws);
-    responder.enqueueResponseForOne(playerId, [buildIntroductionMessage(message.name, playerId)]);
+    responder.enqueueResponseForOne(playerId, [
+      buildIntroductionMessage(message.name, playerId),
+    ]);
   }
 }
 

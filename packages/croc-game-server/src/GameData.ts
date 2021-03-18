@@ -8,6 +8,8 @@ export class GameData {
   }
 
   public get numberOfConnectedPlayers() {
-    return Object.keys(this.players).filter((id) => !this.players[id].disconnected).length;
+    return Object.keys(this.players).filter(
+      (id) => !this.players[id].disconnected,
+    ).length;
   }
 }

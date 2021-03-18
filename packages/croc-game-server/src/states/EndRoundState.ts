@@ -50,10 +50,14 @@ export class EndRoundState extends CrocGameState {
   private processWinner(winnerId: string) {
     const data = this.context.data;
 
-    data.players[winnerId].score = (data.players[winnerId].score || 0) + RIGHT_GUESS_SCORE_DELTA;
+    data.players[winnerId].score =
+      (data.players[winnerId].score || 0) + RIGHT_GUESS_SCORE_DELTA;
 
     this.context.sendActionToAll(
-      Actions.changePlayerScore({ id: winnerId, newScore: data.players[winnerId].score || 0 }),
+      Actions.changePlayerScore({
+        id: winnerId,
+        newScore: data.players[winnerId].score || 0,
+      }),
     );
   }
 }

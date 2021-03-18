@@ -15,7 +15,8 @@ import { CrocGame } from './CrocGame';
 import { CrocGameData } from './CrocGameData';
 import { Responder } from './interfaces/Responder';
 
-const delay = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
+const delay = (time: number) =>
+  new Promise((resolve) => setTimeout(resolve, time));
 
 class MockResponder implements Responder {
   public enqueueResponseForAll = jest.fn();
@@ -37,15 +38,19 @@ const msgValidator = (type: any, payload: any, from?: string) => {
     actionContent.syncData = { from };
   }
 
-  return expect.arrayContaining([expect.objectContaining({
-    type: 'action',
-    action: expect.objectContaining(actionContent),
-  })]);
+  return expect.arrayContaining([
+    expect.objectContaining({
+      type: 'action',
+      action: expect.objectContaining(actionContent),
+    }),
+  ]);
 };
 
 test('Can create new game without throwing', () => {
   const game = new CrocGame({
-    responder: new MockResponder(), config, gameDataInitializer: () => new CrocGameData(),
+    responder: new MockResponder(),
+    config,
+    gameDataInitializer: () => new CrocGameData(),
   });
 });
 
@@ -82,13 +87,19 @@ describe('Game', () => {
 
   beforeEach(() => {
     responder = new MockResponder();
-    game = new CrocGame({responder, config, gameDataInitializer: () => new CrocGameData()});
+    game = new CrocGame({
+      responder,
+      config,
+      gameDataInitializer: () => new CrocGameData(),
+    });
     id = game.connectPlayerWithInfo({ name: 'Meow' });
   });
 
   describe('with single player', () => {
     test('send set leader action', () => {
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(SET_LEADER, id));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(SET_LEADER, id),
+      );
     });
 
     test('pick word and start round on second player connection', () => {
@@ -100,7 +111,10 @@ describe('Game', () => {
     test('send leader when second player connected', () => {
       const secondId = game.connectPlayerWithInfo({ name: 'Mark' });
 
-      expect(responder.enqueueResponseForOne).toBeCalledWith(secondId, msgValidator(SET_LEADER, id));
+      expect(responder.enqueueResponseForOne).toBeCalledWith(
+        secondId,
+        msgValidator(SET_LEADER, id),
+      );
     });
   });
 
@@ -114,88 +128,83 @@ describe('Game', () => {
     test('broadcast chat message for everyone but sender', () => {
       messageToGame(id, Actions.addChatMessages([{ text: 'foo' }]));
 
-      expect(responder.enqueueResponseForAllButOne).toBeCalledWith(id, msgValidator(
-        ADD_CHAT_MESSAGES,
-        [{ text: 'foo' }],
+      expect(responder.enqueueResponseForAllButOne).toBeCalledWith(
         id,
-      ));
+        msgValidator(ADD_CHAT_MESSAGES, [{ text: 'foo' }], id),
+      );
     });
 
     test('broadcast draw action message from leader for everyone but sender', () => {
       messageToGame(id, Actions.addDrawActions(['test']));
 
-      expect(responder.enqueueResponseForAllButOne).toBeCalledWith(id, msgValidator(
-        ADD_DRAW_ACTIONS,
-        ['test'],
+      expect(responder.enqueueResponseForAllButOne).toBeCalledWith(
         id,
-      ));
+        msgValidator(ADD_DRAW_ACTIONS, ['test'], id),
+      );
     });
 
     test('do not broadcast draw action message from not leader for everyone but sender', () => {
       messageToGame(secondId, Actions.addDrawActions(['test']));
 
-      expect(responder.enqueueResponseForAllButOne).not.toBeCalledWith(secondId, msgValidator(
-        ADD_DRAW_ACTIONS,
-        ['test'],
+      expect(responder.enqueueResponseForAllButOne).not.toBeCalledWith(
         secondId,
-      ));
+        msgValidator(ADD_DRAW_ACTIONS, ['test'], secondId),
+      );
     });
 
     test('broadcast proposed wrong answer for everyone', () => {
       messageToGame(secondId, Actions.proposeAnswer('test'));
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        ADD_ANSWERS,
-        [{ answer: 'test', right: false }],
-        secondId,
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(ADD_ANSWERS, [{ answer: 'test', right: false }], secondId),
+      );
     });
 
     test('broadcast proposed right answer for everyone', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        ADD_ANSWERS,
-        [{ answer: 'sadness', right: true }],
-        secondId,
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(
+          ADD_ANSWERS,
+          [{ answer: 'sadness', right: true }],
+          secondId,
+        ),
+      );
     });
 
     test('do not broadcast proposed answer if sent by leader', () => {
       messageToGame(id, Actions.proposeAnswer('test'));
 
-      expect(responder.enqueueResponseForAll).not.toBeCalledWith(msgValidator(
-        ADD_ANSWERS,
-        [{ answer: 'test', right: false }],
-        id,
-      ));
+      expect(responder.enqueueResponseForAll).not.toBeCalledWith(
+        msgValidator(ADD_ANSWERS, [{ answer: 'test', right: false }], id),
+      );
     });
 
     test('end round if right answer was proposed', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        END_ROUND,
-        undefined,
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(END_ROUND, undefined),
+      );
     });
 
     test('send player who guessed the word new leader', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        SET_LEADER,
-        secondId,
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(SET_LEADER, secondId),
+      );
     });
 
     test('send new scores on end round', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        CHANGE_PLAYER_SCORE,
-        expect.objectContaining({ id: secondId }),
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(
+          CHANGE_PLAYER_SCORE,
+          expect.objectContaining({ id: secondId }),
+        ),
+      );
     });
 
     test('pick word and start round on end round', () => {
@@ -217,22 +226,28 @@ describe('Game', () => {
     test('should pass all chat messages to new player', () => {
       messageToGame(id, Actions.addChatMessages([{ text: 'one' }]));
       messageToGame(secondId, Actions.addChatMessages([{ text: 'two' }]));
-      messageToGame(thirdId, Actions.addChatMessages([{ text: 'three' }, { text: 'four' }]));
+      messageToGame(
+        thirdId,
+        Actions.addChatMessages([{ text: 'three' }, { text: 'four' }]),
+      );
       messageToGame(secondId, Actions.addChatMessages([{ text: 'five' }]));
 
       const fourthId = game.connectPlayerWithInfo({ name: 'qua' });
 
-      expect(responder.enqueueResponseForOne).toBeCalledWith(fourthId, msgValidator(
-        ADD_CHAT_MESSAGES,
-        [
-          { text: 'one', from: id },
-          { text: 'two', from: secondId },
-          { text: 'three', from: thirdId },
-          { text: 'four', from: thirdId },
-          { text: 'five', from: secondId },
-        ],
-        'server',
-      ));
+      expect(responder.enqueueResponseForOne).toBeCalledWith(
+        fourthId,
+        msgValidator(
+          ADD_CHAT_MESSAGES,
+          [
+            { text: 'one', from: id },
+            { text: 'two', from: secondId },
+            { text: 'three', from: thirdId },
+            { text: 'four', from: thirdId },
+            { text: 'five', from: secondId },
+          ],
+          'server',
+        ),
+      );
     });
 
     test('should pass all draw actions to new player', () => {
@@ -243,16 +258,14 @@ describe('Game', () => {
 
       const fourthId = game.connectPlayerWithInfo({ name: 'qua' });
 
-      expect(responder.enqueueResponseForOne).toBeCalledWith(fourthId, msgValidator(
-        ADD_DRAW_ACTIONS,
-        [
-          'test1',
-          'test2',
-          'test3',
-          'test4',
-        ],
-        'server',
-      ));
+      expect(responder.enqueueResponseForOne).toBeCalledWith(
+        fourthId,
+        msgValidator(
+          ADD_DRAW_ACTIONS,
+          ['test1', 'test2', 'test3', 'test4'],
+          'server',
+        ),
+      );
     });
 
     test('should pass all answers to new player', () => {
@@ -263,16 +276,19 @@ describe('Game', () => {
 
       const fourthId = game.connectPlayerWithInfo({ name: 'qua' });
 
-      expect(responder.enqueueResponseForOne).toBeCalledWith(fourthId, msgValidator(
-        ADD_ANSWERS,
-        [
-          { answer: 'test1', right: false, from: secondId },
-          { answer: 'test2', right: false, from: thirdId },
-          { answer: 'test3', right: false, from: secondId },
-          { answer: 'test4', right: false, from: secondId },
-        ],
-        'server',
-      ));
+      expect(responder.enqueueResponseForOne).toBeCalledWith(
+        fourthId,
+        msgValidator(
+          ADD_ANSWERS,
+          [
+            { answer: 'test1', right: false, from: secondId },
+            { answer: 'test2', right: false, from: thirdId },
+            { answer: 'test3', right: false, from: secondId },
+            { answer: 'test4', right: false, from: secondId },
+          ],
+          'server',
+        ),
+      );
     });
 
     test('should set picker after end round', () => {
@@ -334,11 +350,9 @@ describe('Game', () => {
       messageToGame(id, Actions.pickWord('grief'));
       messageToGame(id, Actions.proposeAnswer('tsdtstdst'));
 
-      expect(responder.enqueueResponseForAll).not.toBeCalledWith(msgValidator(
-        ADD_ANSWERS,
-        [{ answer: 'tsdtstdst', right: false }],
-        id,
-      ));
+      expect(responder.enqueueResponseForAll).not.toBeCalledWith(
+        msgValidator(ADD_ANSWERS, [{ answer: 'tsdtstdst', right: false }], id),
+      );
     });
 
     test('should start round if picker disconnected and didnt pick a word', () => {
@@ -351,10 +365,9 @@ describe('Game', () => {
     test('should end round and start a new one if leader disconnected', () => {
       game.disconnectPlayerWithId(id);
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        END_ROUND,
-        undefined,
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(END_ROUND, undefined),
+      );
       roundShouldStart(secondId);
     });
 
@@ -362,23 +375,20 @@ describe('Game', () => {
       game.disconnectPlayerWithId(thirdId);
       game.disconnectPlayerWithId(secondId);
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        END_ROUND,
-        undefined,
-      ));
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        WAIT,
-        undefined,
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(END_ROUND, undefined),
+      );
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(WAIT, undefined),
+      );
     });
 
     test('should end round if time is up', async () => {
       await delay(config.timeForRound + 100);
 
-      expect(responder.enqueueResponseForAll).toBeCalledWith(msgValidator(
-        END_ROUND,
-        undefined,
-      ));
+      expect(responder.enqueueResponseForAll).toBeCalledWith(
+        msgValidator(END_ROUND, undefined),
+      );
     });
 
     test('should not send end round when time is up and round has already been ended', async () => {

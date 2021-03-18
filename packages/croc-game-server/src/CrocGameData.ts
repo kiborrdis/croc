@@ -1,8 +1,8 @@
 import { GameData } from './GameData';
 
 export class CrocGameData extends GameData {
-  public chatMessages: Array<{ text: string, from: string }> = [];
-  public answers: Array<{ answer: string, right: boolean, from: string }> = [];
+  public chatMessages: Array<{ text: string; from: string }> = [];
+  public answers: Array<{ answer: string; right: boolean; from: string }> = [];
   public drawActions: any[] = [];
   public leader: string | null = null;
   public picker: string | null = null;

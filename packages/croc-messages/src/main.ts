@@ -11,7 +11,8 @@ export interface ActionMessage extends Message<typeof ACTION_MESSAGE> {
   action: Actions;
 }
 
-export interface IntroductionMessage extends Message<typeof INTRODUCTION_MESSAGE> {
+export interface IntroductionMessage
+  extends Message<typeof INTRODUCTION_MESSAGE> {
   name: string;
   playerId?: string;
 }
@@ -20,7 +21,9 @@ export function isActionMessage(message: any): message is ActionMessage {
   return message.type === ACTION_MESSAGE && message.action;
 }
 
-export function isIntroductionMessage(message: any): message is IntroductionMessage {
+export function isIntroductionMessage(
+  message: any,
+): message is IntroductionMessage {
   return message.type === INTRODUCTION_MESSAGE;
 }
 
@@ -28,7 +31,10 @@ export interface AnyMessage extends Message {
   [key: string]: any;
 }
 
-export function buildActionMessage(action: Actions, from?: string): ActionMessage {
+export function buildActionMessage(
+  action: Actions,
+  from?: string,
+): ActionMessage {
   const actionToSend: Actions = {
     ...action,
     meta: undefined,
@@ -44,7 +50,10 @@ export function buildActionMessage(action: Actions, from?: string): ActionMessag
   };
 }
 
-export function buildIntroductionMessage(name: string, playerId?: string ): IntroductionMessage {
+export function buildIntroductionMessage(
+  name: string,
+  playerId?: string,
+): IntroductionMessage {
   return {
     type: INTRODUCTION_MESSAGE,
     name,

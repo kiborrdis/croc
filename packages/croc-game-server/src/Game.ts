@@ -28,7 +28,11 @@ export class Game<D extends GameData = GameData> {
   protected data: D;
   protected context: GameContext<D>;
 
-  constructor(params: { responder: Responder, config: GameConfig, gameDataInitializer: () => D }) {
+  constructor(params: {
+    responder: Responder;
+    config: GameConfig;
+    gameDataInitializer: () => D;
+  }) {
     this.responder = params.responder;
     this.config = params.config;
     this.data = params.gameDataInitializer();
@@ -107,9 +111,7 @@ export class Game<D extends GameData = GameData> {
   private sendPlayer(id: string) {
     if (this.data.players[id]) {
       this.responder.enqueueResponseForAll([
-        this.config.addPlayersMessageCreator(
-          [{ ...this.data.players[id] }],
-        ),
+        this.config.addPlayersMessageCreator([{ ...this.data.players[id] }]),
       ]);
     }
   }
@@ -117,16 +119,16 @@ export class Game<D extends GameData = GameData> {
   private sendAllPlayersTo(id: string) {
     this.responder.enqueueResponseForOne(id, [
       this.config.addPlayersMessageCreator(
-        Object.keys(this.data.players).map((playerId) => this.data.players[playerId]),
+        Object.keys(this.data.players).map(
+          (playerId) => this.data.players[playerId],
+        ),
       ),
     ]);
   }
 
   private sendDeletePlayer(id: string) {
     this.responder.enqueueResponseForAll([
-      this.config.deletePlayerMessageCreator(
-        id,
-      ),
+      this.config.deletePlayerMessageCreator(id),
     ]);
   }
 
@@ -135,7 +137,9 @@ export class Game<D extends GameData = GameData> {
   }
 
   protected get numberOfConnectedPlayers() {
-    return Object.keys(this.data.players).filter((id) => !this.data.players[id].disconnected).length;
+    return Object.keys(this.data.players).filter(
+      (id) => !this.data.players[id].disconnected,
+    ).length;
   }
 
   protected notifyAboutNewPlayer(playerId: string) {
@@ -159,7 +163,5 @@ export class Game<D extends GameData = GameData> {
     });
   }
 
-  public handleMessage(fromId: string, message: AnyMessage) {
-
-  }
+  public handleMessage(fromId: string, message: AnyMessage) {}
 }

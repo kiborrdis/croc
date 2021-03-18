@@ -3,8 +3,14 @@ import { Message, isActionMessage } from 'croc-messages';
 import { CrocGameContext } from '../CrocGameContext';
 import { CrocGameData } from '../CrocGameData';
 import { GameState } from './GameState';
-import { DISCONNECTED_MESSAGE, DisconnectedMessage } from '../messages/DisconnectPlayerMessage';
-import { NEW_PLAYER_MESSAGE, NewPlayerMessage } from '../messages/NewPlayerMessage';
+import {
+  DISCONNECTED_MESSAGE,
+  DisconnectedMessage,
+} from '../messages/DisconnectPlayerMessage';
+import {
+  NEW_PLAYER_MESSAGE,
+  NewPlayerMessage,
+} from '../messages/NewPlayerMessage';
 
 function isNewPlayerMessage(message: Message): message is NewPlayerMessage {
   return message.type === NEW_PLAYER_MESSAGE;
@@ -14,7 +20,10 @@ function isDisconnectMessage(message: Message): message is DisconnectedMessage {
   return message.type === DISCONNECTED_MESSAGE;
 }
 
-export abstract class CrocGameState extends GameState<CrocGameData, CrocGameContext> {
+export abstract class CrocGameState extends GameState<
+  CrocGameData,
+  CrocGameContext
+> {
   public handleMessage(fromId: string, message: Message) {
     if (isActionMessage(message)) {
       this.beforeHandleAction(fromId, message.action);
@@ -34,7 +43,10 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
         this.context.sendActionToAllButOne(fromId, action, fromId);
 
         this.context.data.chatMessages.push(
-          ...(action.payload.map((messsage) => ({ text: messsage.text, from: fromId }))),
+          ...action.payload.map((messsage) => ({
+            text: messsage.text,
+            from: fromId,
+          })),
         );
 
         break;
@@ -59,21 +71,34 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
     }
 
     if (data.roundStartedAt) {
-      this.context.sendActionTo(playerId, Actions.startRound({
-        remainingTime: data.timePerRound - (new Date().getTime() - data.roundStartedAt),
-      }));
+      this.context.sendActionTo(
+        playerId,
+        Actions.startRound({
+          remainingTime:
+            data.timePerRound - (new Date().getTime() - data.roundStartedAt),
+        }),
+      );
     }
 
     if (data.chatMessages.length > 0) {
-      this.context.sendActionTo(playerId, Actions.addChatMessages([...data.chatMessages]));
+      this.context.sendActionTo(
+        playerId,
+        Actions.addChatMessages([...data.chatMessages]),
+      );
     }
 
     if (data.drawActions.length > 0) {
-      this.context.sendActionTo(playerId, Actions.addDrawActions([...data.drawActions]));
+      this.context.sendActionTo(
+        playerId,
+        Actions.addDrawActions([...data.drawActions]),
+      );
     }
 
     if (data.answers.length > 0) {
-      this.context.sendActionTo(playerId, Actions.addAnswers([...data.answers]));
+      this.context.sendActionTo(
+        playerId,
+        Actions.addAnswers([...data.answers]),
+      );
     }
   }
 
@@ -90,5 +115,4 @@ export abstract class CrocGameState extends GameState<CrocGameData, CrocGameCont
       data.picker = null;
     }
   }
-
 }

@@ -5,7 +5,10 @@ import { WaitState } from './WaitState';
 
 export class BeforeRoundState extends CrocGameState {
   public handleEnter() {
-    if (this.context.data.numberOfConnectedPlayers === 2 || !this.context.data.picker) {
+    if (
+      this.context.data.numberOfConnectedPlayers === 2 ||
+      !this.context.data.picker
+    ) {
       this.startTwoPlayerRound();
     }
   }
@@ -44,7 +47,6 @@ export class BeforeRoundState extends CrocGameState {
   }
 
   private startNewRound() {
-
     const leader = this.context.data.leader || this.chooseLeader();
     const word = this.context.data.word || this.chooseWord();
 
@@ -56,13 +58,19 @@ export class BeforeRoundState extends CrocGameState {
       this.context.data.drawActions = [];
 
       this.context.sendActionToAll(Actions.setLeader(leader));
-      this.context.sendActionToAllButOne(leader, Actions.startRound({
-        remainingTime: this.context.data.timePerRound,
-      }));
-      this.context.sendActionTo(leader, Actions.startRound({
-        word,
-        remainingTime: this.context.data.timePerRound,
-      }));
+      this.context.sendActionToAllButOne(
+        leader,
+        Actions.startRound({
+          remainingTime: this.context.data.timePerRound,
+        }),
+      );
+      this.context.sendActionTo(
+        leader,
+        Actions.startRound({
+          word,
+          remainingTime: this.context.data.timePerRound,
+        }),
+      );
 
       this.context.setState(new RoundInProgressState());
     }

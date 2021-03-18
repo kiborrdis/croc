@@ -1,10 +1,13 @@
 import { PlayerManager } from './PlayerManager';
 import { NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
-import { DisconnectedMessage, DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
+import {
+  DisconnectedMessage,
+  DISCONNECTED_MESSAGE,
+} from './messages/DisconnectPlayerMessage';
 
 describe('GameContext', () => {
   let manager: PlayerManager;
-  let playerInfo = { name: 'Mark', };
+  let playerInfo = { name: 'Mark' };
 
   beforeEach(() => {
     manager = new PlayerManager();
@@ -36,7 +39,9 @@ describe('GameContext', () => {
     try {
       manager.disconnectPlayerWithId('foo');
     } catch (e) {
-      expect((e as Error).message).toBe(`Impossible to disconnect player 'foo', player does not exist`)
+      expect((e as Error).message).toBe(
+        `Impossible to disconnect player 'foo', player does not exist`,
+      );
     }
     expect(manager.disconnectPlayerWithId).toThrow();
   });
@@ -48,7 +53,9 @@ describe('GameContext', () => {
     try {
       manager.disconnectPlayerWithId(newPlayer.player.id);
     } catch (e) {
-      expect((e as Error).message).toBe(`Impossible to disconnect player 'foo', player does not exist`)
+      expect((e as Error).message).toBe(
+        `Impossible to disconnect player 'foo', player does not exist`,
+      );
     }
   });
 });

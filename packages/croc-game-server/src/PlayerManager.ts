@@ -1,6 +1,12 @@
 import { Player } from './interfaces/Player';
-import { NewPlayerMessage, NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
-import { DisconnectedMessage, DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
+import {
+  NewPlayerMessage,
+  NEW_PLAYER_MESSAGE,
+} from './messages/NewPlayerMessage';
+import {
+  DisconnectedMessage,
+  DISCONNECTED_MESSAGE,
+} from './messages/DisconnectPlayerMessage';
 import uuid from 'uuid';
 
 interface IntroductionInfo {
@@ -23,7 +29,9 @@ export class PlayerManager {
 
   public disconnectPlayerWithId(id: string): DisconnectedMessage {
     if (!this.players[id]) {
-      throw new Error(`Impossible to disconnect player '${id}', player does not exist`);
+      throw new Error(
+        `Impossible to disconnect player '${id}', player does not exist`,
+      );
     }
 
     this.players[id].disconnected = true;
