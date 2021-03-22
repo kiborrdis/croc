@@ -7,7 +7,7 @@ export class BeforeRoundState extends CrocGameState {
   public handleEnter(): void {
     if (
       this.context.data.numberOfConnectedPlayers === 2 ||
-      !this.context.data.picker
+      !this.context.data.nextWordPicker
     ) {
       this.startTwoPlayerRound();
     }
@@ -26,7 +26,7 @@ export class BeforeRoundState extends CrocGameState {
   public handleAction(fromId: string, action: Actions): void {
     switch (action.type) {
       case PICK_WORD:
-        if (this.context.data.picker === fromId) {
+        if (this.context.data.nextWordPicker === fromId) {
           if (action.payload) {
             this.context.data.word = action.payload;
           } else {
@@ -47,17 +47,17 @@ export class BeforeRoundState extends CrocGameState {
   }
 
   private startNewRound() {
-    const leader = this.context.data.leader || this.chooseLeader();
+    const leader = this.context.data.painter || this.chooseLeader();
     const word = this.context.data.word || this.chooseWord();
 
     if (leader) {
-      this.context.data.leader = leader;
+      this.context.data.painter = leader;
       this.context.data.word = word;
       this.context.data.roundStartedAt = new Date().getTime();
       this.context.data.answers = [];
       this.context.data.drawActions = [];
 
-      this.context.sendActionToAll(Actions.setLeader(leader));
+      this.context.sendActionToAll(Actions.setPainter(leader));
       this.context.sendActionToAllButOne(
         leader,
         Actions.startRound({
@@ -80,7 +80,7 @@ export class BeforeRoundState extends CrocGameState {
     const players = this.context.data.players;
     const variants = Object.keys(players)
       .filter((id) => !players[id].disconnected)
-      .filter((id) => id !== this.context.data.picker);
+      .filter((id) => id !== this.context.data.nextWordPicker);
 
     return this.context.data.pickLeaderStrategy(variants) || null;
   }

@@ -15,7 +15,7 @@ export class RoundInProgressState extends CrocGameState {
   public handleAction(fromId: string, action: Actions): void {
     switch (action.type) {
       case ADD_DRAW_ACTIONS:
-        if (this.context.data.leader === fromId) {
+        if (this.context.data.painter === fromId) {
           this.context.sendActionToAllButOne(fromId, action, fromId);
 
           this.context.data.drawActions.push(...action.payload);
@@ -24,8 +24,8 @@ export class RoundInProgressState extends CrocGameState {
         break;
       case PROPOSE_ANSWER:
         if (
-          this.context.data.leader !== fromId &&
-          this.context.data.picker !== fromId
+          this.context.data.painter !== fromId &&
+          this.context.data.nextWordPicker !== fromId
         ) {
           const rightAnswer = this.context.data.word === action.payload;
 
@@ -61,9 +61,9 @@ export class RoundInProgressState extends CrocGameState {
   private shouldEndRoundEarly(): boolean {
     return (
       this.context.data.numberOfConnectedPlayers < 2 ||
-      this.context.data.leader === null ||
+      this.context.data.painter === null ||
       (this.context.data.numberOfConnectedPlayers < 3 &&
-        this.context.data.picker !== null)
+        this.context.data.nextWordPicker !== null)
     );
   }
 

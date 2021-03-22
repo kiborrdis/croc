@@ -1,15 +1,15 @@
-import { buildActionMessage } from 'croc-messages';
+import { AnyMessage, buildActionMessage } from 'croc-messages';
 import {
   CHANGE_PLAYER_SCORE,
   ADD_ANSWERS,
   ADD_CHAT_MESSAGES,
   ADD_DRAW_ACTIONS,
-  SET_LEADER,
-  SET_PICKER,
+  SET_NEXT_WORD_PICKER,
   START_ROUND,
   END_ROUND,
   WAIT,
   Actions,
+  SET_PAINTER,
 } from 'croc-actions';
 import { CrocGame } from './CrocGame';
 import { CrocGameData } from './CrocGameData';
@@ -60,7 +60,10 @@ describe('Game', () => {
   let responder: MockResponder;
 
   function messageToGame(senderId: string, action: Actions) {
-    game.handleMessage(senderId, buildActionMessage(action));
+    game.handleMessage(
+      senderId,
+      (buildActionMessage(action) as unknown) as AnyMessage,
+    );
   }
 
   function roundShouldNotStart(leaderId: string, word = 'sadness') {
@@ -98,7 +101,7 @@ describe('Game', () => {
   describe('with single player', () => {
     test('send set leader action', () => {
       expect(responder.enqueueResponseForAll).toBeCalledWith(
-        msgValidator(SET_LEADER, id),
+        msgValidator(SET_PAINTER, id),
       );
     });
 
@@ -113,7 +116,7 @@ describe('Game', () => {
 
       expect(responder.enqueueResponseForOne).toBeCalledWith(
         secondId,
-        msgValidator(SET_LEADER, id),
+        msgValidator(SET_PAINTER, id),
       );
     });
   });
@@ -192,7 +195,7 @@ describe('Game', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 
       expect(responder.enqueueResponseForAll).toBeCalledWith(
-        msgValidator(SET_LEADER, secondId),
+        msgValidator(SET_PAINTER, secondId),
       );
     });
 
@@ -295,7 +298,7 @@ describe('Game', () => {
       messageToGame(secondId, Actions.proposeAnswer('sadness'));
 
       expect(responder.enqueueResponseForAll).toBeCalledWith(
-        msgValidator(SET_PICKER, id),
+        msgValidator(SET_NEXT_WORD_PICKER, id),
       );
     });
 
@@ -324,7 +327,7 @@ describe('Game', () => {
       messageToGame(id, Actions.pickWord());
 
       expect(responder.enqueueResponseForAll).toBeCalledWith(
-        msgValidator(SET_PICKER, undefined),
+        msgValidator(SET_NEXT_WORD_PICKER, undefined),
       );
     });
 
@@ -341,7 +344,7 @@ describe('Game', () => {
       messageToGame(thirdId, Actions.proposeAnswer('grief'));
 
       expect(responder.enqueueResponseForAll).toBeCalledWith(
-        msgValidator(SET_PICKER, undefined),
+        msgValidator(SET_NEXT_WORD_PICKER, undefined),
       );
     });
 

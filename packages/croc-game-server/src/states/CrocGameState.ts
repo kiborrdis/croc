@@ -54,8 +54,8 @@ export abstract class CrocGameState extends GameState<
   }
 
   private beforeHandleDisconnectedPlayer(playerId: string) {
-    if (playerId === this.context.data.leader) {
-      this.context.data.leader = null;
+    if (playerId === this.context.data.painter) {
+      this.context.data.painter = null;
     }
   }
 
@@ -66,8 +66,8 @@ export abstract class CrocGameState extends GameState<
   private sendCurrentGameStateToPlayer(playerId: string) {
     const data = this.context.data;
 
-    if (data.leader) {
-      this.context.sendActionTo(playerId, Actions.setLeader(data.leader));
+    if (data.painter) {
+      this.context.sendActionTo(playerId, Actions.setPainter(data.painter));
     }
 
     if (data.roundStartedAt) {
@@ -109,10 +109,10 @@ export abstract class CrocGameState extends GameState<
   protected unsetPicker(): void {
     const data = this.context.data;
 
-    if (data.picker) {
-      this.context.sendActionToAll(Actions.setPicker());
+    if (data.nextWordPicker) {
+      this.context.sendActionToAll(Actions.setNextWordPicker());
 
-      data.picker = null;
+      data.nextWordPicker = null;
     }
   }
 }

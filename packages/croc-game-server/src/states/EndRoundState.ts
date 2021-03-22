@@ -20,7 +20,7 @@ export class EndRoundState extends CrocGameState {
 
   private finalizeRound() {
     const data = this.context.data;
-    const prevLeader = data.leader;
+    const prevLeader = data.painter;
 
     this.unsetPicker();
     data.word = null;
@@ -30,14 +30,14 @@ export class EndRoundState extends CrocGameState {
       this.processWinner(this.winnerId);
     }
 
-    data.leader = this.winnerId;
+    data.painter = this.winnerId;
 
     this.context.sendActionToAll(Actions.endRound());
 
     if (prevLeader) {
-      data.picker = prevLeader;
+      data.nextWordPicker = prevLeader;
 
-      this.context.sendActionToAll(Actions.setPicker(prevLeader));
+      this.context.sendActionToAll(Actions.setNextWordPicker(prevLeader));
     }
 
     if (data.numberOfConnectedPlayers < 2) {

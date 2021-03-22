@@ -36,8 +36,8 @@ export const CHANGE_PLAYER_SCORE = 'CHANGE_PLAYER_SCORE';
 export const ADD_ANSWERS = 'ADD_ANSWERS';
 export const PROPOSE_ANSWER = 'PROPOSE_ANSWER';
 export const ADD_CHAT_MESSAGES = 'ADD_CHAT_MESSAGES';
-export const SET_LEADER = 'SET_LEADER';
-export const SET_PICKER = 'SET_PICKER';
+export const SET_PAINTER = 'SET_PAINTER';
+export const SET_NEXT_WORD_PICKER = 'SET_NEXT_WORD_PICKER';
 export const PICK_WORD = 'PICK_WORD';
 export const START_ROUND = 'START_ROUND';
 export const WAIT = 'WAIT';
@@ -73,11 +73,11 @@ export const Actions = {
   addChatMessages: (messages: Array<{ text: string; from?: string }>) => {
     return createAction(ADD_CHAT_MESSAGES, messages, { sync: true });
   },
-  setLeader: (id: string) => {
-    return createAction(SET_LEADER, id);
+  setPainter: (id: string) => {
+    return createAction(SET_PAINTER, id);
   },
-  setPicker: (id?: string) => {
-    return createAction(SET_PICKER, id);
+  setNextWordPicker: (id?: string) => {
+    return createAction(SET_NEXT_WORD_PICKER, id);
   },
   pickWord: (word?: string) => {
     return createAction(PICK_WORD, word, { sync: true });

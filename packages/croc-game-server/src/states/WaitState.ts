@@ -9,8 +9,8 @@ export class WaitState extends CrocGameState {
 
   public handleNewPlayer(fromId: string): void {
     if (this.context.data.numberOfConnectedPlayers === 1) {
-      this.context.data.leader = fromId;
-      this.context.sendActionToAll(Actions.setLeader(fromId));
+      this.context.data.painter = fromId;
+      this.context.sendActionToAll(Actions.setPainter(fromId));
 
       return;
     }
