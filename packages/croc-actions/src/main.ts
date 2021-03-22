@@ -30,6 +30,7 @@ export function createAction<T extends string, P, M>(
   };
 }
 
+export const SET_SETTINGS = 'SET_SETTINGS';
 export const ADD_PLAYERS = 'ADD_PLAYERS';
 export const DELETE_PLAYER = 'DELETE_PLAYER';
 export const CHANGE_PLAYER_SCORE = 'CHANGE_PLAYER_SCORE';
@@ -44,6 +45,24 @@ export const WAIT = 'WAIT';
 export const END_ROUND = 'END_ROUND';
 export const ADD_DRAW_ACTIONS = 'ADD_DRAW_ACTIONS';
 export const UNDO_DRAW_ACTIONS = 'UNDO_DRAW_ACTIONS';
+
+type NextPainterPickType = 'winner' | 'rotation' | 'random';
+type NextWorkPickType =
+  | 'random'
+  | 'newPainterFromVariants'
+  | 'oldPainterFromVariants'
+  | 'newPainterAnything';
+
+type CrocGameSettings = {
+  nextPainterPickType: NextPainterPickType;
+  nextWordPickType: NextWorkPickType;
+
+  // wordBase identifier or own base
+  wordBase: string | { baseId: string };
+
+  // for word pick type
+  numberOfWordVariants: number;
+};
 
 export const Actions = {
   addPlayers: (
@@ -91,13 +110,15 @@ export const Actions = {
   endRound: () => {
     return createAction(END_ROUND, undefined);
   },
-  wait: () => {
-    return createAction(WAIT, undefined);
+  wait: (params: { type: 'settings' } | undefined = undefined) => {
+    return createAction(WAIT, params);
   },
   addDrawActions: (drawActions: any[]) => {
     return createAction(ADD_DRAW_ACTIONS, drawActions, { sync: true });
   },
-  // addDrawActions
+  setSettings: (settings: CrocGameSettings) => {
+    return createAction(SET_SETTINGS, settings);
+  },
 };
 
 export type Actions = ActionsUnion<typeof Actions>;

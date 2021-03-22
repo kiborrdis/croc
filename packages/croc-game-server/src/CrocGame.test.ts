@@ -96,6 +96,16 @@ describe('Game', () => {
       gameDataInitializer: () => new CrocGameData(),
     });
     id = game.connectPlayerWithInfo({ name: 'Meow' });
+
+    messageToGame(
+      id,
+      Actions.setSettings({
+        nextPainterPickType: 'rotation',
+        nextWordPickType: 'random',
+        numberOfWordVariants: 2,
+        wordBase: { baseId: 'foo' },
+      }),
+    );
   });
 
   describe('with single player', () => {
