@@ -8,7 +8,10 @@ import { GameState } from './states/GameState';
 import { delayCall, DelayedCall } from './utils/DelayCall';
 import { DELETE_PLAYER_MESSAGE } from './messages/DeletePlayerMessage';
 import { DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
-import { NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
+import {
+  createNewPlayerMessage,
+  NEW_PLAYER_MESSAGE,
+} from './messages/NewPlayerMessage';
 
 interface GameConfig {
   reconnectionTimeout: number;
@@ -59,7 +62,7 @@ export class Game<D extends GameData = GameData> {
 
     this.sendAllPlayersTo(newId);
     this.sendPlayer(newId);
-    this.notifyAboutNewPlayer(newId);
+    this.notifyAboutNewPlayer(newPlayer);
 
     return newId;
   }
@@ -142,11 +145,8 @@ export class Game<D extends GameData = GameData> {
     ).length;
   }
 
-  protected notifyAboutNewPlayer(playerId: string): void {
-    this.handleMessage('self', {
-      type: NEW_PLAYER_MESSAGE,
-      player: { id: playerId },
-    });
+  protected notifyAboutNewPlayer(player: Player): void {
+    this.handleMessage('self', createNewPlayerMessage(player));
   }
 
   protected notifyAboutDisconnectedPlayer(playerId: string): void {

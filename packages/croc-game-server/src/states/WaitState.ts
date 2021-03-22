@@ -36,7 +36,7 @@ export class WaitState extends CrocGameState {
             : action.payload.wordBase.baseId,
       };
 
-      if (this.context.data.painter) {
+      if (this.context.data.numberOfConnectedPlayers > 1) {
         this.context.setState(new BeforeRoundState());
       }
     }

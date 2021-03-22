@@ -40,7 +40,7 @@ export function isIntroductionMessage(
 }
 
 export interface AnyMessage extends Message {
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export function buildActionMessage(

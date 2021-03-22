@@ -7,7 +7,7 @@ type NextWorkPickType =
   | 'oldPainterFromVariants'
   | 'newPainterAnything';
 
-type CrocGameSettings = {
+export type CrocGameSettings = {
   nextPainterPickType: NextPainterPickType;
   nextWordPickType: NextWorkPickType;
 

@@ -13,16 +13,10 @@ import {
 } from 'croc-actions';
 import { CrocGame } from './CrocGame';
 import { CrocGameData } from './CrocGameData';
-import { Responder } from './interfaces/Responder';
+import { MockResponder } from './testUtils/MockResponder';
 
 const delay = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time));
-
-class MockResponder implements Responder {
-  public enqueueResponseForAll = jest.fn();
-  public enqueueResponseForOne = jest.fn();
-  public enqueueResponseForAllButOne = jest.fn();
-}
 
 const config = {
   reconnectionTimeout: 10,
