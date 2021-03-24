@@ -1,14 +1,16 @@
-import { GameState } from './states/GameState';
-import { Message } from 'croc-messages';
+import { GameState, GameStateActions } from './states/GameState';
 import { GameData } from './GameData';
 import { Responder } from './interfaces/Responder';
 
-export class GameContext<D extends GameData> {
-  private state!: GameState<D>;
+export abstract class GameContext<
+  A extends GameStateActions,
+  D extends GameData
+> {
+  protected state!: GameState<A, D>;
   private gameData: D;
   protected responder: Responder;
 
-  constructor(initialState: GameState<D>, data: D, responder: Responder) {
+  constructor(initialState: GameState<A, D>, data: D, responder: Responder) {
     this.gameData = data;
     this.responder = responder;
 
@@ -19,11 +21,9 @@ export class GameContext<D extends GameData> {
     return this.gameData;
   }
 
-  public handleMessage(fromId: string, message: Message): void {
-    this.state.handleMessage(fromId, message);
-  }
+  public abstract handleMessage(fromId: string, message: A[keyof A]): void;
 
-  public setState(state: GameState<D>): void {
+  public setState(state: GameState<A, D>): void {
     if (this.state) {
       this.state.exit();
     }

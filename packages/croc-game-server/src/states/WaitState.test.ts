@@ -8,7 +8,7 @@ import { connectPlayerToStateContext } from '../testUtils/connectPlayerToContext
 import { buildActionMessage } from 'croc-messages';
 import { Actions } from 'croc-actions';
 import { CrocGameState } from './CrocGameState';
-import { BeforeRoundState } from './BeforeRoundState';
+import { PickWordState } from './PickWordState';
 
 const gameSettings: CrocGameSettings = {
   nextPainterPickType: 'random',
@@ -29,11 +29,10 @@ describe('WaitState', () => {
   let context: SpyCrocGameContext;
 
   const applySettings = () => {
-    state.handleMessage(
+    state.triggerAction(
+      'SET_SETTINGS',
+      Actions.setSettings({ ...gameSettings, wordBase: { baseId: 'zzz' } }),
       'foo',
-      buildActionMessage(
-        Actions.setSettings({ ...gameSettings, wordBase: { baseId: 'zzz' } }),
-      ),
     );
   };
 
@@ -104,7 +103,7 @@ describe('WaitState', () => {
 
     applySettings();
 
-    expect(context.setState.mock.calls[0][0]).toBeInstanceOf(BeforeRoundState);
+    expect(context.setState.mock.calls[0][0]).toBeInstanceOf(PickWordState);
   });
 
   test('should move to BeforeRoundState if settings set and second player connected', () => {
@@ -116,7 +115,7 @@ describe('WaitState', () => {
       id: '2',
     });
 
-    expect(context.setState.mock.calls[0][0]).toBeInstanceOf(BeforeRoundState);
+    expect(context.setState.mock.calls[0][0]).toBeInstanceOf(PickWordState);
   });
 
   test('should send simple wait if settings already set', () => {

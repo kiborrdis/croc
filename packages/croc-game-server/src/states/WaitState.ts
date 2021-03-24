@@ -1,45 +1,49 @@
-import { Actions, SET_SETTINGS } from 'croc-actions';
+import { Actions } from 'croc-actions';
 import { CrocGameState } from './CrocGameState';
-import { BeforeRoundState } from './BeforeRoundState';
+import { PickWordState } from './PickWordState';
 
 export class WaitState extends CrocGameState {
-  public handleEnter(): void {
-    this.context.sendActionToAll(
-      Actions.wait(
-        this.context.data.gameSettings ? undefined : { type: 'settings' },
-      ),
-    );
-  }
+  constructor() {
+    super();
 
-  public handleNewPlayer(fromId: string): void {
-    if (this.context.data.numberOfConnectedPlayers === 1) {
-      this.context.data.painter = fromId;
-      this.context.sendActionToAll(Actions.setPainter(fromId));
+    this.subscribeToActions({
+      enter: () => {
+        this.context.sendActionToAll(
+          Actions.wait(
+            this.context.data.gameSettings ? undefined : { type: 'settings' },
+          ),
+        );
+      },
 
-      return;
-    }
+      playerConnected: ({ player: { id } }) => {
+        if (this.context.data.numberOfConnectedPlayers === 1) {
+          this.context.data.painter = id;
+          this.context.sendActionToAll(Actions.setPainter(id));
 
-    if (!this.context.data.gameSettings) {
-      return;
-    }
+          return;
+        }
 
-    this.context.setState(new BeforeRoundState());
-  }
+        if (!this.context.data.gameSettings) {
+          return;
+        }
 
-  public handleAction(fromId: string, action: Actions): void {
-    if (action.type === SET_SETTINGS) {
-      this.context.data.gameSettings = {
-        ...action.payload,
-        wordBase:
-          typeof action.payload.wordBase === 'string'
-            ? parseCustomWordBase(action.payload.wordBase)
-            : action.payload.wordBase.baseId,
-      };
+        this.context.setState(new PickWordState());
+      },
 
-      if (this.context.data.numberOfConnectedPlayers > 1) {
-        this.context.setState(new BeforeRoundState());
-      }
-    }
+      SET_SETTINGS: (action) => {
+        this.context.data.gameSettings = {
+          ...action.payload,
+          wordBase:
+            typeof action.payload.wordBase === 'string'
+              ? parseCustomWordBase(action.payload.wordBase)
+              : action.payload.wordBase.baseId,
+        };
+
+        if (this.context.data.numberOfConnectedPlayers > 1) {
+          this.context.setState(new PickWordState());
+        }
+      },
+    });
   }
 }
 

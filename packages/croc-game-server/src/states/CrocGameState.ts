@@ -1,45 +1,36 @@
-import { Actions, ADD_CHAT_MESSAGES } from 'croc-actions';
-import { Message, isActionMessage } from 'croc-messages';
+import { Actions, ActionTypeToAction } from 'croc-actions';
 import { CrocGameContext } from '../CrocGameContext';
 import { CrocGameData } from '../CrocGameData';
-import { GameState } from './GameState';
-import {
-  DISCONNECTED_MESSAGE,
-  DisconnectedMessage,
-} from '../messages/DisconnectPlayerMessage';
-import {
-  NEW_PLAYER_MESSAGE,
-  NewPlayerMessage,
-} from '../messages/NewPlayerMessage';
+import { GameState, GameStateActions } from './GameState';
+import { DisconnectedMessage } from '../messages/DisconnectPlayerMessage';
+import { NewPlayerMessage } from '../messages/NewPlayerMessage';
+import { DeletePlayerMessage } from '../messages/DeletePlayerMessage';
 
-function isNewPlayerMessage(message: Message): message is NewPlayerMessage {
-  return message.type === NEW_PLAYER_MESSAGE;
-}
-
-function isDisconnectMessage(message: Message): message is DisconnectedMessage {
-  return message.type === DISCONNECTED_MESSAGE;
-}
+export type CrocGameStateActions = {
+  playerConnected: NewPlayerMessage;
+  playerDisconnected: DisconnectedMessage;
+  playerDeleted: DeletePlayerMessage;
+} & GameStateActions &
+  ActionTypeToAction;
 
 export abstract class CrocGameState extends GameState<
+  CrocGameStateActions,
   CrocGameData,
   CrocGameContext
 > {
-  public handleMessage(fromId: string, message: Message): void {
-    if (isActionMessage(message)) {
-      this.beforeHandleAction(fromId, message.action);
-      this.handleAction(fromId, message.action);
-    } else if (isDisconnectMessage(message)) {
-      this.beforeHandleDisconnectedPlayer(message.playerId);
-      this.handleDisconnectedPlayer(message.playerId);
-    } else if (isNewPlayerMessage(message)) {
-      this.beforeHandleConnectedPlayer(message.player.id);
-      this.handleNewPlayer(message.player.id);
-    }
-  }
+  constructor() {
+    super();
 
-  private beforeHandleAction(fromId: string, action: Actions) {
-    switch (action.type) {
-      case ADD_CHAT_MESSAGES:
+    this.subscribeToActions({
+      playerConnected: ({ player }) => {
+        this.sendCurrentGameStateToPlayer(player.id);
+      },
+      playerDisconnected: ({ playerId }) => {
+        if (playerId === this.context.data.painter) {
+          this.context.data.painter = null;
+        }
+      },
+      ADD_CHAT_MESSAGES: (action, fromId) => {
         this.context.sendActionToAllButOne(fromId, action, fromId);
 
         this.context.data.chatMessages.push(
@@ -48,19 +39,8 @@ export abstract class CrocGameState extends GameState<
             from: fromId,
           })),
         );
-
-        break;
-    }
-  }
-
-  private beforeHandleDisconnectedPlayer(playerId: string) {
-    if (playerId === this.context.data.painter) {
-      this.context.data.painter = null;
-    }
-  }
-
-  private beforeHandleConnectedPlayer(playerId: string) {
-    this.sendCurrentGameStateToPlayer(playerId);
+      },
+    });
   }
 
   private sendCurrentGameStateToPlayer(playerId: string) {
@@ -101,10 +81,6 @@ export abstract class CrocGameState extends GameState<
       );
     }
   }
-
-  protected handleAction(fromId: string, action: Actions): void {}
-  protected handleNewPlayer(playerId: string): void {}
-  protected handleDisconnectedPlayer(playerId: string): void {}
 
   protected unsetPicker(): void {
     const data = this.context.data;

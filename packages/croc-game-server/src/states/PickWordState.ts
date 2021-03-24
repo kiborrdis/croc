@@ -1,31 +1,32 @@
-import { Actions, PICK_WORD } from 'croc-actions';
+import { Actions } from 'croc-actions';
 import { CrocGameState } from './CrocGameState';
 import { RoundInProgressState } from './RoundInProgressState';
 import { WaitState } from './WaitState';
 
-export class BeforeRoundState extends CrocGameState {
-  public handleEnter(): void {
-    if (
-      this.context.data.numberOfConnectedPlayers === 2 ||
-      !this.context.data.nextWordPicker
-    ) {
-      this.startTwoPlayerRound();
-    }
-  }
+export class PickWordState extends CrocGameState {
+  constructor() {
+    super();
 
-  public handleDisconnectedPlayer(playerId: string): void {
-    if (this.context.data.numberOfConnectedPlayers < 2) {
-      this.context.setState(new WaitState());
-    }
+    this.subscribeToActions({
+      enter: () => {
+        if (
+          this.context.data.numberOfConnectedPlayers === 2 ||
+          !this.context.data.nextWordPicker
+        ) {
+          this.startTwoPlayerRound();
+        }
+      },
+      playerDisconnected: () => {
+        if (this.context.data.numberOfConnectedPlayers < 2) {
+          this.context.setState(new WaitState());
+        }
 
-    if (this.context.data.numberOfConnectedPlayers === 2) {
-      this.startTwoPlayerRound();
-    }
-  }
+        if (this.context.data.numberOfConnectedPlayers === 2) {
+          this.startTwoPlayerRound();
+        }
+      },
 
-  public handleAction(fromId: string, action: Actions): void {
-    switch (action.type) {
-      case PICK_WORD:
+      PICK_WORD: (action, fromId) => {
         if (this.context.data.nextWordPicker === fromId) {
           if (action.payload) {
             this.context.data.word = action.payload;
@@ -35,9 +36,8 @@ export class BeforeRoundState extends CrocGameState {
 
           this.startNewRound();
         }
-
-        break;
-    }
+      },
+    });
   }
 
   private startTwoPlayerRound() {

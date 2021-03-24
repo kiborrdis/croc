@@ -6,11 +6,26 @@ import { delayCall } from './utils/DelayCall';
 import { NEW_PLAYER_MESSAGE } from './messages/NewPlayerMessage';
 import { DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
 import { DELETE_PLAYER_MESSAGE } from './messages/DeletePlayerMessage';
+import { GameState, GameStateActions } from './states/GameState';
+import { GameContext } from './GameContext';
 
 const delay = (time: number) =>
   new Promise((resolve) => setTimeout(resolve, time));
 
-class MockGame extends Game {
+class MockContext extends GameContext<GameStateActions, GameData> {
+  public handleMessage(fromId: string, message: void): void {}
+}
+
+class MockState extends GameState<GameStateActions, GameData> {}
+
+class MockGame extends Game<GameStateActions> {
+  protected initializeContext(): GameContext<GameStateActions, GameData> {
+    return new MockContext(
+      new MockState(),
+      new GameData(),
+      new MockResponder(),
+    );
+  }
   public handleMessage = jest.fn();
 }
 
@@ -44,11 +59,11 @@ const config = {
 };
 
 test('Can create new game without throwing', () => {
-  const game = new Game({
-    responder: new MockResponder(),
-    config,
-    gameDataInitializer: () => new GameData(),
-  });
+  const game = new MockContext(
+    new MockState(),
+    new GameData(),
+    new MockResponder(),
+  );
 });
 
 describe('Game', () => {

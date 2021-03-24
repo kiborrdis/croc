@@ -1,6 +1,6 @@
 import { Actions } from 'croc-actions';
 import { CrocGameState } from './CrocGameState';
-import { BeforeRoundState } from './BeforeRoundState';
+import { PickWordState } from './PickWordState';
 import { WaitState } from './WaitState';
 
 const RIGHT_GUESS_SCORE_DELTA = 10;
@@ -12,10 +12,12 @@ export class EndRoundState extends CrocGameState {
     super();
 
     this.winnerId = winnerId || null;
-  }
 
-  public handleEnter(): void {
-    this.finalizeRound();
+    this.subscribeToActions({
+      enter: () => {
+        this.finalizeRound();
+      },
+    });
   }
 
   private finalizeRound() {
@@ -43,7 +45,7 @@ export class EndRoundState extends CrocGameState {
     if (data.numberOfConnectedPlayers < 2) {
       this.context.setState(new WaitState());
     } else {
-      this.context.setState(new BeforeRoundState());
+      this.context.setState(new PickWordState());
     }
   }
 

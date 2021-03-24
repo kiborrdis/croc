@@ -4,10 +4,13 @@ import { Responder } from './interfaces/Responder';
 import { Player } from './interfaces/Player';
 import { GameData } from './GameData';
 import { GameContext } from './GameContext';
-import { GameState } from './states/GameState';
+import { GameState, GameStateActions } from './states/GameState';
 import { delayCall, DelayedCall } from './utils/DelayCall';
 import { DELETE_PLAYER_MESSAGE } from './messages/DeletePlayerMessage';
-import { DISCONNECTED_MESSAGE } from './messages/DisconnectPlayerMessage';
+import {
+  createDisconnectPlayerMessage,
+  DISCONNECTED_MESSAGE,
+} from './messages/DisconnectPlayerMessage';
 import {
   createNewPlayerMessage,
   NEW_PLAYER_MESSAGE,
@@ -24,12 +27,15 @@ interface IntroductionInfo {
   id?: string;
 }
 
-export class Game<D extends GameData = GameData> {
+export abstract class Game<
+  A extends GameStateActions,
+  D extends GameData = GameData
+> {
   private config: GameConfig;
   private delayedDeletes: { [id: string]: DelayedCall } = {};
   protected responder: Responder;
   protected data: D;
-  protected context: GameContext<D>;
+  protected context: GameContext<A, D>;
 
   constructor(params: {
     responder: Responder;
@@ -42,11 +48,7 @@ export class Game<D extends GameData = GameData> {
     this.context = this.initializeContext();
   }
 
-  protected initializeContext(): GameContext<D> {
-    const state = new GameState<D>();
-
-    return new GameContext<D>(state, this.data, this.responder);
-  }
+  protected abstract initializeContext(): GameContext<A, D>;
 
   public connectPlayerWithInfo(info: IntroductionInfo): string {
     const oldId = this.tryReconnect(info);
@@ -150,10 +152,7 @@ export class Game<D extends GameData = GameData> {
   }
 
   protected notifyAboutDisconnectedPlayer(playerId: string): void {
-    this.handleMessage('self', {
-      type: DISCONNECTED_MESSAGE,
-      playerId,
-    });
+    this.handleMessage('self', createDisconnectPlayerMessage(playerId));
   }
 
   protected notifyAboutDeletedPlayer(playerId: string): void {

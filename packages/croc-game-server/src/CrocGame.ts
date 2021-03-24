@@ -1,10 +1,11 @@
-import { buildActionMessage, AnyMessage } from 'croc-messages';
+import { buildActionMessage, AnyMessage, isActionMessage } from 'croc-messages';
 import { Actions } from 'croc-actions';
 import { Responder } from './interfaces/Responder';
 import { Game } from './Game';
 import { CrocGameData } from './CrocGameData';
 import { CrocGameContext } from './CrocGameContext';
 import { WaitState } from './states/WaitState';
+import { CrocGameStateActions } from './states/CrocGameState';
 
 interface CrocGameConfig {
   reconnectionTimeout: number;
@@ -13,7 +14,7 @@ interface CrocGameConfig {
   pickLeaderStrategy: (playerIds: string[]) => string;
 }
 
-export class CrocGame extends Game<CrocGameData> {
+export class CrocGame extends Game<CrocGameStateActions, CrocGameData> {
   constructor(params: {
     responder: Responder;
     config: CrocGameConfig;
@@ -51,6 +52,10 @@ export class CrocGame extends Game<CrocGameData> {
   }
 
   public handleMessage(fromId: string, message: AnyMessage): void {
-    this.context.handleMessage(fromId, message);
+    if (isActionMessage(message)) {
+      this.context.handleMessage(fromId, message.action);
+    } else {
+      this.context.handleMessage(fromId, message as any);
+    }
   }
 }
