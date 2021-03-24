@@ -12,9 +12,10 @@ import { PickWordState } from './PickWordState';
 
 const gameSettings: CrocGameSettings = {
   nextPainterPickType: 'random',
-  nextWordPickType: 'newPainterAnything',
+  nextWordPickType: 'oldPainterAnything',
   numberOfWordVariants: 3,
-  wordBase: 'zzzz',
+  wordBase: ['zzzz'],
+  secondsToPickWord: 60,
 };
 
 class SpyCrocGameContext extends CrocGameContext {
@@ -31,7 +32,7 @@ describe('WaitState', () => {
   const applySettings = () => {
     state.triggerAction(
       'SET_SETTINGS',
-      Actions.setSettings({ ...gameSettings, wordBase: { baseId: 'zzz' } }),
+      Actions.setSettings({ ...gameSettings, wordBase: 'zzz' }),
       'foo',
     );
   };
@@ -57,7 +58,7 @@ describe('WaitState', () => {
 
     expect(context.data.gameSettings).toEqual({
       ...gameSettings,
-      wordBase: 'zzz',
+      wordBase: ['zzz'],
     });
   });
 
@@ -123,9 +124,10 @@ describe('WaitState', () => {
 
     initialData.gameSettings = {
       nextPainterPickType: 'random',
-      nextWordPickType: 'newPainterAnything',
+      nextWordPickType: 'oldPainterAnything',
       numberOfWordVariants: 3,
-      wordBase: 'zzzz',
+      wordBase: ['zzzz'],
+      secondsToPickWord: 60,
     };
 
     state = new WaitState();

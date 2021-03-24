@@ -5,17 +5,18 @@ type NextWorkPickType =
   | 'random'
   | 'newPainterFromVariants'
   | 'oldPainterFromVariants'
-  | 'newPainterAnything';
+  | 'oldPainterAnything';
 
 export type CrocGameSettings = {
   nextPainterPickType: NextPainterPickType;
   nextWordPickType: NextWorkPickType;
 
   // wordBase identifier or own base,
-  wordBase: string | string[];
+  wordBase: string[];
 
   // for word pick type
   numberOfWordVariants: number;
+  secondsToPickWord: number;
 };
 
 export class CrocGameData extends GameData {

@@ -46,4 +46,50 @@ export class CrocGameContext extends GameContext<
       buildActionMessage(action, fromId),
     ]);
   }
+
+  private wordGetter: RandomWordGetter | undefined;
+
+  public getRandomWord(): string {
+    if (!this.data.gameSettings?.wordBase) {
+      return '';
+    }
+
+    if (
+      !this.wordGetter ||
+      !this.wordGetter.isSameBase(this.data.gameSettings.wordBase)
+    ) {
+      this.wordGetter = new RandomWordGetter(this.data.gameSettings.wordBase);
+    }
+
+    return this.wordGetter.getWord();
+  }
+}
+
+class RandomWordGetter {
+  private wordbase: string[];
+  private shuffledIndexes: number[] = [];
+  private currentIndex = 0;
+
+  constructor(wordbase: string[]) {
+    this.wordbase = wordbase;
+    this.createShuffledIndexes();
+  }
+
+  private createShuffledIndexes() {
+    this.shuffledIndexes = this.wordbase
+      .map((_, index) => index)
+      .sort(() => Math.random() - 0.5);
+  }
+
+  public isSameBase(wordbase: string[]) {
+    return wordbase === this.wordbase;
+  }
+
+  public getWord(): string {
+    if (this.currentIndex >= this.shuffledIndexes.length) {
+      this.createShuffledIndexes();
+    }
+
+    return this.wordbase[this.currentIndex++];
+  }
 }

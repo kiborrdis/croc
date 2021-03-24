@@ -33,10 +33,11 @@ export class WaitState extends CrocGameState {
       SET_SETTINGS: (action) => {
         this.context.data.gameSettings = {
           ...action.payload,
+          secondsToPickWord: 60,
           wordBase:
             typeof action.payload.wordBase === 'string'
               ? parseCustomWordBase(action.payload.wordBase)
-              : action.payload.wordBase.baseId,
+              : [action.payload.wordBase.baseId],
         };
 
         if (this.context.data.numberOfConnectedPlayers > 1) {

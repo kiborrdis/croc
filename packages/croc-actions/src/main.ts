@@ -4,7 +4,7 @@ import { Action as ReduxAction } from 'redux';
 
 interface Action<T extends string, P, M> extends ReduxAction<T> {
   payload: P;
-  meta?: M;
+  meta: M;
   syncData?: any;
 }
 
@@ -21,7 +21,7 @@ export type ActionsUnion<A extends ActionCreatorsMapObject> = ReturnType<
 export function createAction<T extends keyof ActionTypeToAction>(
   type: T,
   payload: ActionTypeToAction[T]['payload'],
-  meta?: ActionTypeToAction[T]['meta'],
+  meta: ActionTypeToAction[T]['meta'],
 ): Action<T, ActionTypeToAction[T]['payload'], ActionTypeToAction[T]['meta']> {
   return {
     type,
@@ -82,6 +82,13 @@ export type ActionTypeToAction = {
     string | undefined,
     undefined
   >;
+  DEMAND_WORD: Action<
+    'DEMAND_WORD',
+    {
+      variants?: string[];
+    },
+    undefined
+  >;
   PICK_WORD: Action<'PICK_WORD', string | undefined, SyncMeta>;
   START_ROUND: Action<
     'START_ROUND',
@@ -101,7 +108,7 @@ type NextWorkPickType =
   | 'random'
   | 'newPainterFromVariants'
   | 'oldPainterFromVariants'
-  | 'newPainterAnything';
+  | 'oldPainterAnything';
 
 type CrocGameSettings = {
   nextPainterPickType: NextPainterPickType;
@@ -126,7 +133,7 @@ export const Actions = {
     return createAction(ADD_PLAYERS, players, { sync: true });
   },
   deletePlayer: (playerId: string) => {
-    return createAction(DELETE_PLAYER, playerId);
+    return createAction(DELETE_PLAYER, playerId, undefined);
   },
   changePlayerScore: (player: { id: string; newScore: number }) => {
     return createAction(CHANGE_PLAYER_SCORE, player, { sync: true });
@@ -143,31 +150,38 @@ export const Actions = {
     return createAction(ADD_CHAT_MESSAGES, messages, { sync: true });
   },
   setPainter: (id: string) => {
-    return createAction(SET_PAINTER, id);
+    return createAction(SET_PAINTER, id, undefined);
   },
   setNextWordPicker: (id?: string) => {
-    return createAction(SET_NEXT_WORD_PICKER, id);
+    return createAction(SET_NEXT_WORD_PICKER, id, undefined);
+  },
+  demandWord: (variants?: string[]) => {
+    return createAction('DEMAND_WORD', { variants }, undefined);
   },
   pickWord: (word?: string) => {
     return createAction(PICK_WORD, word, { sync: true });
   },
   startRound: (params: { word?: string; remainingTime: number }) => {
-    return createAction(START_ROUND, {
-      word: params.word,
-      remainingTime: params.remainingTime,
-    });
+    return createAction(
+      START_ROUND,
+      {
+        word: params.word,
+        remainingTime: params.remainingTime,
+      },
+      undefined,
+    );
   },
   endRound: () => {
-    return createAction(END_ROUND, undefined);
+    return createAction(END_ROUND, undefined, undefined);
   },
   wait: (params: { type: 'settings' } | undefined = undefined) => {
-    return createAction(WAIT, params);
+    return createAction(WAIT, params, undefined);
   },
   addDrawActions: (drawActions: any[]) => {
     return createAction(ADD_DRAW_ACTIONS, drawActions, { sync: true });
   },
   setSettings: (settings: CrocGameSettings) => {
-    return createAction(SET_SETTINGS, settings);
+    return createAction(SET_SETTINGS, settings, undefined);
   },
 };
 

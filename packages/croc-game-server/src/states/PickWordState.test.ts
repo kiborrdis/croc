@@ -14,9 +14,10 @@ import { addPlayerToCrocData } from '../testUtils/addPlayerToCrocData';
 
 const initialGameSettings: CrocGameSettings = {
   nextPainterPickType: 'random',
-  nextWordPickType: 'newPainterAnything',
+  nextWordPickType: 'oldPainterAnything',
   numberOfWordVariants: 3,
-  wordBase: 'zzzz',
+  wordBase: ['zzzz'],
+  secondsToPickWord: 60,
 };
 
 class SpyCrocGameContext extends CrocGameContext {
